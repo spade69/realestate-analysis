@@ -8,7 +8,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Josefin+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"
+        integrity="sha384-Mx5lkUEQPM1pOJCwFtUICyX45KNojXbkWdYhkKUKsbv391mavbfoAmONbzkgYPzR"
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+        defer></script>
 <style>
 :root {
   --bg: #F0FDFA;
@@ -671,7 +675,10 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
           nameTextStyle: { color: t.muted, fontFamily: 'Josefin Sans, sans-serif' },
         }, commonAxis(t.text, t.line)),
         Object.assign({
-          type: 'value', name: '大跌%', position: 'right', min: 0, max: 16,
+          type: 'value', name: '大跌%', position: 'right',
+          min: 0,
+          // 自适应：上限为最大值 *1.3，至少 6%，避免上方标签裁切
+          max: (v) => Math.max(6, Math.ceil(v.max * 1.3)),
           nameTextStyle: { color: t.muted, fontFamily: 'Josefin Sans, sans-serif' },
           axisLabel: { color: t.text, fontFamily: 'Josefin Sans, sans-serif', fontSize: 12, formatter: '{value}%' },
           axisLine: { lineStyle: { color: t.line } },
@@ -755,7 +762,10 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
         axisLabel: { color: t.text, fontFamily: 'Josefin Sans, sans-serif', fontSize: 11, interval: 0, lineHeight: 16 },
       }, { axisLine: { lineStyle: { color: t.line } }, axisTick: { show: false } }),
       yAxis: Object.assign({
-        type: 'value', name: '变化 %', max: 12, min: -10,
+        type: 'value', name: '变化 %',
+        // 自适应对称范围：以 max(|v|)*1.2 为上下限，至少 ±5%
+        max: (v) => Math.max(5, Math.ceil(Math.max(Math.abs(v.min), Math.abs(v.max)) * 1.2)),
+        min: (v) => -Math.max(5, Math.ceil(Math.max(Math.abs(v.min), Math.abs(v.max)) * 1.2)),
         nameTextStyle: { color: t.muted, fontFamily: 'Josefin Sans, sans-serif' },
         axisLabel: { formatter: '{value}%' },
       }, commonAxis(t.text, t.line)),
