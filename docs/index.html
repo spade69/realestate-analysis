@@ -4,240 +4,567 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>福田二手成交分析 · 2026-03 ~ 2026-05</title>
+<meta name="description" content="深圳福田区二手房成交多期对比分析，含片区涨跌、谈价率分布与趋势图">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Josefin+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0f1419;
-  --card: #1a1f29;
-  --border: #2a3340;
-  --text: #e6e9ed;
-  --text-dim: #8b95a3;
-  --accent: #4ec9b0;
-  --up: #43aa8b;
-  --down: #e63946;
-  --warn: #f4a261;
+  --bg: #F0FDFA;
+  --surface: #FFFFFF;
+  --surface-2: #ECFEF7;
+  --border: #99F6E4;
+  --border-soft: #D1FAE5;
+  --primary: #0F766E;
+  --primary-soft: #14B8A6;
+  --accent: #0369A1;
+  --text: #134E4A;
+  --text-2: #1F2937;
+  --muted: #64748B;
+  --muted-2: #94A3B8;
+  --up: #047857;
+  --up-soft: #D1FAE5;
+  --down: #B91C1C;
+  --down-soft: #FEE2E2;
+  --warn: #B45309;
+  --warn-soft: #FEF3C7;
+  --shadow-sm: 0 1px 2px rgba(15, 118, 110, 0.05), 0 1px 3px rgba(15, 118, 110, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(15, 118, 110, 0.08), 0 2px 4px -2px rgba(15, 118, 110, 0.04);
+  --shadow-lg: 0 10px 20px -8px rgba(15, 118, 110, 0.12), 0 4px 8px -2px rgba(15, 118, 110, 0.06);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0A1F1C;
+    --surface: #122E2A;
+    --surface-2: #0F2A26;
+    --border: #1E4A43;
+    --border-soft: #163934;
+    --primary: #14B8A6;
+    --primary-soft: #2DD4BF;
+    --accent: #38BDF8;
+    --text: #E6F4F1;
+    --text-2: #CBD5E1;
+    --muted: #94A3B8;
+    --muted-2: #64748B;
+    --up: #34D399;
+    --up-soft: rgba(52, 211, 153, 0.12);
+    --down: #F87171;
+    --down-soft: rgba(248, 113, 113, 0.14);
+    --warn: #FBBF24;
+    --warn-soft: rgba(251, 191, 36, 0.14);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30);
+    --shadow-md: 0 4px 8px -2px rgba(0, 0, 0, 0.35);
+    --shadow-lg: 0 10px 24px -8px rgba(0, 0, 0, 0.50);
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Songti SC", sans-serif;
+  font-family: 'Josefin Sans', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
   background: var(--bg);
   color: var(--text);
-  line-height: 1.6;
-  padding: 20px 16px 60px;
+  line-height: 1.65;
+  font-weight: 400;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
-.container { max-width: 960px; margin: 0 auto; }
-header { padding: 28px 0 20px; border-bottom: 1px solid var(--border); margin-bottom: 28px; }
-h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 6px; }
-.subtitle { color: var(--text-dim); font-size: 0.95rem; }
-.meta { color: var(--text-dim); font-size: 0.85rem; margin-top: 8px; }
-h2 { font-size: 1.3rem; margin: 36px 0 14px; color: var(--accent); border-left: 3px solid var(--accent); padding-left: 10px; }
-h3 { font-size: 1.05rem; margin: 22px 0 10px; color: var(--text); }
-p { margin: 10px 0; }
+
+.container { max-width: 1080px; margin: 0 auto; padding: 0 20px 80px; }
+
+/* Hero */
+.hero { padding: 56px 0 36px; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px;
+  background: var(--primary); color: white;
+  border-radius: 100px;
+  font-size: 0.78rem; font-weight: 600;
+  letter-spacing: 0.4px; text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.hero-eyebrow .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #34D399;
+  box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.35);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+@media (prefers-reduced-motion: reduce) { .hero-eyebrow .dot { animation: none; } }
+
+h1 {
+  font-family: 'Cinzel', 'Songti SC', Georgia, serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.hero-subtitle { font-size: 1.1rem; color: var(--text-2); margin-bottom: 6px; font-weight: 400; }
+.hero-meta { color: var(--muted); font-size: 0.92rem; margin-top: 8px; }
+.hero-meta span { white-space: nowrap; }
+.hero-meta .sep { display: inline-block; margin: 0 8px; opacity: 0.5; }
+
+/* Section */
+section { margin-bottom: 48px; scroll-margin-top: 24px; }
+h2 {
+  font-family: 'Cinzel', 'Songti SC', Georgia, serif;
+  font-size: 1.5rem; font-weight: 600;
+  letter-spacing: -0.2px; color: var(--text);
+  margin-bottom: 18px;
+  display: flex; align-items: center; gap: 10px;
+}
+h2 .h2-icon {
+  width: 28px; height: 28px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+h3 { font-family: 'Josefin Sans', sans-serif; font-size: 1.05rem; font-weight: 600; color: var(--text); margin: 24px 0 10px; }
+p { margin: 10px 0; color: var(--text-2); }
+
+/* TLDR */
 .tldr {
-  background: linear-gradient(135deg, #1a2638 0%, #1a1f29 100%);
-  border: 1px solid var(--accent);
-  border-radius: 8px;
-  padding: 18px 20px;
-  margin: 20px 0;
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
 }
-.tldr strong { color: var(--accent); }
+.tldr::before {
+  content: ""; position: absolute; inset: 0 auto 0 0;
+  width: 4px; background: linear-gradient(180deg, var(--primary), var(--accent));
+}
+.tldr p { margin: 0; color: var(--text-2); font-size: 1.02rem; line-height: 1.75; }
+.tldr strong { color: var(--primary); font-weight: 600; }
+
+/* KPI */
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
-  margin: 16px 0;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
+  margin: 22px 0;
 }
 .kpi {
-  background: var(--card);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 14px;
-  text-align: center;
+  border-radius: var(--radius);
+  padding: 18px 18px 16px;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
 }
-.kpi-label { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 4px; }
-.kpi-value { font-size: 1.5rem; font-weight: 700; }
-.kpi .period { font-size: 0.75rem; color: var(--text-dim); }
-figure { margin: 20px 0 28px; background: #f8f9fa; border-radius: 8px; padding: 12px; }
-figure img { width: 100%; height: auto; display: block; border-radius: 4px; }
-figcaption { margin-top: 8px; font-size: 0.85rem; color: #555; text-align: center; }
-table { width: 100%; border-collapse: collapse; margin: 14px 0 22px; font-size: 0.9rem; }
-th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
-th { background: var(--card); font-weight: 600; color: var(--text-dim); }
-td.num { font-variant-numeric: tabular-nums; }
+.kpi:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--primary-soft); }
+.kpi-label { font-size: 0.78rem; color: var(--muted); font-weight: 500; letter-spacing: 0.3px; text-transform: uppercase; margin-bottom: 8px; }
+.kpi-value {
+  font-family: 'Cinzel', 'Songti SC', Georgia, serif;
+  font-size: 1.85rem; font-weight: 700;
+  font-variant-numeric: tabular-nums; color: var(--text);
+  line-height: 1.1; margin-bottom: 4px;
+}
+.kpi-value.up { color: var(--up); }
+.kpi-value.down { color: var(--down); }
+.kpi-value.warn { color: var(--warn); }
+.kpi-period { font-size: 0.78rem; color: var(--muted-2); }
+
+/* Figure */
+figure {
+  margin: 18px 0 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition);
+}
+figure:hover { box-shadow: var(--shadow-md); }
+figure img { width: 100%; height: auto; display: block; border-radius: var(--radius-sm); background: white; }
+figcaption { margin-top: 10px; font-size: 0.88rem; color: var(--muted); text-align: center; }
+
+/* Table */
+.table-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  margin: 16px 0 22px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border-soft); }
+th { background: var(--surface-2); font-weight: 600; color: var(--text); font-size: 0.82rem; letter-spacing: 0.3px; text-transform: uppercase; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr { transition: background var(--transition); }
+tbody tr:hover { background: var(--surface-2); }
+td.num {
+  font-variant-numeric: tabular-nums;
+  font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  font-size: 0.88rem;
+}
 .up { color: var(--up); font-weight: 600; }
 .down { color: var(--down); font-weight: 600; }
 .warn { color: var(--warn); font-weight: 600; }
-.dim { color: var(--text-dim); }
+.dim { color: var(--muted); }
+
+/* Tag */
 .tag {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  margin-right: 4px;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 100px;
+  font-size: 0.78rem; font-weight: 600;
+  margin: 2px 4px 2px 0;
+  border: 1px solid transparent; white-space: nowrap;
 }
-.tag-up { background: rgba(67, 170, 139, 0.2); color: var(--up); }
-.tag-down { background: rgba(230, 57, 70, 0.2); color: var(--down); }
-.tag-warn { background: rgba(244, 162, 97, 0.2); color: var(--warn); }
-.tag-flat { background: rgba(139, 149, 163, 0.2); color: var(--text-dim); }
-details {
-  background: var(--card);
+.tag-up { background: var(--up-soft); color: var(--up); border-color: var(--up); }
+.tag-down { background: var(--down-soft); color: var(--down); border-color: var(--down); }
+.tag-warn { background: var(--warn-soft); color: var(--warn); border-color: var(--warn); }
+.tag-flat { background: var(--surface-2); color: var(--muted); border-color: var(--border); }
+
+/* Signal */
+.signal-block {
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  margin: 14px 0;
-  padding: 10px 14px;
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+}
+.signal-block h3 { margin: 0 0 10px; padding-bottom: 8px; border-bottom: 1px dashed var(--border); font-size: 0.98rem; }
+
+/* Details */
+details {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 16px 0;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
 }
 summary {
-  cursor: pointer;
-  font-weight: 600;
-  color: var(--accent);
+  cursor: pointer; font-weight: 600; color: var(--primary);
+  padding: 14px 18px; background: var(--surface-2);
+  list-style: none; display: flex; align-items: center; gap: 8px;
+  user-select: none; transition: background var(--transition);
 }
+summary::-webkit-details-marker { display: none; }
+summary::before {
+  content: "+";
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px;
+  background: var(--primary); color: white;
+  border-radius: 50%;
+  font-size: 0.85rem; font-weight: 700; line-height: 1;
+  transition: transform var(--transition);
+}
+details[open] summary::before { content: "−"; }
+summary:hover { background: var(--border-soft); }
+details > *:not(summary) { padding: 16px 18px; }
+details table { margin: 0; }
+details figure { margin: 0; box-shadow: none; border: none; padding: 0; }
+
+/* Footer */
 footer {
-  margin-top: 60px;
-  padding-top: 20px;
+  margin-top: 64px;
+  padding: 28px 0 8px;
   border-top: 1px solid var(--border);
-  color: var(--text-dim);
-  font-size: 0.85rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+  text-align: center;
 }
-a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
-@media (max-width: 600px) {
-  h1 { font-size: 1.4rem; }
-  table { font-size: 0.82rem; }
-  th, td { padding: 6px 6px; }
+footer p { margin: 6px 0; color: var(--muted); }
+
+/* Links */
+a { color: var(--primary); text-decoration: none; font-weight: 500; transition: color var(--transition); }
+a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+
+/* Conclusion */
+.conclusion {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin: 18px 0;
+  box-shadow: var(--shadow-sm);
+}
+.conclusion strong { color: var(--accent); }
+
+/* Responsive */
+@media (max-width: 720px) {
+  .container { padding: 0 16px 60px; }
+  .hero { padding: 36px 0 28px; margin-bottom: 28px; }
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.25rem; }
+  .hero-subtitle { font-size: 0.98rem; }
+  .hero-meta { font-size: 0.85rem; }
+  .hero-meta .sep { margin: 0 6px; }
+  .tldr { padding: 18px 20px; }
+  .tldr p { font-size: 0.96rem; }
+  .kpi { padding: 14px 14px 12px; }
+  .kpi-value { font-size: 1.55rem; }
+  table { font-size: 0.84rem; }
+  th, td { padding: 9px 8px; }
+  td.num { font-size: 0.82rem; }
+  .signal-block { padding: 14px 16px; }
 }
 </style>
 </head>
 <body>
 <div class="container">
 
-<header>
+<header class="hero">
+  <div class="hero-eyebrow"><span class="dot" aria-hidden="true"></span>5 期对比 · 持续更新</div>
   <h1>福田二手成交分析</h1>
-  <p class="subtitle">2026 年 3 月上 → 5 月上（5 个半月期）</p>
-  <p class="meta">数据来源：行舟深房笔记 · 共 749 笔成交（608 笔含谈价率）· 更新于 2026-06-03</p>
+  <p class="hero-subtitle">深圳福田区二手房 5 期数据多维度对比 · 2026-03 ~ 2026-05</p>
+  <p class="hero-meta">
+    <span>749 笔成交</span><span class="sep">·</span>
+    <span>608 笔含谈价率</span><span class="sep">·</span>
+    <span>数据源：行舟深房笔记</span><span class="sep">·</span>
+    <span>更新于 2026-06-03</span>
+  </p>
 </header>
 
 <section>
-  <h2>📌 一句话总结</h2>
+  <h2><span class="h2-icon" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+  </span>一句话总结</h2>
   <div class="tldr">
     <p><strong>福田过去 5 期市场总体平稳。</strong>成交量 4 月达高峰（184 + 179 笔）后 5 月回落到 128 笔；同小区同户型在 ±3% 内震荡，没有持续单边方向。<strong>低总价段（≤200 万）的砍价深度依然显著高于其他段</strong>（大跌占比 15.9% vs 1-7%）。<strong>香蜜湖均价"急涨"</strong>是 4-5 月豪宅扎堆造成的品种偏移，<strong>不是真实房价信号</strong>。</p>
   </div>
 </section>
 
 <section>
-  <h2>📊 5 期成交量 + 大跌占比</h2>
+  <h2><span class="h2-icon" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+  </span>成交量 + 大跌占比</h2>
+
   <figure>
-    <img src="trend_volume_bigdrop.png" alt="成交量与大跌占比">
+    <img src="trend_volume_bigdrop.png" alt="5 期成交量与大跌占比对比图：4 月双高、5 月回落；大跌占比 4 月下最低 2.8%">
     <figcaption>4 月下成交活跃（179 笔）同时大跌占比最低（2.8%），是这 5 期最"理性"的一期。</figcaption>
   </figure>
 
   <div class="kpi-grid">
-    <div class="kpi"><div class="kpi-label">总成交</div><div class="kpi-value">749</div><div class="period">5 期合计</div></div>
-    <div class="kpi"><div class="kpi-label">4 月上 笔数</div><div class="kpi-value">184</div><div class="period">高峰</div></div>
-    <div class="kpi"><div class="kpi-label">5 月上 笔数</div><div class="kpi-value">128</div><div class="period">回落</div></div>
-    <div class="kpi"><div class="kpi-label">最大跌幅</div><div class="kpi-value down">-86%</div><div class="period">安拉公馆 3 月下</div></div>
-    <div class="kpi"><div class="kpi-label">≤200 万大跌占比</div><div class="kpi-value warn">15.9%</div><div class="period">vs 其他段 1-7%</div></div>
+    <div class="kpi">
+      <div class="kpi-label">总成交</div>
+      <div class="kpi-value">749</div>
+      <div class="kpi-period">5 期合计</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">4 月上 笔数</div>
+      <div class="kpi-value up">184</div>
+      <div class="kpi-period">5 期高峰</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">5 月上 笔数</div>
+      <div class="kpi-value down">128</div>
+      <div class="kpi-period">回落 31%</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">最大跌幅</div>
+      <div class="kpi-value down">-86%</div>
+      <div class="kpi-period">安拉公馆 3 月下</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">≤200 万大跌占比</div>
+      <div class="kpi-value warn">15.9%</div>
+      <div class="kpi-period">vs 其他段 1-7%</div>
+    </div>
   </div>
 </section>
 
 <section>
-  <h2>📈 核心片区 5 期均价走势</h2>
+  <h2><span class="h2-icon" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+  </span>核心片区 5 期均价走势</h2>
+
   <figure>
-    <img src="trend_core_areas_avg.png" alt="核心片区均价走势">
+    <img src="trend_core_areas_avg.png" alt="13 个核心片区在 5 期内的平均成交单价走势折线图">
     <figcaption>13 个核心片区（≥3 期 ≥5 笔）的平均成交单价走势。</figcaption>
   </figure>
 
   <h3>关键观察</h3>
-  <table>
-    <thead><tr><th>片区</th><th>走势</th><th>解读</th></tr></thead>
-    <tbody>
-      <tr><td>香蜜湖</td><td class="num up">9.66 → 12.61 → 14.00</td><td><span class="tag tag-warn">⚠️ 品种偏移</span>4-5 月豪宅扎堆（熙园 26 万/m²、水樾花都 16.8 万/m²），不是真涨</td></tr>
-      <tr><td>福田中心</td><td class="num">7.4 → 5.4 → 6.5 → 6.7</td><td>3 月下高点后剧烈震荡</td></tr>
-      <tr><td>百花</td><td class="num">9.0 → 8.2 → 9.3</td><td>4 月下小坑后回升</td></tr>
-      <tr><td>梅林 / 石厦 / 景田 / 莲花</td><td class="num dim">5 ~ 6</td><td>窄幅震荡（稳）</td></tr>
-      <tr><td>八卦岭</td><td class="num dim">3.7 ~ 4.4</td><td>全程最便宜也最稳</td></tr>
-    </tbody>
-  </table>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>片区</th><th>走势</th><th>解读</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>香蜜湖</strong></td>
+          <td class="num up">9.66 → 12.61 → 14.00</td>
+          <td><span class="tag tag-warn">品种偏移</span>4-5 月豪宅扎堆（熙园 26 万/m²、水樾花都 16.8 万/m²），<strong>不是真涨</strong></td>
+        </tr>
+        <tr>
+          <td>福田中心</td>
+          <td class="num">7.4 → 5.4 → 6.5 → 6.7</td>
+          <td>3 月下高点后剧烈震荡</td>
+        </tr>
+        <tr>
+          <td>百花</td>
+          <td class="num">9.0 → 8.2 → 9.3</td>
+          <td>4 月下小坑后回升</td>
+        </tr>
+        <tr>
+          <td>梅林 / 石厦 / 景田 / 莲花</td>
+          <td class="num dim">5 ~ 6</td>
+          <td>窄幅震荡（稳）</td>
+        </tr>
+        <tr>
+          <td>八卦岭</td>
+          <td class="num dim">3.7 ~ 4.4</td>
+          <td>全程最便宜也最稳</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </section>
 
 <section>
-  <h2>🎯 同小区同户型 真实变化</h2>
+  <h2><span class="h2-icon" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+  </span>同小区同户型 真实变化</h2>
+
   <figure>
-    <img src="trend_same_unit_change.png" alt="同小区同户型相邻期变化">
+    <img src="trend_same_unit_change.png" alt="同小区同户型相邻期变化柱状图：剔除品种偏移后的真实信号">
     <figcaption>剔除品种偏移后的真实信号：只看同一小区+同一户型在两期都有成交、且每期 ≥2 笔的高可信对子。</figcaption>
   </figure>
 
-  <table>
-    <thead><tr><th>区间</th><th>对子数</th><th>变化%</th><th>说明</th></tr></thead>
-    <tbody>
-      <tr><td>3 下 vs 3 上</td><td class="num">1</td><td class="num up">+9.37%</td><td class="dim">样本太少，噪音</td></tr>
-      <tr><td>4 上 vs 3 下</td><td class="num">2</td><td class="num down">-6.63%</td><td>小幅回调</td></tr>
-      <tr><td><strong>4 下 vs 4 上</strong></td><td class="num"><strong>6</strong></td><td class="num down"><strong>-2.67%</strong></td><td><strong>样本最厚，最可信</strong></td></tr>
-      <tr><td>5 上 vs 4 下</td><td class="num">3</td><td class="num up">+2.56%</td><td>反弹微涨</td></tr>
-    </tbody>
-  </table>
-  <p>真实市场节奏：<strong>在 ±3% 范围内震荡</strong>，没有持续单边方向。</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>区间</th><th>对子数</th><th>变化%</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>3 下 vs 3 上</td><td class="num">1</td><td class="num up">+9.37%</td><td class="dim">样本太少，噪音</td></tr>
+        <tr><td>4 上 vs 3 下</td><td class="num">2</td><td class="num down">-6.63%</td><td>小幅回调</td></tr>
+        <tr style="background: var(--surface-2);">
+          <td><strong>4 下 vs 4 上</strong></td>
+          <td class="num"><strong>6</strong></td>
+          <td class="num down"><strong>-2.67%</strong></td>
+          <td><strong>样本最厚，最可信</strong></td>
+        </tr>
+        <tr><td>5 上 vs 4 下</td><td class="num">3</td><td class="num up">+2.56%</td><td>反弹微涨</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="conclusion">
+    <p>真实市场节奏：<strong>在 ±3% 范围内震荡</strong>，没有持续单边方向。</p>
+  </div>
 </section>
 
 <section>
-  <h2>💰 假设检验：低总价段砍价更狠</h2>
+  <h2><span class="h2-icon" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+  </span>假设检验：低总价段砍价更狠</h2>
+
   <p>用户假设：「总价越低 → 砍价幅度越大」。基于 608 笔含谈价率数据：</p>
 
-  <table>
-    <thead><tr><th>总价桶</th><th>笔数</th><th>平均谈价率</th><th>大跌占比 (≤-20%)</th></tr></thead>
-    <tbody>
-      <tr><td><strong>≤200 万</strong></td><td class="num">124</td><td class="num down">-11.56%</td><td class="num warn"><strong>15.9% 🔥</strong></td></tr>
-      <tr><td>200-400 万</td><td class="num">258</td><td class="num">-9.52%</td><td class="num">6.6%</td></tr>
-      <tr><td>400-500 万</td><td class="num">99</td><td class="num">-7.99%</td><td class="num">1.3%</td></tr>
-      <tr><td>500-700 万</td><td class="num">135</td><td class="num">-9.22%</td><td class="num">2.8%</td></tr>
-      <tr><td>700-1000 万</td><td class="num">78</td><td class="num">-8.56%</td><td class="num">3.4%</td></tr>
-      <tr><td>&gt;1000 万</td><td class="num">58</td><td class="num">-8.24%</td><td class="num">7.1%</td></tr>
-    </tbody>
-  </table>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>总价桶</th><th>笔数</th><th>平均谈价率</th><th>大跌占比 (≤-20%)</th></tr>
+      </thead>
+      <tbody>
+        <tr style="background: var(--surface-2);">
+          <td><strong>≤200 万</strong></td>
+          <td class="num">124</td>
+          <td class="num down">-11.56%</td>
+          <td class="num warn"><strong>15.9%</strong></td>
+        </tr>
+        <tr><td>200-400 万</td><td class="num">258</td><td class="num">-9.52%</td><td class="num">6.6%</td></tr>
+        <tr><td>400-500 万</td><td class="num">99</td><td class="num">-7.99%</td><td class="num">1.3%</td></tr>
+        <tr><td>500-700 万</td><td class="num">135</td><td class="num">-9.22%</td><td class="num">2.8%</td></tr>
+        <tr><td>700-1000 万</td><td class="num">78</td><td class="num">-8.56%</td><td class="num">3.4%</td></tr>
+        <tr><td>&gt;1000 万</td><td class="num">58</td><td class="num">-8.24%</td><td class="num">7.1%</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <p>
-    <strong>结论：</strong>
-    Pearson r = <span class="num">0.035</span> (p=0.39) <span class="dim">线性相关不显著</span> ❌；
-    Spearman ρ = <span class="num up">0.139</span> (p=0.0006) <span class="up">秩相关显著</span> ✅。
-    意思是：<strong>≤200 万 段砍价幅度依然最狠（15.9% vs 其他段 1-7%）</strong>，但桶间不是严格线性递增——大概率因为高总价段（&gt;1000 万）也出现零星大砍价。
-  </p>
+  <div class="conclusion">
+    <p>
+      Pearson r = <strong>0.035</strong> (p=0.39) <span class="dim">线性相关不显著</span>；
+      Spearman ρ = <strong class="up">0.139</strong> (p=0.0006) <span class="up">秩相关显著</span>。
+    </p>
+    <p>意思是：<strong>≤200 万 段砍价幅度依然最狠（15.9% vs 其他段 1-7%）</strong>，但桶间不是严格线性递增——大概率因为高总价段（&gt;1000 万）也出现零星大砍价。</p>
+  </div>
 </section>
 
 <section>
-  <h2>🔍 各期真信号摘要</h2>
+  <h2><span class="h2-icon" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  </span>各期真信号摘要</h2>
 
-  <h3>2026-04 上 vs 2026-03 下</h3>
-  <p><span class="tag tag-down">📉 梅林</span>-9.54%（强信号）<span class="tag tag-down">📉 福田中心</span>-27.27%<span class="tag tag-down">📉 香蜜湖</span>-8.64%<span class="tag tag-up">📈 景田</span>+4.68%</p>
+  <div class="signal-block">
+    <h3>2026-04 上 vs 2026-03 下</h3>
+    <p>
+      <span class="tag tag-down">梅林 -9.54% 强</span>
+      <span class="tag tag-down">福田中心 -27.27%</span>
+      <span class="tag tag-down">香蜜湖 -8.64%</span>
+      <span class="tag tag-up">景田 +4.68%</span>
+    </p>
+  </div>
 
-  <h3>2026-04 下 vs 2026-04 上</h3>
-  <p><span class="tag tag-down">📉 八卦岭</span>-10.41%<span class="tag tag-down">📉 景田</span>-10.22%<span class="tag tag-down">📉 百花</span>-14.36%<span class="tag tag-up">📈 梅林</span>+7.34%<span class="tag tag-up">📈 华强北</span>+5.65%<span class="tag tag-up">📈 福田中心</span>+19.76%</p>
+  <div class="signal-block">
+    <h3>2026-04 下 vs 2026-04 上</h3>
+    <p>
+      <span class="tag tag-down">八卦岭 -10.41%</span>
+      <span class="tag tag-down">景田 -10.22%</span>
+      <span class="tag tag-down">百花 -14.36%</span>
+      <span class="tag tag-up">梅林 +7.34%</span>
+      <span class="tag tag-up">华强北 +5.65%</span>
+      <span class="tag tag-up">福田中心 +19.76%</span>
+    </p>
+  </div>
 
-  <h3>2026-05 上 vs 2026-04 下</h3>
-  <p><span class="tag tag-down">📉 石厦</span>-17.54%（首次出现）<span class="tag tag-down">📉 华强北</span>-13.63%<span class="tag tag-up">📈 景田</span>+16.26%<span class="tag tag-up">📈 香蜜湖</span>+11.07%</p>
+  <div class="signal-block">
+    <h3>2026-05 上 vs 2026-04 下</h3>
+    <p>
+      <span class="tag tag-down">石厦 -17.54% 首次</span>
+      <span class="tag tag-down">华强北 -13.63%</span>
+      <span class="tag tag-up">景田 +16.26%</span>
+      <span class="tag tag-up">香蜜湖 +11.07%</span>
+    </p>
+  </div>
 </section>
 
 <details>
-<summary>📋 5 期成交量与含谈价率详情</summary>
-<table>
-  <thead><tr><th>期次</th><th>总笔数</th><th>含谈价率</th><th>大跌 (≤-20%)</th><th>最大跌幅</th></tr></thead>
-  <tbody>
-    <tr><td>2026-03 上</td><td class="num">132</td><td class="num">125</td><td class="num">15</td><td class="num down">-30.00% 鹏盛花园</td></tr>
-    <tr><td>2026-03 下</td><td class="num">129</td><td class="num">101</td><td class="num">5</td><td class="num down">-86.05% 安拉公馆</td></tr>
-    <tr><td>2026-04 上</td><td class="num">184</td><td class="num">120</td><td class="num">11</td><td class="num down">-50.83% 新世界四季山水</td></tr>
-    <tr><td>2026-04 下</td><td class="num">179</td><td class="num">142</td><td class="num">4</td><td class="num down">-36.45% 鹏盛村</td></tr>
-    <tr><td>2026-05 上</td><td class="num">128</td><td class="num">120</td><td class="num">6</td><td class="num down">-30.40% 帝港海湾豪庭</td></tr>
-  </tbody>
-</table>
+<summary>5 期成交量与含谈价率详情</summary>
+<div class="table-wrap" style="margin:0; border:none; box-shadow:none;">
+  <table>
+    <thead>
+      <tr><th>期次</th><th>总笔数</th><th>含谈价率</th><th>大跌 (≤-20%)</th><th>最大跌幅</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>2026-03 上</td><td class="num">132</td><td class="num">125</td><td class="num">15</td><td class="num down">-30.00% 鹏盛花园</td></tr>
+      <tr><td>2026-03 下</td><td class="num">129</td><td class="num">101</td><td class="num">5</td><td class="num down">-86.05% 安拉公馆</td></tr>
+      <tr><td>2026-04 上</td><td class="num">184</td><td class="num">120</td><td class="num">11</td><td class="num down">-50.83% 新世界四季山水</td></tr>
+      <tr><td>2026-04 下</td><td class="num">179</td><td class="num">142</td><td class="num">4</td><td class="num down">-36.45% 鹏盛村</td></tr>
+      <tr><td>2026-05 上</td><td class="num">128</td><td class="num">120</td><td class="num">6</td><td class="num down">-30.40% 帝港海湾豪庭</td></tr>
+    </tbody>
+  </table>
+</div>
 </details>
 
 <details>
-<summary>📊 中位单价走势（更抗豪宅扰动）</summary>
-<figure>
-  <img src="trend_core_areas_median.png" alt="中位单价走势">
+<summary>中位单价走势（更抗豪宅扰动）</summary>
+<figure style="margin:0; box-shadow:none; border:none; padding:0;">
+  <img src="trend_core_areas_median.png" alt="13 个核心片区在 5 期内的中位成交单价走势折线图">
 </figure>
 </details>
 
 <footer>
-  <p>数据来源：<a href="https://mp.weixin.qq.com/" target="_blank" rel="noopener">行舟深房笔记</a>（微信公众号）· 手动转录</p>
-  <p>分析工具：Python + pandas + scipy + matplotlib</p>
+  <p>数据来源：<strong>行舟深房笔记</strong>（微信公众号）· 手动转录</p>
+  <p>分析：Python + pandas + scipy + matplotlib</p>
   <p>源码：<a href="https://github.com/spade69/realestate-analysis" target="_blank" rel="noopener">github.com/spade69/realestate-analysis</a></p>
 </footer>
 
