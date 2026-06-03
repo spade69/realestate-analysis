@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Josefin+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js" defer></script>
 <style>
 :root {
   --bg: #F0FDFA;
@@ -190,6 +191,25 @@ figure:hover { box-shadow: var(--shadow-md); }
 figure img { width: 100%; height: auto; display: block; border-radius: var(--radius-sm); background: white; }
 figcaption { margin-top: 10px; font-size: 0.88rem; color: var(--muted); text-align: center; }
 
+/* Chart containers */
+.chart {
+  width: 100%;
+  height: 380px;
+  border-radius: var(--radius-sm);
+}
+.chart-tall { height: 420px; }
+.chart-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+@media (max-width: 720px) {
+  .chart { height: 320px; }
+  .chart-tall { height: 360px; }
+}
+
 /* Table */
 .table-wrap {
   border: 1px solid var(--border);
@@ -348,7 +368,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
   </span>成交量 + 大跌占比</h2>
 
   <figure>
-    <img src="trend_volume_bigdrop.png" alt="5 期成交量与大跌占比对比图：4 月双高、5 月回落；大跌占比 4 月下最低 2.8%">
+    <div id="chart-volume" class="chart" role="img" aria-label="5 期成交量与大跌占比图表"><div class="chart-loading">图表加载中…</div></div>
     <figcaption>4 月下成交活跃（179 笔）同时大跌占比最低（2.8%），是这 5 期最"理性"的一期。</figcaption>
   </figure>
 
@@ -387,8 +407,8 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
   </span>核心片区 5 期均价走势</h2>
 
   <figure>
-    <img src="trend_core_areas_avg.png" alt="13 个核心片区在 5 期内的平均成交单价走势折线图">
-    <figcaption>13 个核心片区（≥3 期 ≥5 笔）的平均成交单价走势。</figcaption>
+    <div id="chart-area-avg" class="chart chart-tall" role="img" aria-label="13 个核心片区 5 期均价走势折线图"><div class="chart-loading">图表加载中…</div></div>
+    <figcaption>13 个核心片区（≥3 期 ≥5 笔）的平均成交单价走势 · 点击图例切换显示</figcaption>
   </figure>
 
   <h3>关键观察</h3>
@@ -434,8 +454,8 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
   </span>同小区同户型 真实变化</h2>
 
   <figure>
-    <img src="trend_same_unit_change.png" alt="同小区同户型相邻期变化柱状图：剔除品种偏移后的真实信号">
-    <figcaption>剔除品种偏移后的真实信号：只看同一小区+同一户型在两期都有成交、且每期 ≥2 笔的高可信对子。</figcaption>
+    <div id="chart-same-unit" class="chart" role="img" aria-label="同小区同户型相邻期变化柱状图"><div class="chart-loading">图表加载中…</div></div>
+    <figcaption>剔除品种偏移后的真实信号 · 仅看同一小区+同户型两期都 ≥2 笔的高可信对子</figcaption>
   </figure>
 
   <div class="table-wrap">
@@ -555,11 +575,9 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
 </div>
 </details>
 
-<details>
+<details id="details-median">
 <summary>中位单价走势（更抗豪宅扰动）</summary>
-<figure style="margin:0; box-shadow:none; border:none; padding:0;">
-  <img src="trend_core_areas_median.png" alt="13 个核心片区在 5 期内的中位成交单价走势折线图">
-</figure>
+<div id="chart-area-median" class="chart chart-tall" role="img" aria-label="13 个核心片区 5 期中位单价走势折线图"><div class="chart-loading">展开后渲染…</div></div>
 </details>
 
 <footer>
@@ -569,5 +587,280 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
 </footer>
 
 </div>
+
+<script>
+(function () {
+  'use strict';
+  // 调色：核心片区 13 色，对比清晰且兼容深色模式
+  const PALETTE = [
+    '#0F766E', '#0EA5E9', '#7C3AED', '#DB2777', '#F97316',
+    '#65A30D', '#0891B2', '#EAB308', '#9333EA', '#DC2626',
+    '#10B981', '#3B82F6', '#14B8A6'
+  ];
+
+  function isDark() {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
+  function cssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function commonAxis(textColor, lineColor) {
+    return {
+      axisLabel: { color: textColor, fontFamily: 'Josefin Sans, sans-serif', fontSize: 12 },
+      axisLine: { lineStyle: { color: lineColor } },
+      axisTick: { lineStyle: { color: lineColor } },
+      splitLine: { lineStyle: { color: lineColor, type: 'dashed', opacity: 0.4 } },
+    };
+  }
+
+  function tooltipStyle(textColor, bgColor, borderColor) {
+    return {
+      trigger: 'axis',
+      backgroundColor: bgColor,
+      borderColor: borderColor,
+      borderWidth: 1,
+      padding: [8, 12],
+      textStyle: { color: textColor, fontFamily: 'Josefin Sans, sans-serif', fontSize: 12 },
+      extraCssText: 'box-shadow: 0 6px 14px rgba(0,0,0,0.18); border-radius: 8px;',
+    };
+  }
+
+  function chartTheme() {
+    const dark = isDark();
+    return {
+      text: dark ? '#CBD5E1' : '#1F2937',
+      muted: dark ? '#94A3B8' : '#64748B',
+      line: dark ? '#1E4A43' : '#D1FAE5',
+      surface: dark ? '#122E2A' : '#FFFFFF',
+      surface2: dark ? '#0F2A26' : '#ECFEF7',
+      border: dark ? '#1E4A43' : '#99F6E4',
+      primary: dark ? '#14B8A6' : '#0F766E',
+      accent: dark ? '#38BDF8' : '#0369A1',
+      up: dark ? '#34D399' : '#047857',
+      down: dark ? '#F87171' : '#B91C1C',
+      warn: dark ? '#FBBF24' : '#B45309',
+    };
+  }
+
+  let DATA = null;
+  const charts = {};
+
+  function clearLoading(el) {
+    const loading = el.querySelector('.chart-loading');
+    if (loading) loading.remove();
+  }
+
+  function renderVolume(el) {
+    const t = chartTheme();
+    const c = echarts.init(el);
+    charts.volume = c;
+    c.setOption({
+      grid: { left: 50, right: 60, top: 40, bottom: 50 },
+      tooltip: Object.assign(tooltipStyle(t.text, t.surface, t.border), { axisPointer: { type: 'shadow' } }),
+      legend: {
+        data: ['成交笔数', '大跌占比 (≤-20%)'],
+        textStyle: { color: t.text, fontFamily: 'Josefin Sans, sans-serif' },
+        top: 8, icon: 'roundRect',
+      },
+      xAxis: Object.assign({ type: 'category', data: DATA.periods }, commonAxis(t.text, t.line)),
+      yAxis: [
+        Object.assign({
+          type: 'value', name: '笔数', position: 'left',
+          nameTextStyle: { color: t.muted, fontFamily: 'Josefin Sans, sans-serif' },
+        }, commonAxis(t.text, t.line)),
+        Object.assign({
+          type: 'value', name: '大跌%', position: 'right', min: 0, max: 16,
+          nameTextStyle: { color: t.muted, fontFamily: 'Josefin Sans, sans-serif' },
+          axisLabel: { color: t.text, fontFamily: 'Josefin Sans, sans-serif', fontSize: 12, formatter: '{value}%' },
+          axisLine: { lineStyle: { color: t.line } },
+          axisTick: { lineStyle: { color: t.line } },
+          splitLine: { show: false },
+        }, {}),
+      ],
+      series: [
+        {
+          name: '成交笔数', type: 'bar', data: DATA.volume,
+          itemStyle: { color: t.primary, borderRadius: [6, 6, 0, 0] },
+          barWidth: '40%',
+          label: { show: true, position: 'top', color: t.text, fontFamily: 'JetBrains Mono, monospace', fontSize: 11 },
+        },
+        {
+          name: '大跌占比 (≤-20%)', type: 'line', yAxisIndex: 1,
+          data: DATA.big_drop_rate,
+          smooth: true, symbol: 'circle', symbolSize: 9,
+          itemStyle: { color: t.down },
+          lineStyle: { width: 3, color: t.down },
+          label: { show: true, color: t.down, fontFamily: 'JetBrains Mono, monospace', fontSize: 11, formatter: (p) => p.value + '%' },
+        },
+      ],
+    });
+  }
+
+  function renderAreaLine(el, series, instanceKey) {
+    const t = chartTheme();
+    const c = echarts.init(el);
+    charts[instanceKey] = c;
+    c.setOption({
+      color: PALETTE,
+      grid: { left: 50, right: 100, top: 40, bottom: 60 },
+      tooltip: Object.assign(tooltipStyle(t.text, t.surface, t.border), {
+        axisPointer: { type: 'cross', lineStyle: { color: t.muted, opacity: 0.4 } },
+        valueFormatter: (v) => (v == null ? '—' : v.toFixed(2) + ' 万/m²'),
+      }),
+      legend: {
+        data: series.map((s) => s.name),
+        type: 'scroll',
+        bottom: 6, icon: 'roundRect',
+        textStyle: { color: t.text, fontFamily: 'Josefin Sans, sans-serif', fontSize: 11 },
+        pageTextStyle: { color: t.muted },
+      },
+      xAxis: Object.assign({ type: 'category', data: DATA.periods, boundaryGap: false }, commonAxis(t.text, t.line)),
+      yAxis: Object.assign({ type: 'value', name: '万/m²', nameTextStyle: { color: t.muted, fontFamily: 'Josefin Sans, sans-serif' } }, commonAxis(t.text, t.line)),
+      series: series.map((s) => ({
+        name: s.name,
+        type: 'line',
+        smooth: true,
+        connectNulls: true,
+        symbol: 'circle',
+        symbolSize: 7,
+        emphasis: { focus: 'series', lineStyle: { width: 3 } },
+        endLabel: {
+          show: true, formatter: '{a}', color: 'inherit',
+          fontFamily: 'Josefin Sans, sans-serif', fontSize: 11,
+        },
+        lineStyle: { width: 2 },
+        data: s.data,
+      })),
+    });
+  }
+
+  function renderSameUnit(el) {
+    const t = chartTheme();
+    const c = echarts.init(el);
+    charts.sameUnit = c;
+    const items = DATA.same_unit;
+    c.setOption({
+      grid: { left: 60, right: 30, top: 30, bottom: 70 },
+      tooltip: Object.assign(tooltipStyle(t.text, t.surface, t.border), {
+        formatter: (p) => {
+          const item = items[p[0].dataIndex];
+          return `<b>${item.label}</b><br/>变化 <b>${item.value > 0 ? '+' : ''}${item.value}%</b> · ${item.n} 对`;
+        },
+      }),
+      xAxis: Object.assign({
+        type: 'category',
+        data: items.map((i) => i.label.replace(' vs ', '\nvs ')),
+        axisLabel: { color: t.text, fontFamily: 'Josefin Sans, sans-serif', fontSize: 11, interval: 0, lineHeight: 16 },
+      }, { axisLine: { lineStyle: { color: t.line } }, axisTick: { show: false } }),
+      yAxis: Object.assign({
+        type: 'value', name: '变化 %', max: 12, min: -10,
+        nameTextStyle: { color: t.muted, fontFamily: 'Josefin Sans, sans-serif' },
+        axisLabel: { formatter: '{value}%' },
+      }, commonAxis(t.text, t.line)),
+      series: [{
+        type: 'bar',
+        barWidth: '50%',
+        data: items.map((i) => ({
+          value: i.value,
+          itemStyle: {
+            color: i.value >= 0 ? t.up : t.down,
+            borderRadius: i.value >= 0 ? [8, 8, 0, 0] : [0, 0, 8, 8],
+          },
+        })),
+        label: {
+          show: true,
+          color: t.text,
+          fontFamily: 'JetBrains Mono, monospace',
+          fontSize: 12,
+          fontWeight: 'bold',
+          formatter: (p) => {
+            const item = items[p.dataIndex];
+            return (item.value >= 0 ? '+' : '') + item.value + '%\n(' + item.n + ' 对)';
+          },
+          position: (params) => params.value >= 0 ? 'top' : 'bottom',
+        },
+        markLine: {
+          silent: true, symbol: 'none',
+          lineStyle: { color: t.muted, type: 'solid', opacity: 0.4 },
+          data: [{ yAxis: 0 }],
+        },
+      }],
+    });
+  }
+
+  function bootstrap() {
+    if (typeof echarts === 'undefined') {
+      console.error('ECharts not loaded');
+      return;
+    }
+
+    fetch('chart_data.json')
+      .then((r) => r.json())
+      .then((data) => {
+        DATA = data;
+        const volEl = document.getElementById('chart-volume');
+        const avgEl = document.getElementById('chart-area-avg');
+        const suEl = document.getElementById('chart-same-unit');
+        if (volEl) { clearLoading(volEl); renderVolume(volEl); }
+        if (avgEl) { clearLoading(avgEl); renderAreaLine(avgEl, DATA.avg_series, 'avgLine'); }
+        if (suEl) { clearLoading(suEl); renderSameUnit(suEl); }
+
+        // 中位图：details 展开时再渲染（节省首屏开销）
+        const detEl = document.getElementById('details-median');
+        const medEl = document.getElementById('chart-area-median');
+        if (detEl && medEl) {
+          detEl.addEventListener('toggle', () => {
+            if (detEl.open && !charts.medLine) {
+              clearLoading(medEl);
+              renderAreaLine(medEl, DATA.median_series, 'medLine');
+            }
+          });
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to load chart data:', err);
+        document.querySelectorAll('.chart-loading').forEach((el) => {
+          el.textContent = '图表加载失败';
+          el.style.color = 'var(--down)';
+        });
+      });
+
+    // resize 响应
+    window.addEventListener('resize', () => {
+      Object.values(charts).forEach((c) => c && c.resize());
+    });
+
+    // 监听深浅模式切换（macOS / iOS / Android），重新渲染
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        Object.entries(charts).forEach(([k, c]) => {
+          if (!c) return;
+          c.dispose();
+          delete charts[k];
+        });
+        // 重新渲染已经存在的图表
+        const volEl = document.getElementById('chart-volume');
+        const avgEl = document.getElementById('chart-area-avg');
+        const suEl = document.getElementById('chart-same-unit');
+        if (volEl && DATA) renderVolume(volEl);
+        if (avgEl && DATA) renderAreaLine(avgEl, DATA.avg_series, 'avgLine');
+        if (suEl && DATA) renderSameUnit(suEl);
+        const detEl = document.getElementById('details-median');
+        if (detEl && detEl.open && DATA) {
+          renderAreaLine(document.getElementById('chart-area-median'), DATA.median_series, 'medLine');
+        }
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootstrap);
+  } else {
+    bootstrap();
+  }
+})();
+</script>
 </body>
 </html>
