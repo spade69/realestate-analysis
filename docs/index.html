@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<!--
+  ⚠️  此文件由 render_site.py 自动生成于 2026-06-03
+  ⚠️  请勿直接编辑 docs/index.html！修改请改 template/index.html，然后跑：
+         python3 render_site.py
+-->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -200,30 +205,39 @@ figcaption { margin-top: 10px; font-size: 0.88rem; color: var(--muted); text-ali
   width: 100%;
   height: 380px;
   border-radius: var(--radius-sm);
+  touch-action: pan-y;
 }
-.chart-tall { height: 420px; }
+.chart-tall { height: 440px; }
 .chart-loading {
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100%;
   color: var(--muted);
   font-size: 0.9rem;
 }
 @media (max-width: 720px) {
-  .chart { height: 320px; }
+  .chart { height: 300px; }
   .chart-tall { height: 360px; }
+  figure { padding: 10px; }
+  figcaption { font-size: 0.8rem; margin-top: 8px; }
+}
+@media (max-width: 420px) {
+  .chart { height: 280px; }
+  .chart-tall { height: 340px; }
 }
 
 /* Table */
 .table-wrap {
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   background: var(--surface);
   box-shadow: var(--shadow-sm);
   margin: 16px 0 22px;
 }
-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 100%; }
 th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border-soft); }
 th { background: var(--surface-2); font-weight: 600; color: var(--text); font-size: 0.82rem; letter-spacing: 0.3px; text-transform: uppercase; }
 tbody tr:last-child td { border-bottom: none; }
@@ -660,6 +674,14 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
     return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
+  function isMobile() {
+    return window.matchMedia && window.matchMedia('(max-width: 720px)').matches;
+  }
+
+  function isNarrowMobile() {
+    return window.matchMedia && window.matchMedia('(max-width: 420px)').matches;
+  }
+
   function commonAxis(textColor, lineColor) {
     return {
       axisLabel: { color: textColor, fontFamily: 'Josefin Sans, sans-serif', fontSize: 12 },
@@ -706,20 +728,31 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
     if (loading) loading.remove();
   }
 
+  function shortPeriod(p) {
+    // '2026-03上' → '3上'
+    const m = /\d{4}-(\d{2})([上下])/.exec(p);
+    return m ? `${parseInt(m[1], 10)}${m[2]}` : p;
+  }
+
   function renderVolume(el) {
     const t = chartTheme();
+    const mob = isMobile();
+    const narrow = isNarrowMobile();
     const c = echarts.init(el);
     charts.volume = c;
     c.setOption({
       animation: !prefersReducedMotion(),
-      grid: { left: 50, right: 60, top: 40, bottom: 50 },
+      grid: { left: mob ? 36 : 50, right: mob ? 42 : 60, top: 42, bottom: mob ? 36 : 50 },
       tooltip: Object.assign(tooltipStyle(t.text, t.surface, t.border), { axisPointer: { type: 'shadow' } }),
       legend: {
-        data: ['成交笔数', '大跌占比 (≤-20%)'],
-        textStyle: { color: t.text, fontFamily: 'Josefin Sans, sans-serif' },
-        top: 8, icon: 'roundRect',
+        data: narrow ? ['成交笔数', '大跌%'] : ['成交笔数', '大跌占比 (≤-20%)'],
+        textStyle: { color: t.text, fontFamily: 'Josefin Sans, sans-serif', fontSize: mob ? 10 : 12 },
+        top: 6, icon: 'roundRect', itemGap: mob ? 8 : 14,
       },
-      xAxis: Object.assign({ type: 'category', data: DATA.periods }, commonAxis(t.text, t.line)),
+      xAxis: Object.assign({
+        type: 'category',
+        data: mob ? DATA.periods.map(shortPeriod) : DATA.periods,
+      }, commonAxis(t.text, t.line)),
       yAxis: [
         Object.assign({
           type: 'value', name: '笔数', position: 'left',
@@ -741,16 +774,16 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
         {
           name: '成交笔数', type: 'bar', data: DATA.volume,
           itemStyle: { color: t.primary, borderRadius: [6, 6, 0, 0] },
-          barWidth: '40%',
-          label: { show: true, position: 'top', color: t.text, fontFamily: 'JetBrains Mono, monospace', fontSize: 11 },
+          barWidth: mob ? '55%' : '40%',
+          label: { show: true, position: 'top', color: t.text, fontFamily: 'JetBrains Mono, monospace', fontSize: mob ? 10 : 11 },
         },
         {
-          name: '大跌占比 (≤-20%)', type: 'line', yAxisIndex: 1,
+          name: narrow ? '大跌%' : '大跌占比 (≤-20%)', type: 'line', yAxisIndex: 1,
           data: DATA.big_drop_rate,
-          smooth: true, symbol: 'circle', symbolSize: 9,
+          smooth: true, symbol: 'circle', symbolSize: mob ? 8 : 9,
           itemStyle: { color: t.down },
-          lineStyle: { width: 3, color: t.down },
-          label: { show: true, color: t.down, fontFamily: 'JetBrains Mono, monospace', fontSize: 11, formatter: (p) => p.value + '%' },
+          lineStyle: { width: 2.5, color: t.down },
+          label: { show: true, color: t.down, fontFamily: 'JetBrains Mono, monospace', fontSize: mob ? 10 : 11, formatter: (p) => p.value + '%' },
         },
       ],
     });
@@ -758,38 +791,61 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
 
   function renderAreaLine(el, series, instanceKey) {
     const t = chartTheme();
+    const mob = isMobile();
     const c = echarts.init(el);
     charts[instanceKey] = c;
     c.setOption({
       animation: !prefersReducedMotion(),
       color: PALETTE,
-      grid: { left: 50, right: 100, top: 40, bottom: 60 },
+      // 手机上去掉右侧 endLabel 空间；底部留 legend 滚动空间
+      grid: {
+        left: mob ? 38 : 50,
+        right: mob ? 16 : 100,
+        top: mob ? 28 : 40,
+        bottom: mob ? 70 : 60,
+      },
       tooltip: Object.assign(tooltipStyle(t.text, t.surface, t.border), {
+        confine: true,  // 不超出图表边界（手机上避免被裁）
         axisPointer: { type: 'cross', lineStyle: { color: t.muted, opacity: 0.4 } },
         valueFormatter: (v) => (v == null ? '—' : v.toFixed(2) + ' 万/m²'),
       }),
       legend: {
         data: series.map((s) => s.name),
         type: 'scroll',
-        bottom: 6, icon: 'roundRect',
-        textStyle: { color: t.text, fontFamily: 'Josefin Sans, sans-serif', fontSize: 11 },
+        bottom: 4, icon: 'roundRect',
+        // 手机上 legend 紧凑 + 单行可滑
+        textStyle: { color: t.text, fontFamily: 'Josefin Sans, sans-serif', fontSize: mob ? 10 : 11 },
         pageTextStyle: { color: t.muted },
+        itemWidth: mob ? 14 : 25,
+        itemHeight: mob ? 8 : 14,
+        itemGap: mob ? 8 : 14,
       },
-      xAxis: Object.assign({ type: 'category', data: DATA.periods, boundaryGap: false }, commonAxis(t.text, t.line)),
-      yAxis: Object.assign({ type: 'value', name: '万/m²', nameTextStyle: { color: t.muted, fontFamily: 'Josefin Sans, sans-serif' } }, commonAxis(t.text, t.line)),
+      xAxis: Object.assign({
+        type: 'category',
+        data: mob ? DATA.periods.map(shortPeriod) : DATA.periods,
+        boundaryGap: false,
+      }, commonAxis(t.text, t.line)),
+      yAxis: Object.assign({
+        type: 'value',
+        name: mob ? '' : '万/m²',  // 手机上 y 轴名占地方，省掉
+        nameTextStyle: { color: t.muted, fontFamily: 'Josefin Sans, sans-serif' },
+      }, commonAxis(t.text, t.line)),
       series: series.map((s) => ({
         name: s.name,
         type: 'line',
         smooth: true,
         connectNulls: true,
         symbol: 'circle',
-        symbolSize: 7,
+        symbolSize: mob ? 5 : 7,
+        // 手机上 hit 区域加大，触摸友好
+        triggerLineEvent: true,
         emphasis: { focus: 'series', lineStyle: { width: 3 } },
         endLabel: {
-          show: true, formatter: '{a}', color: 'inherit',
+          show: !mob,
+          formatter: '{a}', color: 'inherit',
           fontFamily: 'Josefin Sans, sans-serif', fontSize: 11,
         },
-        lineStyle: { width: 2 },
+        lineStyle: { width: mob ? 1.8 : 2 },
         data: s.data,
       })),
     });
@@ -797,13 +853,17 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
 
   function renderSameUnit(el) {
     const t = chartTheme();
+    const mob = isMobile();
     const c = echarts.init(el);
     charts.sameUnit = c;
     const items = DATA.same_unit;
+    // 手机上缩短 label：'2026-04下 vs 2026-04上' → '4下→4上'
+    const shortLabel = (s) => s.replace(/2026-(\d{2})([上下])\s*vs\s*2026-(\d{2})([上下])/, (_, m1, t1, m2, t2) => `${parseInt(m2,10)}${t2}→${parseInt(m1,10)}${t1}`);
     c.setOption({
       animation: !prefersReducedMotion(),
-      grid: { left: 60, right: 30, top: 30, bottom: 70 },
+      grid: { left: mob ? 44 : 60, right: mob ? 12 : 30, top: 30, bottom: mob ? 50 : 70 },
       tooltip: Object.assign(tooltipStyle(t.text, t.surface, t.border), {
+        confine: true,
         formatter: (p) => {
           const item = items[p[0].dataIndex];
           return `<b>${item.label}</b><br/>变化 <b>${item.value > 0 ? '+' : ''}${item.value}%</b> · ${item.n} 对`;
@@ -811,8 +871,8 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
       }),
       xAxis: Object.assign({
         type: 'category',
-        data: items.map((i) => i.label.replace(' vs ', '\nvs ')),
-        axisLabel: { color: t.text, fontFamily: 'Josefin Sans, sans-serif', fontSize: 11, interval: 0, lineHeight: 16 },
+        data: items.map((i) => mob ? shortLabel(i.label) : i.label.replace(' vs ', '\nvs ')),
+        axisLabel: { color: t.text, fontFamily: 'Josefin Sans, sans-serif', fontSize: mob ? 10 : 11, interval: 0, lineHeight: 14 },
       }, { axisLine: { lineStyle: { color: t.line } }, axisTick: { show: false } }),
       yAxis: Object.assign({
         type: 'value', name: '变化 %',
@@ -824,7 +884,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
       }, commonAxis(t.text, t.line)),
       series: [{
         type: 'bar',
-        barWidth: '50%',
+        barWidth: mob ? '60%' : '50%',
         data: items.map((i) => ({
           value: i.value,
           itemStyle: {
@@ -836,7 +896,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
           show: true,
           color: t.text,
           fontFamily: 'JetBrains Mono, monospace',
-          fontSize: 12,
+          fontSize: mob ? 10 : 12,
           fontWeight: 'bold',
           formatter: (p) => {
             const item = items[p.dataIndex];
@@ -890,9 +950,31 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
         });
       });
 
-    // resize 响应
+    // resize 响应（debounced）
+    let resizeTimer;
+    let lastIsMobile = isMobile();
     window.addEventListener('resize', () => {
-      Object.values(charts).forEach((c) => c && c.resize());
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const nowMob = isMobile();
+        if (nowMob !== lastIsMobile) {
+          // 跨越断点：dispose + 重渲染以应用 mobile-specific options
+          lastIsMobile = nowMob;
+          Object.entries(charts).forEach(([k, c]) => { if (c) { c.dispose(); delete charts[k]; } });
+          const volEl = document.getElementById('chart-volume');
+          const avgEl = document.getElementById('chart-area-avg');
+          const suEl = document.getElementById('chart-same-unit');
+          if (volEl && DATA) renderVolume(volEl);
+          if (avgEl && DATA) renderAreaLine(avgEl, DATA.avg_series, 'avgLine');
+          if (suEl && DATA) renderSameUnit(suEl);
+          const detEl = document.getElementById('details-median');
+          if (detEl && detEl.open && DATA) {
+            renderAreaLine(document.getElementById('chart-area-median'), DATA.median_series, 'medLine');
+          }
+        } else {
+          Object.values(charts).forEach((c) => c && c.resize());
+        }
+      }, 150);
     });
 
     // 监听深浅模式切换（macOS / iOS / Android），重新渲染

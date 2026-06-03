@@ -5,12 +5,18 @@
 
 from __future__ import annotations
 
+import html as _html
 import json
 import re
 from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
+
+
+def esc(s: object) -> str:
+    """HTML escape for CSV-derived strings (community/area names)."""
+    return _html.escape(str(s), quote=True)
 
 from analyze import (
     load_data,
@@ -78,7 +84,7 @@ def build_kpi_grid(df: pd.DataFrame, periods: list[str]) -> str:
     if len(nr):
         worst = nr.iloc[0]
         max_drop_val = float(worst["negotiation_rate"])
-        max_drop_label = f'{worst["community"]} {period_short(worst["period"])}'
+        max_drop_label = f'{esc(worst["community"])} {period_short(worst["period"])}'
     else:
         max_drop_val = 0
         max_drop_label = "—"
@@ -258,13 +264,13 @@ def build_area_observations(df: pd.DataFrame, periods: list[str]) -> str:
     html = []
     for r in rows:
         cls = "num up" if "品种偏移" in (r["warn"] or "") else ("num dim" if "稳" in r["interp"] else "num")
-        bold = "strong" if r["is_warn"] else "td"
+        area_esc = esc(r["area"])
         if r["is_warn"]:
-            area_cell = f'<td><strong>{r["area"]}</strong></td>'
-            tag_html = f'<span class="tag tag-warn">{r["warn"]}</span>'
+            area_cell = f'<td><strong>{area_esc}</strong></td>'
+            tag_html = f'<span class="tag tag-warn">{esc(r["warn"])}</span>'
             interp_cell = f'<td>{tag_html}{r["interp"]}，<strong>不是真涨</strong></td>'
         else:
-            area_cell = f'<td>{r["area"]}</td>'
+            area_cell = f'<td>{area_esc}</td>'
             interp_cell = f'<td>{r["interp"]}</td>'
         html.append(
             f'        <tr>\n'
@@ -292,18 +298,22 @@ def build_same_unit_rows(df: pd.DataFrame, periods: list[str]) -> tuple[str, str
                 "n": len(thick),
                 "avg": avg,
             })
-        else:
+        elif pairs:
             # 退一步：用所有 pair 的平均
-            if pairs:
-                avg = sum(p["change_pct"] for p in pairs) / len(pairs)
-                pair_stats.append({
-                    "label": f"{period_compact(l)} vs {period_compact(e)}",
-                    "n": len(pairs),
-                    "avg": avg,
-                    "is_loose": True,
-                })
+            avg = sum(p["change_pct"] for p in pairs) / len(pairs)
+            pair_stats.append({
+                "label": f"{period_compact(l)} vs {period_compact(e)}",
+                "n": len(pairs),
+                "avg": avg,
+            })
 
-    # 找出最厚 (n 最大) 的一对
+    # 空数据保护：少于 2 期 或 所有相邻对都无样本时
+    if not pair_stats:
+        return (
+            '        <tr><td colspan="4" class="dim">暂无相邻期对比数据。</td></tr>',
+            "样本不足，暂不展开真实变化分析。",
+        )
+
     most_reliable_idx = max(range(len(pair_stats)), key=lambda i: pair_stats[i]["n"])
 
     html_rows = []
@@ -466,9 +476,9 @@ def build_signal_blocks(df: pd.DataFrame, periods: list[str]) -> str:
         tags = []
         for s in signals_down:
             suffix = f" {s['strength']}" if s['strength'] else ""
-            tags.append(f'      <span class="tag tag-down">{s["area"]} {signed(s["avg"])}%{suffix}</span>')
+            tags.append(f'      <span class="tag tag-down">{esc(s["area"])} {signed(s["avg"])}%{suffix}</span>')
         for s in signals_up:
-            tags.append(f'      <span class="tag tag-up">{s["area"]} {signed(s["avg"])}%</span>')
+            tags.append(f'      <span class="tag tag-up">{esc(s["area"])} {signed(s["avg"])}%</span>')
 
         block = (
             f'  <div class="signal-block">\n'
@@ -496,7 +506,7 @@ def build_period_details(df: pd.DataFrame, periods: list[str]) -> str:
         n_big_drop = (nr["negotiation_rate"] <= -20).sum()
         if len(nr):
             worst = nr.iloc[0]
-            max_drop_str = f'{worst["negotiation_rate"]:.2f}% {worst["community"]}'
+            max_drop_str = f'{worst["negotiation_rate"]:.2f}% {esc(worst["community"])}'
         else:
             max_drop_str = "—"
         rows.append(
@@ -589,7 +599,10 @@ def build_tldr(df: pd.DataFrame, periods: list[str]) -> str:
     else:
         parts.append(f'最新一期 {period_short(latest_period)} 成交 {latest_n} 笔；')
 
-    parts.append(f'同小区同户型在 ±{max_thick_abs:.0f}% 内震荡，没有持续单边方向。')
+    if max_thick_abs > 0.5:
+        parts.append(f'同小区同户型在 ±{max_thick_abs:.0f}% 内震荡，没有持续单边方向。')
+    else:
+        parts.append('同小区同户型对比样本不足，无法判定真实方向。')
 
     parts.append(
         f'<strong>低总价段（≤200 万）的砍价深度依然显著高于其他段</strong>'
@@ -597,9 +610,10 @@ def build_tldr(df: pd.DataFrame, periods: list[str]) -> str:
     )
 
     if mix_shift_areas:
-        first_mix = mix_shift_areas[0]
+        # 列出全部品种偏移片区（通常 1-2 个）
+        names = "、".join(esc(a) for a in mix_shift_areas[:3])
         parts.append(
-            f'<strong>{first_mix}均价"急涨"</strong>是后期豪宅扎堆造成的品种偏移，'
+            f'<strong>{names}均价"急涨"</strong>是后期豪宅扎堆造成的品种偏移，'
             f'<strong>不是真实房价信号</strong>。'
         )
 
