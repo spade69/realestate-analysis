@@ -38,9 +38,20 @@
 
 ```bash
 pip install -r requirements.txt
-python3 analyze.py        # 生成 Markdown 报告 → reports/
-python3 plot_trends.py    # 生成 4 张趋势图 → reports/
+
+# 加新一期数据：
+# 1) 把新 CSV 放到 data/ (符合 schema)
+# 2) 全自动重新生成 docs/index.html + chart_data.json：
+python3 render_site.py
+
+# 可选：生成 Markdown 报告和 PNG 趋势图
+python3 analyze.py        # → reports/*.md
+python3 plot_trends.py    # → reports/*.png
 ```
+
+## 模板与渲染
+
+`template/index.html` 是带 `{{ PLACEHOLDER }}` 的模板，`render_site.py` 读 CSV → 计算指标 → 自动生成 KPI/表格/解读 → 替换占位符 → 写出 `docs/index.html`。所有"解读"性质文字（TLDR、片区观察、信号摘要、假设检验结论）都按规则自动生成，不需要手改。
 
 ## 数据来源
 

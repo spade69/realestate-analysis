@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>福田二手成交分析 · 3 月上 ~ 5 月上</title>
+<title>福田二手成交分析 · {{ PERIOD_RANGE }}</title>
 <meta name="description" content="深圳福田区二手房成交多期对比分析，含片区涨跌、谈价率分布与趋势图">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -348,14 +348,14 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
 <div class="container">
 
 <header class="hero">
-  <div class="hero-eyebrow"><span class="dot" aria-hidden="true"></span>5 期对比 · 持续更新</div>
+  <div class="hero-eyebrow"><span class="dot" aria-hidden="true"></span>{{ N_PERIODS }} 期对比 · 持续更新</div>
   <h1>福田二手成交分析</h1>
-  <p class="hero-subtitle">深圳福田区二手房 5 期数据多维度对比 · 3 月上 ~ 5 月上</p>
+  <p class="hero-subtitle">深圳福田区二手房 {{ N_PERIODS }} 期数据多维度对比 · {{ PERIOD_RANGE }}</p>
   <p class="hero-meta">
-    <span>752 笔成交</span><span class="sep">·</span>
-    <span>608 笔含谈价率</span><span class="sep">·</span>
+    <span>{{ TOTAL_TXNS }} 笔成交</span><span class="sep">·</span>
+    <span>{{ TOTAL_WITH_NR }} 笔含谈价率</span><span class="sep">·</span>
     <span>数据源：行舟深房笔记</span><span class="sep">·</span>
-    <span>更新于 2026-06-03</span>
+    <span>更新于 {{ UPDATED_DATE }}</span>
   </p>
 </header>
 
@@ -364,7 +364,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
   </span>一句话总结</h2>
   <div class="tldr">
-    <p><strong>福田过去 5 期市场总体平稳。</strong>成交量 4 月上 达高峰（184 + 179 笔）后 5 月上 回落到 128 笔；同小区同户型在 ±7% 内震荡，没有持续单边方向。<strong>低总价段（≤200 万）的砍价深度依然显著高于其他段</strong>（大跌占比 15.9% vs 1-7%）。<strong>香蜜湖均价"急涨"</strong>是后期豪宅扎堆造成的品种偏移，<strong>不是真实房价信号</strong>。</p>
+    <p>{{ TLDR_HTML }}</p>
   </div>
 </section>
 
@@ -375,35 +375,11 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
 
   <figure>
     <div id="chart-volume" class="chart" role="img" aria-label="5 期成交量与大跌占比图表"><div class="chart-loading">图表加载中…</div></div>
-    <figcaption>4 月下成交活跃（179 笔）同时大跌占比最低（2.8%），是这 5 期最"理性"的一期。</figcaption>
+    <figcaption>{{ VOLUME_CAPTION }}</figcaption>
   </figure>
 
   <div class="kpi-grid">
-        <div class="kpi">
-      <div class="kpi-label">总成交</div>
-      <div class="kpi-value">752</div>
-      <div class="kpi-period">5 期合计</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">4 月上 笔数</div>
-      <div class="kpi-value up">184</div>
-      <div class="kpi-period">5 期高峰</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">5 月上 笔数</div>
-      <div class="kpi-value down">128</div>
-      <div class="kpi-period">回落 30%</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">历期最大跌幅</div>
-      <div class="kpi-value down">-86%</div>
-      <div class="kpi-period">安拉公馆 3 月下</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">≤200 万大跌占比</div>
-      <div class="kpi-value warn">15.9%</div>
-      <div class="kpi-period">vs 其他段 1-7%</div>
-    </div>
+    {{ KPI_GRID_HTML }}
   </div>
 </section>
 
@@ -424,71 +400,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
         <tr><th>片区</th><th>走势</th><th>解读</th></tr>
       </thead>
       <tbody>
-                <tr>
-          <td><strong>香蜜湖</strong></td>
-          <td class="num up">10.48 → 9.66 → 12.61 → 14.00</td>
-          <td><span class="tag tag-warn">品种偏移</span>末期 14.00 比早期 10.48 高 34%，疑似豪宅扎堆推高均价，<strong>不是真涨</strong></td>
-        </tr>
-        <tr>
-          <td>上下沙</td>
-          <td class="num">4.13 → 5.72</td>
-          <td>持续上行 +41.7%</td>
-        </tr>
-        <tr>
-          <td>石厦</td>
-          <td class="num">6.72 → 6.40 → 5.36</td>
-          <td>持续下行 -20.2%</td>
-        </tr>
-        <tr>
-          <td>梅林</td>
-          <td class="num">4.66 → 5.74 → 5.19 → 5.57</td>
-          <td>3 月下高点后回调</td>
-        </tr>
-        <tr>
-          <td>华强北</td>
-          <td class="num">7.20 → 6.45 → 6.81 → 5.89</td>
-          <td>持续下行 -18.3%</td>
-        </tr>
-        <tr>
-          <td>园岭</td>
-          <td class="num dim">5.44 → 5.21 → 4.94</td>
-          <td>窄幅震荡 4.9-5.4（稳）</td>
-        </tr>
-        <tr>
-          <td>皇岗</td>
-          <td class="num">4.86 → 5.33 → 5.59</td>
-          <td>4 月下高点后回调</td>
-        </tr>
-        <tr>
-          <td>八卦岭</td>
-          <td class="num dim">3.71 → 4.40 → 3.94</td>
-          <td>低位稳定 3.7-4.4，全程便宜也稳</td>
-        </tr>
-        <tr>
-          <td>莲花</td>
-          <td class="num dim">5.78 → 6.04</td>
-          <td>窄幅震荡 5.8-6.0（稳）</td>
-        </tr>
-        <tr>
-          <td>新洲</td>
-          <td class="num dim">5.38 → 5.00 → 5.59</td>
-          <td>窄幅震荡 5.0-5.6（稳）</td>
-        </tr>
-        <tr>
-          <td>景田</td>
-          <td class="num">5.64 → 5.90 → 5.30 → 6.16</td>
-          <td>4 月下小坑后回升</td>
-        </tr>
-        <tr>
-          <td>福田中心</td>
-          <td class="num">6.41 → 7.43 → 5.40 → 6.47</td>
-          <td>3 月下高点后回调</td>
-        </tr>
-        <tr>
-          <td>百花</td>
-          <td class="num">8.94 → 9.59 → 8.21 → 9.26</td>
-          <td>4 月上高点后回调</td>
-        </tr>
+        {{ AREA_OBSERVATIONS_ROWS }}
       </tbody>
     </table>
   </div>
@@ -510,16 +422,13 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
         <tr><th>区间</th><th>对子数</th><th>变化%</th><th>说明</th></tr>
       </thead>
       <tbody>
-                <tr><td>3下 vs 3上</td><td class="num">1</td><td class="num up">+9.37%</td><td class="dim">样本太少，噪音</td></tr>
-        <tr><td>4上 vs 3下</td><td class="num">2</td><td class="num down">-6.63%</td><td>明显回调</td></tr>
-        <tr class="row-highlight"><td><strong>4下 vs 4上</strong></td><td class="num"><strong>6</strong></td><td class="num down"><strong>-2.67%</strong></td><td><strong>样本最厚，最可信</strong></td></tr>
-        <tr><td>5上 vs 4下</td><td class="num">3</td><td class="num up">+2.56%</td><td>反弹微涨</td></tr>
+        {{ SAME_UNIT_ROWS }}
       </tbody>
     </table>
   </div>
 
   <div class="conclusion">
-    <p>真实市场节奏：相邻期变化范围 ±9.4%，最近一期（5上 vs 4下）反弹 <strong>+2.56%</strong>。</p>
+    <p>{{ SAME_UNIT_CONCLUSION_HTML }}</p>
   </div>
 </section>
 
@@ -528,7 +437,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
   </span>假设检验：低总价段砍价更狠</h2>
 
-  <p>用户假设：「总价越低 → 砍价幅度越大」。基于 608 笔含谈价率数据：</p>
+  <p>用户假设：「总价越低 → 砍价幅度越大」。基于 {{ TOTAL_WITH_NR }} 笔含谈价率数据：</p>
 
   <div class="table-wrap">
     <table>
@@ -536,27 +445,13 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
         <tr><th>总价桶</th><th>笔数</th><th>平均谈价率</th><th>大跌占比 (≤-20%)</th></tr>
       </thead>
       <tbody>
-                <tr class="row-highlight">
-          <td><strong>≤200万</strong></td>
-          <td class="num">124</td>
-          <td class="num down">-11.56%</td>
-          <td class="num warn"><strong>15.9%</strong></td>
-        </tr>
-        <tr><td>200-400万</td><td class="num">258</td><td class="num">-9.52%</td><td class="num">6.6%</td></tr>
-        <tr><td>400-500万</td><td class="num">99</td><td class="num">-7.99%</td><td class="num">1.3%</td></tr>
-        <tr><td>500-700万</td><td class="num">135</td><td class="num">-9.22%</td><td class="num">2.8%</td></tr>
-        <tr><td>700-1000万</td><td class="num">78</td><td class="num">-8.56%</td><td class="num">3.4%</td></tr>
-        <tr><td>>1000万</td><td class="num">58</td><td class="num">-8.24%</td><td class="num">7.1%</td></tr>
+        {{ HYPOTHESIS_ROWS }}
       </tbody>
     </table>
   </div>
 
   <div class="conclusion">
-    <p>
-      Pearson r = <strong>0.035</strong> (p=0.39) <span class="dim">线性相关不显著</span>；
-      Spearman ρ = <strong class="up">0.139</strong> (p=0.00061) <span class="up">秩相关显著</span>。
-    </p>
-    <p>意思是：<strong>≤200 万 段砍价幅度依然最狠（15.9% vs 其他段 1-7%）</strong>，但桶间不是严格线性递增——大概率因为高总价段也出现零星大砍价。</p>
+    {{ HYPOTHESIS_CONCLUSION_HTML }}
   </div>
 </section>
 
@@ -565,50 +460,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
   </span>各期真信号摘要</h2>
 
-    <div class="signal-block">
-    <h3>3 月下 vs 3 月上</h3>
-    <p>
-      <span class="tag tag-down">新洲 -7.08%</span>
-      <span class="tag tag-down">景田 -4.83%</span>
-      <span class="tag tag-up">梅林 +23.12%</span>
-      <span class="tag tag-up">福田中心 +15.83%</span>
-    </p>
-  </div>
-
-  <div class="signal-block">
-    <h3>4 月上 vs 3 月下</h3>
-    <p>
-      <span class="tag tag-down">福田中心 -27.27%</span>
-      <span class="tag tag-down">梅林 -9.54% 强</span>
-      <span class="tag tag-down">香蜜湖 -8.64%</span>
-      <span class="tag tag-up">景田 +4.68%</span>
-    </p>
-  </div>
-
-  <div class="signal-block">
-    <h3>4 月下 vs 4 月上</h3>
-    <p>
-      <span class="tag tag-down">百花 -14.36%</span>
-      <span class="tag tag-down">八卦岭 -10.41% 强</span>
-      <span class="tag tag-down">景田 -10.22% 强</span>
-      <span class="tag tag-down">园岭 -4.30%</span>
-      <span class="tag tag-up">香蜜湖 +30.48%</span>
-      <span class="tag tag-up">福田中心 +19.76%</span>
-      <span class="tag tag-up">梅林 +7.34%</span>
-      <span class="tag tag-up">华强北 +5.65%</span>
-    </p>
-  </div>
-
-  <div class="signal-block">
-    <h3>5 月上 vs 4 月下</h3>
-    <p>
-      <span class="tag tag-down">石厦 -17.54% 强</span>
-      <span class="tag tag-down">华强北 -13.63%</span>
-      <span class="tag tag-down">园岭 -5.10%</span>
-      <span class="tag tag-up">景田 +16.26%</span>
-      <span class="tag tag-up">香蜜湖 +11.07%</span>
-    </p>
-  </div>
+  {{ SIGNAL_BLOCKS_HTML }}
 </section>
 
 <details>
@@ -619,11 +471,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
       <tr><th>期次</th><th>总笔数</th><th>含谈价率</th><th>大跌 (≤-20%)</th><th>最大跌幅</th></tr>
     </thead>
     <tbody>
-            <tr><td>3 月上</td><td class="num">132</td><td class="num">125</td><td class="num">15</td><td class="num down">-30.00% 鹏盛花园</td></tr>
-      <tr><td>3 月下</td><td class="num">129</td><td class="num">101</td><td class="num">5</td><td class="num down">-86.05% 安拉公馆</td></tr>
-      <tr><td>4 月上</td><td class="num">184</td><td class="num">120</td><td class="num">11</td><td class="num down">-50.83% 新世界四季山水</td></tr>
-      <tr><td>4 月下</td><td class="num">179</td><td class="num">142</td><td class="num">4</td><td class="num down">-36.45% 鹏盛村</td></tr>
-      <tr><td>5 月上</td><td class="num">128</td><td class="num">120</td><td class="num">6</td><td class="num down">-30.40% 帝港海湾豪庭</td></tr>
+      {{ PERIOD_DETAILS_ROWS }}
     </tbody>
   </table>
 </div>
