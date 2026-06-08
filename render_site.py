@@ -10,6 +10,7 @@ import json
 import re
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 import pandas as pd
 
@@ -20,11 +21,27 @@ def esc(s: object) -> str:
 
 from analyze import (
     load_data,
+    filter_outliers,
     analyze_by_total_price,
     analyze_by_area,
     analyze_same_community_room_delta,
     classify_area_delta,
+    predict_next_period,
 )
+
+
+def next_period_label(periods: list[str]) -> str:
+    """从最后一期推下一期 label，例如 '2026-05上' → '2026-05下'。"""
+    m = re.match(r"(\d{4})-(\d{2})([上下])", periods[-1])
+    if not m:
+        return "下期"
+    year, mon, half = int(m.group(1)), int(m.group(2)), m.group(3)
+    if half == "上":
+        return f"{year}-{mon:02d}下"
+    nm = mon + 1
+    if nm > 12:
+        return f"{year + 1}-01上"
+    return f"{year}-{nm:02d}上"
 
 
 # ── 工具 ──────────────────────────────────────────────────────────
@@ -620,10 +637,153 @@ def build_tldr(df: pd.DataFrame, periods: list[str]) -> str:
     return "".join(parts)
 
 
+# ── 小区检索数据 ─────────────────────────────────────────────────
+
+
+def build_search_data(df: pd.DataFrame) -> str:
+    """生成 JSON：所有成交的精简列，供前端 JS 搜索。
+
+    输出嵌入 <script type="application/json"> 块，必须转义 </ 防止
+    数据中如出现 '</script>' 字串提前关闭脚本标签（latent XSS）。
+    """
+    records = []
+    for _, r in df.iterrows():
+        records.append({
+            "p": r["period"],
+            "a": str(r["area"]),
+            "c": str(r["community"]),
+            "rt": str(r["room_type"]),
+            "sq": float(r["area_sqm"]),
+            "tp": float(r["total_price_wan"]),
+            "up": float(r["unit_price_wan_sqm"]),
+            "nr": None if pd.isna(r["negotiation_rate"]) else float(r["negotiation_rate"]),
+            "d": str(r["deal_date"].date()),
+        })
+    raw = json.dumps(records, ensure_ascii=False, separators=(",", ":"))
+    return raw.replace("</", "<\\/")
+
+
+# ── 下期预测 ─────────────────────────────────────────────────────
+
+
+def build_prediction_rows(df: pd.DataFrame, periods: list[str]) -> tuple[str, str]:
+    """返回 (table rows HTML, caption HTML)。"""
+    preds = predict_next_period(df, periods)
+    if not preds:
+        return ('        <tr><td colspan="6" class="dim">样本不足，无法预测。</td></tr>', "")
+
+    next_p = next_period_label(periods)
+
+    latest_period = periods[-1]
+    html_rows = []
+    for r in preds:
+        area = esc(r["area"])
+        cur = f'{r["current"]:.2f}'
+        # 若 current 不是最末期，给 "当期均价" 加期次脚注 + 颜色提示
+        cur_p = r["current_period"]
+        if cur_p != latest_period:
+            cur_html = (
+                f'{cur} <span class="dim" '
+                f'title="最末期 {period_short(latest_period)} 样本不足 5 笔，'
+                f'当期均价基于 {period_short(cur_p)}">'
+                f'({period_compact(cur_p)})</span>'
+            )
+        else:
+            cur_html = cur
+        pred = f'{r["predicted"]:.2f}'
+        ci = f'[{r["ci_low"]:.2f}, {r["ci_high"]:.2f}]'
+        chg = r["change_pct"]
+        if chg > 1.5:
+            chg_cls = "num up"
+        elif chg < -1.5:
+            chg_cls = "num down"
+        else:
+            chg_cls = "num dim"
+        chg_str = f'{signed(chg, 1)}%'
+
+        # R² 颜色：< 0.3 不可信
+        r2 = r["r2"]
+        r2_cls = "num up" if r2 >= 0.7 else ("num" if r2 >= 0.3 else "num dim")
+        r2_str = f'{r2:.2f}'
+        if r2 < 0.3:
+            r2_str += ' <span class="dim">(噪)</span>'
+
+        html_rows.append(
+            f'        <tr>'
+            f'<td>{area}</td>'
+            f'<td class="num">{cur_html}</td>'
+            f'<td class="num"><strong>{pred}</strong></td>'
+            f'<td class="num dim">{ci}</td>'
+            f'<td class="{chg_cls}">{chg_str}</td>'
+            f'<td class="{r2_cls}">{r2_str}</td>'
+            f'</tr>'
+        )
+
+    # caption: 选最强信号
+    strong = [r for r in preds if r["r2"] >= 0.5 and abs(r["change_pct"]) >= 3]
+    n_up = sum(1 for r in preds if r["change_pct"] > 1.5)
+    n_down = sum(1 for r in preds if r["change_pct"] < -1.5)
+
+    if strong:
+        names = "、".join(esc(r["area"]) for r in strong[:3])
+        caption = (
+            f'<strong>{next_p} 预测信号：</strong>'
+            f'{n_up} 个片区上行 / {n_down} 个下行（{len(preds) - n_up - n_down} 个持平）。'
+            f'R² ≥ 0.5 且变化 ≥ 3% 的可信信号：<strong>{names}</strong>。'
+        )
+    else:
+        caption = (
+            f'<strong>{next_p} 预测信号：</strong>'
+            f'{n_up} 个片区上行 / {n_down} 个下行（{len(preds) - n_up - n_down} 个持平），'
+            f'但 R² 普遍偏低，5 期样本难以支撑高置信预测，仅供方向性参考。'
+        )
+
+    return "\n".join(html_rows), caption
+
+
+# ── Outlier 通告 ─────────────────────────────────────────────────
+
+
+def build_outlier_notice(outliers: pd.DataFrame) -> str:
+    """生成"已剔除 N 条非市场价"通告 + 可折叠明细。"""
+    n = len(outliers)
+    if n == 0:
+        return ""
+    rows = []
+    for _, r in outliers.iterrows():
+        rows.append(
+            f'        <tr>'
+            f'<td>{period_short(r["period"])}</td>'
+            f'<td>{esc(r["area"])}</td>'
+            f'<td>{esc(r["community"])}</td>'
+            f'<td class="num">{r["area_sqm"]:g}㎡</td>'
+            f'<td class="num">{r["total_price_wan"]:g}万</td>'
+            f'<td class="num down"><strong>{r["unit_price_wan_sqm"]:.2f}</strong>万/㎡</td>'
+            f'</tr>'
+        )
+    return (
+        f'<details class="outlier-notice">\n'
+        f'  <summary>'
+        f'已自动剔除 <strong>{n}</strong> 条非市场价（单价 &lt; 片区中位数 × 0.5），'
+        f'点击展开明细'
+        f'</summary>\n'
+        f'  <table class="outlier-table">\n'
+        f'    <thead><tr>'
+        f'<th>期</th><th>片区</th><th>小区</th><th>面积</th>'
+        f'<th>总价</th><th>单价</th>'
+        f'</tr></thead>\n'
+        f'    <tbody>\n'
+        + "\n".join(rows) + "\n"
+        f'    </tbody>\n'
+        f'  </table>\n'
+        f'</details>'
+    )
+
+
 # ── chart_data.json 生成 ───────────────────────────────────────────
 
 
-def build_chart_data(df: pd.DataFrame, periods: list[str]) -> dict:
+def build_chart_data(df: pd.DataFrame, periods: list[str]) -> dict[str, Any]:
     n_pivot = df.groupby(["area", "period"]).size().unstack("period").fillna(0).astype(int)
     core_mask = (n_pivot >= 5).sum(axis=1) >= 3
     core_areas = n_pivot[core_mask].index.tolist()
@@ -679,13 +839,17 @@ def build_chart_data(df: pd.DataFrame, periods: list[str]) -> dict:
 def main() -> None:
     here = Path(__file__).parent
     csvs = sorted((here / "data").glob("*.csv"))
-    df = load_data(csvs)
+    df_raw = load_data(csvs)
+    df, outliers = filter_outliers(df_raw)
     periods = sorted(df["period"].unique())
 
     placeholders = {
         "PERIOD_RANGE": f"{period_short(periods[0])} ~ {period_short(periods[-1])}",
         "N_PERIODS": str(len(periods)),
         "TOTAL_TXNS": str(len(df)),
+        "TOTAL_RAW": str(len(df_raw)),
+        "OUTLIER_COUNT": str(len(outliers)),
+        "OUTLIER_NOTICE": build_outlier_notice(outliers),
         "TOTAL_WITH_NR": str(int(df["negotiation_rate"].notna().sum())),
         "UPDATED_DATE": datetime.now().strftime("%Y-%m-%d"),
         "TLDR_HTML": build_tldr(df, periods),
@@ -698,7 +862,16 @@ def main() -> None:
         "HYPOTHESIS_CONCLUSION_HTML": "",  # filled below
         "SIGNAL_BLOCKS_HTML": build_signal_blocks(df, periods),
         "PERIOD_DETAILS_ROWS": build_period_details(df, periods),
+        "NEXT_PERIOD_LABEL": next_period_label(periods),
+        "PREDICTION_ROWS": "",  # filled below
+        "PREDICTION_CAPTION": "",  # filled below
     }
+
+    pred_rows, pred_caption = build_prediction_rows(df, periods)
+    placeholders["PREDICTION_ROWS"] = pred_rows
+    placeholders["PREDICTION_CAPTION"] = pred_caption
+
+    placeholders["SEARCH_DATA_JSON"] = build_search_data(df)
 
     same_rows, same_conclusion = build_same_unit_rows(df, periods)
     placeholders["SAME_UNIT_ROWS"] = same_rows

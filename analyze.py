@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
-from typing import Iterable
+from typing import Any, Iterable
 
 import pandas as pd
 from scipy import stats as _stats
@@ -16,6 +17,9 @@ COLUMNS = [
 ]
 
 THRESHOLDS = (-20, -30, -50)
+
+# Outlier: 单价低于片区中位数的 50% → 视为非市场价（底商/老破小/关联交易）
+OUTLIER_RATIO = 0.5
 
 DIST_BUCKETS = [
     ("≥-5%",        lambda r: r >= -5),
@@ -52,7 +56,27 @@ def load_data(paths: Iterable[Path | str]) -> pd.DataFrame:
     return pd.concat(frames, ignore_index=True)
 
 
-def analyze_extremes(df: pd.DataFrame) -> dict:
+def detect_outliers(df: pd.DataFrame, ratio: float = OUTLIER_RATIO) -> pd.Series:
+    """标记非市场价（单价 < 片区中位数 × ratio）。
+
+    片区中位数用全期合并数据算（少量 outlier 不会拉低 median）。
+    注意：跨度 ≤ 1 年时此方法稳健；若未来做年比/多年分析且片区均价
+    整体已大幅迁移（>30%），应改用 per-period median 避免误判。
+    返回布尔 Series，True = outlier。
+    """
+    area_median = df.groupby("area")["unit_price_wan_sqm"].transform("median")
+    return df["unit_price_wan_sqm"] < area_median * ratio
+
+
+def filter_outliers(
+    df: pd.DataFrame, ratio: float = OUTLIER_RATIO
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """返回 (clean_df, outliers_df)，两者均为新拷贝（不改原 df）。"""
+    mask = detect_outliers(df, ratio)
+    return df[~mask].copy().reset_index(drop=True), df[mask].copy().reset_index(drop=True)
+
+
+def analyze_extremes(df: pd.DataFrame) -> dict[str, Any]:
     """spec §4.1: -20/-30/-50% 阈值笔数 + 楼盘明细 + 最大跌幅记录。"""
     sub = df.dropna(subset=["negotiation_rate"]).copy()
     sub = sub.sort_values("negotiation_rate", ascending=True)
@@ -75,7 +99,10 @@ def analyze_distribution(df: pd.DataFrame) -> dict[str, int]:
             for label, pred in DIST_BUCKETS}
 
 
-def analyze_by_area(df: pd.DataFrame, period_pairs: list[tuple[str, str]] | None = None) -> dict:
+def analyze_by_area(
+    df: pd.DataFrame,
+    period_pairs: list[tuple[str, str]] | None = None,
+) -> dict[str, Any]:
     """spec §4.3: 片区 × 期 聚合 + 任意期对的变化%。
 
     period_pairs: 要计算的 (earlier, later) 对；默认按字典序生成所有相邻对。
@@ -189,7 +216,7 @@ def _room_type_group(rt: str) -> str:
     return "4室及以上"
 
 
-def analyze_by_room_type(df: pd.DataFrame) -> list[dict]:
+def analyze_by_room_type(df: pd.DataFrame) -> list[dict[str, Any]]:
     """spec §4.4: 户型 × 期 聚合（4+ 合并）。"""
     df2 = df.assign(room_type_group=df["room_type"].map(_room_type_group))
     rows = []
@@ -215,7 +242,7 @@ def total_price_bucket(p: float) -> str:
     raise ValueError(f"unbucketed: {p}")
 
 
-def analyze_by_total_price(df: pd.DataFrame) -> dict:
+def analyze_by_total_price(df: pd.DataFrame) -> dict[str, Any]:
     """spec §4.5: 总价段聚合 + 总价 vs 谈价率相关性假设检验。"""
     df2 = df.assign(_bucket=df["total_price_wan"].map(total_price_bucket))
 
@@ -263,7 +290,7 @@ def analyze_same_community_room_delta(
     df: pd.DataFrame,
     earlier: str | None = None,
     later: str | None = None,
-) -> list[dict]:
+) -> list[dict[str, Any]]:
     """spec §4.7: 跨期同小区同户型对比（消除品种偏移）。
 
     earlier / later: 默认取数据中最早/最晚两期。
@@ -313,7 +340,91 @@ def analyze_same_community_room_delta(
     return rows
 
 
-def analyze_repeat_communities(df: pd.DataFrame) -> list[dict]:
+def predict_next_period(
+    df: pd.DataFrame,
+    periods: list[str],
+    min_periods_with_data: int = 3,
+    min_n_per_period: int = 5,
+) -> list[dict[str, Any]]:
+    """对每个核心片区做线性回归预测下期均价 + 95% 置信带。
+
+    核心片区 = 至少 min_periods_with_data 个期都有 ≥ min_n_per_period 笔。
+    回归基于"片区 × 期"的平均单价；x = 期索引 0..n-1，预测 x = n。
+
+    `current` 是该片区**最后一个合格期**（≥ min_n_per_period 笔）的均价，
+    可能不是 periods 的最末期（若最末期样本不足）。`current_period` 字段
+    标识具体是哪一期。
+
+    返回 list[{area, current, current_period, predicted, ci_low, ci_high,
+                change_pct, slope, r2, n_periods, trend}]
+    按 abs(change_pct) 降序（预测变化最剧烈的在前）。
+    """
+    from scipy import stats as _s
+
+    n_pivot = df.groupby(["area", "period"]).size().unstack("period").fillna(0).astype(int)
+    avg_pivot = df.groupby(["area", "period"])["unit_price_wan_sqm"].mean().unstack("period")
+
+    out: list[dict[str, Any]] = []
+    for area in n_pivot.index:
+        # 取有 ≥ min_n_per_period 笔且非 NaN 的期
+        xs, ys, qualifying_periods = [], [], []
+        for i, p in enumerate(periods):
+            count = int(n_pivot.loc[area].get(p, 0))
+            v = avg_pivot.loc[area, p] if p in avg_pivot.columns else float("nan")
+            if count >= min_n_per_period and not pd.isna(v):
+                xs.append(i)
+                ys.append(float(v))
+                qualifying_periods.append(p)
+        n = len(xs)
+        if n < min_periods_with_data:
+            continue
+        slope, intercept, r, _p, _stderr = _s.linregress(xs, ys)
+        x_next = len(periods)  # 预测下一期的索引
+        y_pred = slope * x_next + intercept
+
+        # 95% 预测区间
+        y_fit = [slope * x + intercept for x in xs]
+        residuals = [yi - yh for yi, yh in zip(ys, y_fit)]
+        if n > 2:
+            sse = sum(r_ * r_ for r_ in residuals)
+            s_err = (sse / (n - 2)) ** 0.5
+            x_mean = sum(xs) / n
+            sxx = sum((x - x_mean) ** 2 for x in xs)
+            se_pred = s_err * (1 + 1 / n + (x_next - x_mean) ** 2 / sxx) ** 0.5
+            t_crit = float(_s.t.ppf(0.975, n - 2))
+            margin = t_crit * se_pred
+        else:
+            margin = 0.0
+
+        current = ys[-1]
+        current_period = qualifying_periods[-1]
+        change_pct = (y_pred - current) / current * 100 if current else 0
+        if abs(change_pct) < 1.5:
+            trend = "持平"
+        elif change_pct > 0:
+            trend = "上行"
+        else:
+            trend = "下行"
+
+        out.append({
+            "area": area,
+            "current": round(current, 2),
+            "current_period": current_period,
+            "predicted": round(y_pred, 2),
+            "ci_low": round(y_pred - margin, 2),
+            "ci_high": round(y_pred + margin, 2),
+            "change_pct": round(change_pct, 2),
+            "slope": round(slope, 3),
+            "r2": round(r * r, 3),
+            "n_periods": n,
+            "trend": trend,
+        })
+
+    out.sort(key=lambda r: -abs(r["change_pct"]))
+    return out
+
+
+def analyze_repeat_communities(df: pd.DataFrame) -> list[dict[str, Any]]:
     """spec §4.6: 两期合计 ≥2 笔的小区列表。"""
     counts = df.groupby("community").size()
     repeats = counts[counts >= 2].index.tolist()
@@ -332,7 +443,7 @@ def analyze_repeat_communities(df: pd.DataFrame) -> list[dict]:
     return out
 
 
-def _fmt_drop_listing(r: dict) -> str:
+def _fmt_drop_listing(r: dict[str, Any]) -> str:
     yb = int(r["year_built"]) if pd.notna(r["year_built"]) else "?"
     return (f"{r['negotiation_rate']:.2f}% | {r['area']} | "
             f"{r['community']}({yb}) | {r['room_type']} | "
@@ -599,17 +710,34 @@ def render_report(df: pd.DataFrame) -> str:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="福田二手成交分析")
+    parser.add_argument(
+        "--include-outliers", action="store_true",
+        help="包含非市场价（单价 < 片区中位数 × 0.5 的记录），默认剔除",
+    )
+    args = parser.parse_args()
+
     here = Path(__file__).parent
     csvs = sorted((here / "data").glob("*.csv"))
     if not csvs:
         raise SystemExit("No CSVs in data/")
-    df = load_data(csvs)
+    df_raw = load_data(csvs)
 
-    print(f"Loaded {len(df)} rows from {len(csvs)} CSVs")
+    if args.include_outliers:
+        df = df_raw
+        print(f"Loaded {len(df)} rows (含 outlier)")
+    else:
+        df, outliers = filter_outliers(df_raw)
+        print(f"Loaded {len(df_raw)} rows, 剔除 {len(outliers)} 条非市场价 → {len(df)} 条用于分析")
+        if len(outliers):
+            print("剔除明细：")
+            for _, r in outliers.iterrows():
+                print(f"  {r['period']} {r['area']}/{r['community']} "
+                      f"{r['area_sqm']:g}㎡ {r['total_price_wan']:g}万 "
+                      f"→ {r['unit_price_wan_sqm']:.2f}万/㎡")
+
     print(f"Periods: {sorted(df['period'].unique())}")
     print(f"Negotiation-rate non-null: {df['negotiation_rate'].notna().sum()}")
-    print("\nPer-area count by period:")
-    print(df.groupby(["period", "area"]).size().to_string())
 
     report = render_report(df)
     periods = sorted(df['period'].unique())
