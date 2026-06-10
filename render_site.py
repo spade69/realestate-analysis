@@ -684,9 +684,9 @@ def build_prediction_rows(df: pd.DataFrame, periods: list[str]) -> tuple[str, st
         if cur_p != latest_period:
             cur_html = (
                 f'{cur} <span class="dim" '
-                f'title="最末期 {period_short(latest_period)} 样本不足 5 笔，'
-                f'当期均价基于 {period_short(cur_p)}">'
-                f'({period_compact(cur_p)})</span>'
+                f'title="最末期 {esc(period_short(latest_period))} 样本不足 5 笔，'
+                f'当期均价基于 {esc(period_short(cur_p))}">'
+                f'({esc(period_compact(cur_p))})</span>'
             )
         else:
             cur_html = cur
