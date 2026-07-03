@@ -246,6 +246,85 @@ def categorize_area_trend(
     return (trend_str, None, "横盘震荡")
 
 
+# 走势分类 → (显示名, tag 样式)。用于「多数板块共识」汇总。
+CONSENSUS_LABELS = {
+    "pullback": ("高点后回调", "tag-down"),
+    "downtrend": ("持续下行", "tag-down"),
+    "uptrend": ("持续上行", "tag-up"),
+    "rebound": ("低点后回升", "tag-up"),
+    "stable": ("窄幅/横盘稳定", "tag-flat"),
+}
+
+
+def classify_interp_category(warn_tag: str | None, interp: str) -> str:
+    """把 categorize_area_trend 已生成的解读文本归类成粗粒度走势标签。"""
+    if warn_tag == "品种偏移":
+        return "mix_shift"
+    if interp.startswith("样本不足"):
+        return "insufficient"
+    if interp.startswith("持续上行"):
+        return "uptrend"
+    if interp.startswith("持续下行"):
+        return "downtrend"
+    if "高点后回调" in interp:
+        return "pullback"
+    if "小坑后回升" in interp:
+        return "rebound"
+    return "stable"  # 低位稳定 / 窄幅震荡 / 横盘震荡
+
+
+def build_area_consensus(df: pd.DataFrame, periods: list[str]) -> str:
+    """核心片区走势分类汇总：是否存在多数共识（回调/上行/下行/稳定）。"""
+    n_pivot = df.groupby(["area", "period"]).size().unstack("period").fillna(0).astype(int)
+    core_mask = (n_pivot >= 5).sum(axis=1) >= 3
+    core_areas = n_pivot[core_mask].index.tolist()
+    avg_pivot = df.groupby(["area", "period"])["unit_price_wan_sqm"].mean().unstack("period")
+
+    counts: dict[str, int] = {}
+    excluded = 0
+    for area in core_areas:
+        values = [
+            None if pd.isna(avg_pivot.loc[area, p]) else float(avg_pivot.loc[area, p])
+            for p in periods
+        ]
+        area_counts = [int(n_pivot.loc[area].get(p, 0)) for p in periods]
+        _, warn_tag, interp = categorize_area_trend(values, periods, area_counts)
+        cat = classify_interp_category(warn_tag, interp)
+        if cat in ("mix_shift", "insufficient"):
+            excluded += 1
+            continue
+        counts[cat] = counts.get(cat, 0) + 1
+
+    total_valid = sum(counts.values())
+    if total_valid == 0:
+        return '<p class="dim">核心片区样本不足，暂无法判断整体走势。</p>'
+
+    dom_cat, dom_n = max(counts.items(), key=lambda kv: kv[1])
+    dom_label, _ = CONSENSUS_LABELS[dom_cat]
+    dom_pct = dom_n / total_valid * 100
+
+    tags = "".join(
+        f'<span class="tag {CONSENSUS_LABELS[cat][1]}">{CONSENSUS_LABELS[cat][0]} {n}</span>'
+        for cat, n in sorted(counts.items(), key=lambda kv: -kv[1])
+    )
+    excluded_note = f'，另有 {excluded} 个片区因样本不足/品种偏移不计入判断' if excluded else ''
+
+    if dom_pct >= 50:
+        headline = (
+            f'<strong>{total_valid} 个核心片区中，{dom_n} 个（{dom_pct:.0f}%）呈「{dom_label}」，'
+            f'是当前主流态势{excluded_note}。</strong>'
+        )
+    elif dom_pct >= 40:
+        headline = (
+            f'<strong>{total_valid} 个核心片区中，{dom_n} 个（{dom_pct:.0f}%）呈「{dom_label}」占优，'
+            f'但未过半{excluded_note}。</strong>'
+        )
+    else:
+        headline = f'<strong>{total_valid} 个核心片区走势分化，没有单一主流{excluded_note}。</strong>'
+
+    return f'<p>{headline}</p>\n    <p>{tags}</p>'
+
+
 def build_area_observations(df: pd.DataFrame, periods: list[str]) -> str:
     """13 个核心片区每个一行。按警告/变化幅度排序。"""
     n_pivot = df.groupby(["area", "period"]).size().unstack("period").fillna(0).astype(int)
@@ -855,6 +934,7 @@ def main() -> None:
         "TLDR_HTML": build_tldr(df, periods),
         "VOLUME_CAPTION": build_volume_caption(df, periods),
         "KPI_GRID_HTML": build_kpi_grid(df, periods),
+        "AREA_CONSENSUS_HTML": build_area_consensus(df, periods),
         "AREA_OBSERVATIONS_ROWS": build_area_observations(df, periods),
         "SAME_UNIT_CONCLUSION_HTML": "",  # filled below
         "SAME_UNIT_ROWS": "",  # filled below
