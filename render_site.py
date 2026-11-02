@@ -32,9 +32,7 @@ from analyze import (
     SCHOOL_TIERS,
     UNMAPPED_TIER,
     analyze_by_total_price,
-    analyze_by_area,
     analyze_same_community_room_delta,
-    classify_area_delta,
     predict_next_period,
 )
 
@@ -540,64 +538,6 @@ def build_hypothesis(df: pd.DataFrame) -> tuple[str, str]:
     return "\n".join(rows), "\n    ".join(conclusion_lines)
 
 
-# ── 真信号摘要 ───────────────────────────────────────────────────
-
-
-def build_signal_blocks(df: pd.DataFrame, periods: list[str]) -> str:
-    by_area = analyze_by_area(df)
-    n_by_ap = {(r["area"], r["period"]): r["n"] for r in by_area["per_period"]}
-
-    blocks = []
-    for (earlier, later), delta_rows in by_area["deltas"].items():
-        if earlier not in periods or later not in periods:
-            continue
-        signals_down = []
-        signals_up = []
-        for r in delta_rows:
-            n_e = n_by_ap.get((r["area"], earlier), 0)
-            n_l = n_by_ap.get((r["area"], later), 0)
-            label, reason = classify_area_delta(
-                r["avg_unit_price_change_pct"],
-                r["median_unit_price_change_pct"],
-                n_e, n_l,
-            )
-            avg = r["avg_unit_price_change_pct"]
-            if label.startswith("📉 跌"):
-                strength = "强" if "强" in label else ""
-                signals_down.append({
-                    "area": r["area"], "avg": avg, "strength": strength,
-                })
-            elif label.startswith("📈 涨"):
-                signals_up.append({
-                    "area": r["area"], "avg": avg,
-                })
-
-        signals_down.sort(key=lambda x: x["avg"])  # 跌幅大的在前
-        signals_up.sort(key=lambda x: -x["avg"])  # 涨幅大的在前
-
-        if not signals_down and not signals_up:
-            continue
-
-        tags = []
-        for s in signals_down:
-            suffix = f" {s['strength']}" if s['strength'] else ""
-            tags.append(f'      <span class="tag tag-down">{esc(s["area"])} {signed(s["avg"])}%{suffix}</span>')
-        for s in signals_up:
-            tags.append(f'      <span class="tag tag-up">{esc(s["area"])} {signed(s["avg"])}%</span>')
-
-        block = (
-            f'  <div class="signal-block">\n'
-            f'    <h3>{period_short(later)} vs {period_short(earlier)}</h3>\n'
-            f'    <p>\n'
-            + "\n".join(tags) + "\n"
-            f'    </p>\n'
-            f'  </div>'
-        )
-        blocks.append(block)
-
-    return "\n\n".join(blocks) if blocks else '  <p class="dim">暂无真信号。</p>'
-
-
 # ── 期次详情 ─────────────────────────────────────────────────────
 
 
@@ -1012,7 +952,7 @@ def build_prediction_rows(df: pd.DataFrame, periods: list[str]) -> tuple[str, st
         caption = (
             f'<strong>{next_p} 预测信号：</strong>'
             f'{n_up} 个片区上行 / {n_down} 个下行（{len(preds) - n_up - n_down} 个持平），'
-            f'但 R² 普遍偏低，5 期样本难以支撑高置信预测，仅供方向性参考。'
+            f'但 R² 普遍偏低，样本期数有限，难以支撑高置信预测，仅供方向性参考。'
         )
 
     return "\n".join(html_rows), caption
@@ -1153,7 +1093,6 @@ def main() -> None:
         "SAME_UNIT_ROWS": "",  # filled below
         "HYPOTHESIS_ROWS": "",  # filled below
         "HYPOTHESIS_CONCLUSION_HTML": "",  # filled below
-        "SIGNAL_BLOCKS_HTML": build_signal_blocks(df, periods),
         "PERIOD_DETAILS_ROWS": build_period_details(df, periods),
         "NEXT_PERIOD_LABEL": next_period_label(periods),
         "PREDICTION_ROWS": "",  # filled below
