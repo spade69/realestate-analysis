@@ -15,6 +15,8 @@ COLUMNS = [
     "room_type", "area_sqm", "total_price_wan", "unit_price_wan_sqm",
     "negotiation_rate", "deal_date",
 ]
+# 可选尾列：法拍标记（1 = 法拍）。旧 CSV 无此列，读入时补 False。
+AUCTION_COLUMN = "is_auction"
 
 THRESHOLDS = (-20, -30, -50)
 
@@ -46,7 +48,11 @@ def load_data(paths: Iterable[Path | str]) -> pd.DataFrame:
     frames = []
     for p in paths:
         df = pd.read_csv(p, dtype=str, keep_default_na=False)
-        if list(df.columns) != COLUMNS:
+        if list(df.columns) == COLUMNS:
+            df[AUCTION_COLUMN] = False
+        elif list(df.columns) == COLUMNS + [AUCTION_COLUMN]:
+            df[AUCTION_COLUMN] = df[AUCTION_COLUMN].eq("1")
+        else:
             raise ValueError(f"{p}: columns mismatch, got {list(df.columns)}")
         for col in ["area_sqm", "total_price_wan", "unit_price_wan_sqm",
                     "negotiation_rate", "year_built"]:
@@ -54,6 +60,12 @@ def load_data(paths: Iterable[Path | str]) -> pd.DataFrame:
         df["deal_date"] = pd.to_datetime(df["deal_date"], format="%Y-%m-%d")
         frames.append(df)
     return pd.concat(frames, ignore_index=True)
+
+
+def split_auctions(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """返回 (market_df, auctions_df)。法拍价非市场成交、户型与谈价率缺失，不进价格分析。"""
+    mask = df[AUCTION_COLUMN]
+    return df[~mask].copy().reset_index(drop=True), df[mask].copy().reset_index(drop=True)
 
 
 def detect_outliers(df: pd.DataFrame, ratio: float = OUTLIER_RATIO) -> pd.Series:
@@ -721,7 +733,9 @@ def main() -> None:
     csvs = sorted((here / "data").glob("*.csv"))
     if not csvs:
         raise SystemExit("No CSVs in data/")
-    df_raw = load_data(csvs)
+    df_raw, auctions = split_auctions(load_data(csvs))
+    if len(auctions):
+        print(f"剔除 {len(auctions)} 条法拍")
 
     if args.include_outliers:
         df = df_raw

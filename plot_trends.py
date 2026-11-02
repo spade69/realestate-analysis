@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from matplotlib import font_manager
 import pandas as pd
 
-from analyze import load_data
+from analyze import load_data, split_auctions
 
 
 # 设置中文字体（macOS 上的 Songti SC）
@@ -24,7 +24,7 @@ plt.rcParams["axes.unicode_minus"] = False
 def main() -> None:
     here = Path(__file__).parent
     csvs = sorted((here / "data").glob("*.csv"))
-    df = load_data(csvs)
+    df, _ = split_auctions(load_data(csvs))
 
     periods = sorted(df["period"].unique())
     print(f"Periods: {periods}")

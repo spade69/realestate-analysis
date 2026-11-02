@@ -12,8 +12,9 @@
 - 2026-06 上 / 06 下
 - 2026-07 上 / 07 下
 - 2026-08 上 / 08 下
+- 2026-10 上（9 月两期待补）
 
-共 1605 笔成交（1413 笔含谈价率）。
+共 1727 笔成交（1510 笔含谈价率），另有 27 笔法拍单独列出、不计入分析。
 
 ## 分析维度
 
@@ -43,7 +44,7 @@
 pip install -r requirements.txt
 
 # 加新一期数据：
-# 1) 把新 CSV 放到 data/ (符合 schema)
+# 1) 把新 CSV 放到 data/ (符合 schema；可选尾列 is_auction，1 = 法拍)
 # 2) 全自动重新生成 docs/index.html + chart_data.json：
 python3 render_site.py
 

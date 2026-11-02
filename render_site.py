@@ -22,6 +22,7 @@ def esc(s: object) -> str:
 from analyze import (
     load_data,
     filter_outliers,
+    split_auctions,
     analyze_by_total_price,
     analyze_by_area,
     analyze_same_community_room_delta,
@@ -823,13 +824,12 @@ def build_prediction_rows(df: pd.DataFrame, periods: list[str]) -> tuple[str, st
 # ── Outlier 通告 ─────────────────────────────────────────────────
 
 
-def build_outlier_notice(outliers: pd.DataFrame) -> str:
-    """生成"已剔除 N 条非市场价"通告 + 可折叠明细。"""
-    n = len(outliers)
-    if n == 0:
+def _excluded_notice(rows_df: pd.DataFrame, summary: str) -> str:
+    """生成"已剔除 N 条 xxx"通告 + 可折叠明细。"""
+    if len(rows_df) == 0:
         return ""
     rows = []
-    for _, r in outliers.iterrows():
+    for _, r in rows_df.iterrows():
         rows.append(
             f'        <tr>'
             f'<td>{period_short(r["period"])}</td>'
@@ -842,10 +842,7 @@ def build_outlier_notice(outliers: pd.DataFrame) -> str:
         )
     return (
         f'<details class="outlier-notice">\n'
-        f'  <summary>'
-        f'已自动剔除 <strong>{n}</strong> 条非市场价（单价 &lt; 片区中位数 × 0.5），'
-        f'点击展开明细'
-        f'</summary>\n'
+        f'  <summary>{summary}，点击展开明细</summary>\n'
         f'  <table class="outlier-table">\n'
         f'    <thead><tr>'
         f'<th>期</th><th>片区</th><th>小区</th><th>面积</th>'
@@ -856,6 +853,20 @@ def build_outlier_notice(outliers: pd.DataFrame) -> str:
         f'    </tbody>\n'
         f'  </table>\n'
         f'</details>'
+    )
+
+
+def build_outlier_notice(outliers: pd.DataFrame) -> str:
+    return _excluded_notice(
+        outliers,
+        f'已自动剔除 <strong>{len(outliers)}</strong> 条非市场价（单价 &lt; 片区中位数 × 0.5）',
+    )
+
+
+def build_auction_notice(auctions: pd.DataFrame) -> str:
+    return _excluded_notice(
+        auctions,
+        f'另有 <strong>{len(auctions)}</strong> 条法拍成交，不计入价格与谈价分析',
     )
 
 
@@ -919,7 +930,8 @@ def main() -> None:
     here = Path(__file__).parent
     csvs = sorted((here / "data").glob("*.csv"))
     df_raw = load_data(csvs)
-    df, outliers = filter_outliers(df_raw)
+    df_market, auctions = split_auctions(df_raw)
+    df, outliers = filter_outliers(df_market)
     periods = sorted(df["period"].unique())
 
     placeholders = {
@@ -928,7 +940,7 @@ def main() -> None:
         "TOTAL_TXNS": str(len(df)),
         "TOTAL_RAW": str(len(df_raw)),
         "OUTLIER_COUNT": str(len(outliers)),
-        "OUTLIER_NOTICE": build_outlier_notice(outliers),
+        "OUTLIER_NOTICE": build_outlier_notice(outliers) + build_auction_notice(auctions),
         "TOTAL_WITH_NR": str(int(df["negotiation_rate"].notna().sum())),
         "UPDATED_DATE": datetime.now().strftime("%Y-%m-%d"),
         "TLDR_HTML": build_tldr(df, periods),
