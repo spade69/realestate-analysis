@@ -95,6 +95,7 @@ SCHOOL_TIERS = ("名校", "普通", "无学位")
 UNMAPPED_TIER = "未标注"
 SCHOOL_MIN_N = 3  # 同片区对比时每档最少样本
 SCHOOL_RECENT_PERIODS = 4  # “近期最低价”看最近几期
+SCHOOL_LIST_MIN_DEALS = 10  # 学校卡片 / 全部学校表只展示累计成交 ≥ 此值的学校
 
 # 名校：社会公认的头部公办小学及集团校区（tools/build_school_map.py 据此给小区定档）
 TOP_SCHOOLS = (
@@ -144,8 +145,9 @@ def _deal(r: pd.Series) -> dict[str, Any]:
 
 
 def analyze_by_school(df: pd.DataFrame) -> list[dict[str, Any]]:
-    """按对口小学聚合：上车门槛（最低总价）、2室+最低总价、近期最低价、中位数。
+    """按对口小学聚合：上车门槛（最低总价）、2室+最低总价、近期最低价、中位数，及流通性。
 
+    流通性：月均成交笔数（一期 = 半个月）、有成交的期数占比、平均谈价率。
     共享/大学区的小区同时计入其对口的每所学校。名校在前，其余按成交笔数降序。
     """
     rows = df[df["school_primary"] != ""].copy()
@@ -164,11 +166,18 @@ def analyze_by_school(df: pd.DataFrame) -> list[dict[str, Any]]:
                  .agg(n=("community", "size"), min_total=("total_price_wan", "min"),
                       note=("school_note", "first"))
                  .sort_values(["n", "min_total"], ascending=[False, True]))
+        nr = g["negotiation_rate"].dropna()
+        n_active = g["period"].nunique()
         out.append({
             "school": school,
             "is_top": school in TOP_SCHOOLS,
             "n": len(g),
             "n_communities": len(comm),
+            "per_month": len(g) / (len(periods) / 2),
+            "n_active_periods": n_active,
+            "n_periods": len(periods),
+            "active_ratio": n_active / len(periods),
+            "avg_neg_rate": float(nr.mean()) if len(nr) else None,
             "cheapest": _deal(g.loc[g["total_price_wan"].idxmin()]),
             "cheapest_2r": _deal(g2.loc[g2["total_price_wan"].idxmin()]) if len(g2) else None,
             "cheapest_recent": _deal(gr.loc[gr["total_price_wan"].idxmin()]) if len(gr) else None,
