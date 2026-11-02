@@ -314,17 +314,6 @@ td.num {
 .outlier-table .num { text-align: right; font-variant-numeric: tabular-nums; }
 .outlier-table .num.down { color: var(--down); }
 
-/* Signal */
-.signal-block {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px 22px;
-  margin-bottom: 14px;
-  box-shadow: var(--shadow-sm);
-}
-.signal-block h3 { margin: 0 0 10px; padding-bottom: 8px; border-bottom: 1px dashed var(--border); font-size: 0.98rem; }
-
 /* School cards */
 .school-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin: 16px 0 22px; }
 .school-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow-sm); }
@@ -484,7 +473,6 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
   table { font-size: 0.84rem; }
   th, td { padding: 9px 8px; }
   td.num { font-size: 0.82rem; }
-  .signal-block { padding: 14px 16px; }
 }
 </style>
 </head>
@@ -581,7 +569,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
   </span>成交量 + 大跌占比</h2>
 
   <figure>
-    <div id="chart-volume" class="chart" role="img" aria-label="5 期成交量与大跌占比图表"><div class="chart-loading">图表加载中…</div></div>
+    <div id="chart-volume" class="chart" role="img" aria-label="15 期成交量与大跌占比图表"><div class="chart-loading">图表加载中…</div></div>
     <figcaption>4 月上成交量最高（184 笔），共 15 期对比。</figcaption>
   </figure>
 
@@ -617,10 +605,10 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
 <section>
   <h2><span class="h2-icon" aria-hidden="true">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-  </span>核心片区 5 期均价走势</h2>
+  </span>核心片区均价走势</h2>
 
   <figure>
-    <div id="chart-area-avg" class="chart chart-tall" role="img" aria-label="13 个核心片区 5 期均价走势折线图"><div class="chart-loading">图表加载中…</div></div>
+    <div id="chart-area-avg" class="chart chart-tall" role="img" aria-label="13 个核心片区 15 期均价走势折线图"><div class="chart-loading">图表加载中…</div></div>
     <figcaption>13 个核心片区（≥3 期 ≥5 笔）的平均成交单价走势 · 点击图例切换显示</figcaption>
   </figure>
 
@@ -759,7 +747,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
   </div>
 
   <div class="conclusion">
-    <p><strong>2026-10下 预测信号：</strong>11 个片区上行 / 1 个下行（3 个持平），但 R² 普遍偏低，5 期样本难以支撑高置信预测，仅供方向性参考。</p>
+    <p><strong>2026-10下 预测信号：</strong>11 个片区上行 / 1 个下行（3 个持平），但 R² 普遍偏低，样本期数有限，难以支撑高置信预测，仅供方向性参考。</p>
   </div>
 </section>
 
@@ -853,177 +841,6 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
 
 <section>
   <h2><span class="h2-icon" aria-hidden="true">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-  </span>各期真信号摘要</h2>
-
-    <div class="signal-block">
-    <h3>3 月下 vs 3 月上</h3>
-    <p>
-      <span class="tag tag-down">新洲 -7.08%</span>
-      <span class="tag tag-down">景田 -4.83%</span>
-      <span class="tag tag-up">梅林 +19.56%</span>
-      <span class="tag tag-up">福田中心 +15.83%</span>
-    </p>
-  </div>
-
-  <div class="signal-block">
-    <h3>4 月上 vs 3 月下</h3>
-    <p>
-      <span class="tag tag-down">福田中心 -27.27%</span>
-      <span class="tag tag-down">梅林 -9.54% 强</span>
-      <span class="tag tag-down">香蜜湖 -8.64%</span>
-      <span class="tag tag-up">景田 +4.68%</span>
-    </p>
-  </div>
-
-  <div class="signal-block">
-    <h3>4 月下 vs 4 月上</h3>
-    <p>
-      <span class="tag tag-down">百花 -14.36%</span>
-      <span class="tag tag-down">八卦岭 -10.41% 强</span>
-      <span class="tag tag-down">景田 -10.22% 强</span>
-      <span class="tag tag-down">园岭 -4.30%</span>
-      <span class="tag tag-up">香蜜湖 +30.48%</span>
-      <span class="tag tag-up">福田中心 +19.76%</span>
-      <span class="tag tag-up">梅林 +7.34%</span>
-      <span class="tag tag-up">华强北 +5.65%</span>
-    </p>
-  </div>
-
-  <div class="signal-block">
-    <h3>5 月上 vs 4 月下</h3>
-    <p>
-      <span class="tag tag-down">华强北 -13.63%</span>
-      <span class="tag tag-down">石厦 -13.44% 强</span>
-      <span class="tag tag-up">景田 +16.26%</span>
-      <span class="tag tag-up">香蜜湖 +11.07%</span>
-      <span class="tag tag-up">园岭 +5.69%</span>
-    </p>
-  </div>
-
-  <div class="signal-block">
-    <h3>5 月下 vs 5 月上</h3>
-    <p>
-      <span class="tag tag-down">香蜜湖 -18.10%</span>
-      <span class="tag tag-down">梅林 -8.70% 强</span>
-      <span class="tag tag-down">皇岗 -4.66% 强</span>
-      <span class="tag tag-up">华强北 +45.38%</span>
-      <span class="tag tag-up">石厦 +22.68%</span>
-      <span class="tag tag-up">八卦岭 +13.00%</span>
-      <span class="tag tag-up">景田 +3.99%</span>
-    </p>
-  </div>
-
-  <div class="signal-block">
-    <h3>6 月上 vs 5 月下</h3>
-    <p>
-      <span class="tag tag-down">华强北 -16.53% 强</span>
-      <span class="tag tag-down">石厦 -6.11% 强</span>
-      <span class="tag tag-down">景田 -5.19%</span>
-      <span class="tag tag-up">梅林 +17.61%</span>
-      <span class="tag tag-up">香蜜湖 +6.96%</span>
-      <span class="tag tag-up">八卦岭 +6.68%</span>
-    </p>
-  </div>
-
-  <div class="signal-block">
-    <h3>6 月下 vs 6 月上</h3>
-    <p>
-      <span class="tag tag-down">百花 -23.55%</span>
-      <span class="tag tag-down">梅林 -14.24%</span>
-      <span class="tag tag-down">香蜜湖 -12.00%</span>
-      <span class="tag tag-down">莲花 -9.40%</span>
-      <span class="tag tag-up">石厦 +4.67%</span>
-    </p>
-  </div>
-
-  <div class="signal-block">
-    <h3>7 月上 vs 6 月下</h3>
-    <p>
-      <span class="tag tag-down">石厦 -15.86%</span>
-      <span class="tag tag-down">皇岗 -8.84% 强</span>
-      <span class="tag tag-down">莲花 -4.59%</span>
-      <span class="tag tag-up">香蜜湖 +40.55%</span>
-      <span class="tag tag-up">新洲 +8.08%</span>
-    </p>
-  </div>
-
-  <div class="signal-block">
-    <h3>7 月下 vs 7 月上</h3>
-    <p>
-      <span class="tag tag-down">华强北 -20.72%</span>
-      <span class="tag tag-down">新洲 -9.13%</span>
-      <span class="tag tag-up">皇岗 +15.32%</span>
-      <span class="tag tag-up">石厦 +13.25%</span>
-      <span class="tag tag-up">莲花 +12.48%</span>
-    </p>
-  </div>
-
-  <div class="signal-block">
-    <h3>8 月上 vs 7 月下</h3>
-    <p>
-      <span class="tag tag-down">皇岗 -11.16% 强</span>
-      <span class="tag tag-down">石厦 -3.74% 强</span>
-      <span class="tag tag-up">福田中心 +43.01%</span>
-      <span class="tag tag-up">华强北 +32.71%</span>
-      <span class="tag tag-up">新洲 +16.33%</span>
-      <span class="tag tag-up">梅林 +3.67%</span>
-    </p>
-  </div>
-
-  <div class="signal-block">
-    <h3>8 月下 vs 8 月上</h3>
-    <p>
-      <span class="tag tag-down">福田中心 -29.91%</span>
-      <span class="tag tag-down">华强北 -24.11% 强</span>
-      <span class="tag tag-down">梅林 -11.04%</span>
-      <span class="tag tag-down">香蜜湖 -6.59%</span>
-      <span class="tag tag-up">皇岗 +7.28%</span>
-    </p>
-  </div>
-
-  <div class="signal-block">
-    <h3>9 月上 vs 8 月下</h3>
-    <p>
-      <span class="tag tag-down">皇岗 -7.28%</span>
-      <span class="tag tag-up">福田中心 +34.18%</span>
-      <span class="tag tag-up">香蜜湖 +30.28%</span>
-      <span class="tag tag-up">梅林 +15.90%</span>
-      <span class="tag tag-up">石厦 +13.20%</span>
-      <span class="tag tag-up">华强北 +4.74%</span>
-    </p>
-  </div>
-
-  <div class="signal-block">
-    <h3>9 月下 vs 9 月上</h3>
-    <p>
-      <span class="tag tag-down">福田中心 -18.77%</span>
-      <span class="tag tag-down">华强北 -14.97% 强</span>
-      <span class="tag tag-down">石厦 -14.53% 强</span>
-      <span class="tag tag-down">八卦岭 -12.85%</span>
-      <span class="tag tag-up">皇岗 +14.77%</span>
-      <span class="tag tag-up">梅林 +9.00%</span>
-      <span class="tag tag-up">香蜜湖 +7.92%</span>
-    </p>
-  </div>
-
-  <div class="signal-block">
-    <h3>10 月上 vs 9 月下</h3>
-    <p>
-      <span class="tag tag-down">新洲 -27.95%</span>
-      <span class="tag tag-down">皇岗 -15.51%</span>
-      <span class="tag tag-down">梅林 -15.01%</span>
-      <span class="tag tag-down">香蜜湖 -7.71%</span>
-      <span class="tag tag-up">百花 +28.58%</span>
-      <span class="tag tag-up">华强北 +25.22%</span>
-      <span class="tag tag-up">八卦岭 +5.80%</span>
-      <span class="tag tag-up">石厦 +3.77%</span>
-    </p>
-  </div>
-</section>
-
-<section>
-  <h2><span class="h2-icon" aria-hidden="true">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
   </span>小区/片区检索</h2>
 
@@ -1062,7 +879,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
 </section>
 
 <details>
-<summary>5 期成交量与含谈价率详情</summary>
+<summary>15 期成交量与含谈价率详情</summary>
 <div class="table-wrap" style="margin:0; border:none; box-shadow:none;">
   <table>
     <thead>
@@ -1091,7 +908,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
 
 <details id="details-median">
 <summary>中位单价走势（更抗豪宅扰动）</summary>
-<div id="chart-area-median" class="chart chart-tall" role="img" aria-label="13 个核心片区 5 期中位单价走势折线图"><div class="chart-loading">展开后渲染…</div></div>
+<div id="chart-area-median" class="chart chart-tall" role="img" aria-label="13 个核心片区 15 期中位单价走势折线图"><div class="chart-loading">展开后渲染…</div></div>
 </details>
 
 <footer>
