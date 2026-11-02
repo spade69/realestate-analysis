@@ -88,16 +88,16 @@ def test_load_rejects_unknown_tier(tmp_path):
 def test_analyze_by_school_thresholds():
     from analyze import analyze_by_school
 
-    def deal(c, school, rt, sqm, total, period):
+    def deal(c, school, rt, sqm, total, period, neg=-10.0):
         return {"community": c, "school_primary": school, "school_note": "",
                 "room_type": rt, "area_sqm": sqm, "total_price_wan": total,
                 "unit_price_wan_sqm": total / sqm, "period": period,
-                "deal_date": pd.Timestamp("2026-01-10")}
+                "negotiation_rate": neg, "deal_date": pd.Timestamp("2026-01-10")}
 
     df = pd.DataFrame([
         deal("甲", "百花小学", "1室", 30, 200, "2026-01上"),
         deal("甲", "百花小学", "-", 60, 250, "2026-01上"),
-        deal("乙", "百花小学", "2室", 60, 400, "2026-02下"),
+        deal("乙", "百花小学", "2室", 60, 400, "2026-02下", neg=-4.0),
         deal("丙", "福民小学/福田小学", "3室", 90, 500, "2026-02下"),
         deal("丁", "", "2室", 60, 100, "2026-02下"),
     ])
@@ -108,3 +108,8 @@ def test_analyze_by_school_thresholds():
     assert by["百花小学"]["cheapest_2r"]["community"] == "乙"
     assert by["福田小学"]["n"] == 1
     assert list(by)[0] == "百花小学"
+    # 流通性：2 期 = 1 个月
+    assert by["百花小学"]["per_month"] == pytest.approx(3.0)
+    assert by["百花小学"]["n_active_periods"] == 2 and by["百花小学"]["active_ratio"] == 1.0
+    assert by["百花小学"]["avg_neg_rate"] == pytest.approx(-8.0)
+    assert by["福田小学"]["n_active_periods"] == 1 and by["福田小学"]["active_ratio"] == 0.5

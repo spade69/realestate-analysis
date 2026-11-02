@@ -25,6 +25,7 @@ from analyze import (
     split_auctions,
     analyze_school_premium,
     analyze_by_school,
+    SCHOOL_LIST_MIN_DEALS,
     SCHOOL_RECENT_PERIODS,
     attach_school,
     load_school_map,
@@ -800,13 +801,25 @@ def _deal_line(d: dict[str, Any]) -> str:
             f'{d["unit"]:.2f}万/㎡ · {period_short(d["period"])}{warn}')
 
 
+def _neg(v: float | None) -> str:
+    return f"{v:.1f}%" if v is not None else "—"
+
+
 def _wan(d: dict[str, Any] | None) -> str:
     return f'{d["total"]:g}万' if d else "—"
 
 
+def _liquidity(s: dict[str, Any]) -> str:
+    nr = f'{s["avg_neg_rate"]:.1f}%' if s["avg_neg_rate"] is not None else "—"
+    return (f'月均 {s["per_month"]:.1f} 笔 · {s["n_active_periods"]}/{s["n_periods"]} 期有成交'
+            f' · 谈价 {nr}')
+
+
 def build_school_cards(df: pd.DataFrame) -> str:
-    """名校逐校卡片（上车门槛）+ 全部学校汇总表。"""
-    schools = analyze_by_school(df)
+    """名校逐校卡片（上车门槛 + 流通性）+ 全部学校汇总表。成交过少的学校不展示。"""
+    all_schools = analyze_by_school(df)
+    schools = [s for s in all_schools if s["n"] >= SCHOOL_LIST_MIN_DEALS]
+    hidden = [s for s in all_schools if s["n"] < SCHOOL_LIST_MIN_DEALS]
     if not schools:
         return ""
     periods = sorted(df["period"].unique())
@@ -829,6 +842,7 @@ def build_school_cards(df: pd.DataFrame) -> str:
             f'<dt>2室及以上最低</dt><dd>' + (f'<strong>{c2["total"]:g}万</strong> {_deal_line(c2)}' if c2 else '<span class="dim">无成交</span>') + '</dd>',
             f'<dt>{recent_label}最低</dt><dd>' + (f'<strong>{cr["total"]:g}万</strong> {_deal_line(cr)}' if cr else '<span class="dim">无成交</span>') + '</dd>',
             f'<dt>总价 / 单价中位</dt><dd>{s["median_total"]:g}万 · {s["median_unit"]:.2f}万/㎡</dd>',
+            f'<dt>流通性</dt><dd>{_liquidity(s)}</dd>',
             f'<dt>对口小区</dt><dd>{comms}</dd>',
             '</dl>',
         ]
@@ -842,20 +856,32 @@ def build_school_cards(df: pd.DataFrame) -> str:
             f'<td class="num">{s["n_communities"]}</td><td class="num">{s["n"]}</td>'
             f'<td class="num">{c["total"]:g}万</td><td>{esc(c["community"])}</td>'
             f'<td class="num">{_wan(c2)}</td><td class="num">{_wan(cr)}</td>'
-            f'<td class="num">{s["median_total"]:g}万</td><td class="num">{s["median_unit"]:.2f}</td></tr>'
+            f'<td class="num">{s["median_total"]:g}万</td><td class="num">{s["median_unit"]:.2f}</td>'
+            f'<td class="num">{s["per_month"]:.1f}</td>'
+            f'<td class="num">{s["n_active_periods"]}/{s["n_periods"]}</td>'
+            f'<td class="num">{_neg(s["avg_neg_rate"])}</td></tr>'
         )
+    hidden_note = (
+        f'<p class="caption-note">另有 {len(hidden)} 所学校累计成交不足 {SCHOOL_LIST_MIN_DEALS} 笔，'
+        '流通性差、价格参考意义有限，未列出：'
+        + "、".join(f'{esc(h["school"])}({h["n"]})' for h in sorted(hidden, key=lambda h: -h["n"]))
+        + '。</p>'
+    ) if hidden else ""
     return (
         '<h3>重点学校：上车门槛</h3>'
         '<p class="caption-note">按对口小学汇总全部期次成交（已剔除法拍和非市场价）。'
         '共享学区/大学区的小区同时计入每所对口学校；括号内为该小区成交笔数。'
-        '最低价可能是商住公寓或极小户型，看「2室及以上最低」更接近家庭上车门槛。</p>'
+        '最低价可能是商住公寓或极小户型，看「2室及以上最低」更接近家庭上车门槛。'
+        f'只展示累计成交 ≥{SCHOOL_LIST_MIN_DEALS} 笔的学校。'
+        '流通性：月均成交（一期 = 半个月）、有成交的期数、平均谈价率（越接近 0 越好卖）。</p>'
         '<div class="school-grid">' + "".join(cards) + '</div>'
         '<details><summary>全部学校（' + str(len(schools)) + ' 所，★ 为名校）</summary>'
         '<div class="table-wrap" style="margin:0;border:none;box-shadow:none;"><table><thead><tr>'
         '<th>学校</th><th class="num">小区</th><th class="num">成交</th><th class="num">最低总价</th><th>最低价小区</th>'
         f'<th class="num">2室+最低</th><th class="num">近{SCHOOL_RECENT_PERIODS}期最低</th>'
         '<th class="num">总价中位</th><th class="num">单价中位</th>'
-        '</tr></thead><tbody>' + "".join(rows) + '</tbody></table></div></details>'
+        '<th class="num">月均成交</th><th class="num">有成交期数</th><th class="num">平均谈价</th>'
+        '</tr></thead><tbody>' + "".join(rows) + '</tbody></table></div>' + hidden_note + '</details>'
     )
 
 
