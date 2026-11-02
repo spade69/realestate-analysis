@@ -6,6 +6,7 @@ import argparse
 from pathlib import Path
 from typing import Any, Iterable
 
+import numpy as np
 import pandas as pd
 from scipy import stats as _stats
 
@@ -15,6 +16,8 @@ COLUMNS = [
     "room_type", "area_sqm", "total_price_wan", "unit_price_wan_sqm",
     "negotiation_rate", "deal_date",
 ]
+# 可选尾列：法拍标记（1 = 法拍）。旧 CSV 无此列，读入时补 False。
+AUCTION_COLUMN = "is_auction"
 
 THRESHOLDS = (-20, -30, -50)
 
@@ -46,7 +49,11 @@ def load_data(paths: Iterable[Path | str]) -> pd.DataFrame:
     frames = []
     for p in paths:
         df = pd.read_csv(p, dtype=str, keep_default_na=False)
-        if list(df.columns) != COLUMNS:
+        if list(df.columns) == COLUMNS:
+            df[AUCTION_COLUMN] = False
+        elif list(df.columns) == COLUMNS + [AUCTION_COLUMN]:
+            df[AUCTION_COLUMN] = df[AUCTION_COLUMN].eq("1")
+        else:
             raise ValueError(f"{p}: columns mismatch, got {list(df.columns)}")
         for col in ["area_sqm", "total_price_wan", "unit_price_wan_sqm",
                     "negotiation_rate", "year_built"]:
@@ -54,6 +61,141 @@ def load_data(paths: Iterable[Path | str]) -> pd.DataFrame:
         df["deal_date"] = pd.to_datetime(df["deal_date"], format="%Y-%m-%d")
         frames.append(df)
     return pd.concat(frames, ignore_index=True)
+
+
+def split_auctions(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """返回 (market_df, auctions_df)。法拍价非市场成交、户型与谈价率缺失，不进价格分析。"""
+    mask = df[AUCTION_COLUMN]
+    return df[~mask].copy().reset_index(drop=True), df[mask].copy().reset_index(drop=True)
+
+
+# ── 学区 ──────────────────────────────────────────────────────────
+
+SCHOOL_MAP_COLUMNS = ["area", "community", "n_deals", "primary_school",
+                      "middle_school", "tier", "source", "note"]
+# 名校 = 公认优质学位；普通 = 有公办学位；无学位 = 公寓/商住/产权不足等无法入学
+SCHOOL_TIERS = ("名校", "普通", "无学位")
+UNMAPPED_TIER = "未标注"
+SCHOOL_MIN_N = 3  # 同片区对比时每档最少样本
+
+
+def load_school_map(path: Path | str) -> pd.DataFrame:
+    """读 小区→学校 映射表。tier 为空的行视为未标注，不参与匹配。"""
+    m = pd.read_csv(path, dtype=str, keep_default_na=False)
+    if list(m.columns) != SCHOOL_MAP_COLUMNS:
+        raise ValueError(f"{path}: columns mismatch, got {list(m.columns)}")
+    bad = set(m["tier"]) - set(SCHOOL_TIERS) - {""}
+    if bad:
+        raise ValueError(f"{path}: unknown tier {sorted(bad)}, expected {SCHOOL_TIERS}")
+    m = m[m["tier"] != ""]
+    dup = m["community"][m["community"].duplicated()]
+    if len(dup):
+        raise ValueError(f"{path}: duplicate community {sorted(set(dup))}")
+    return m[["community", "primary_school", "middle_school", "tier"]]
+
+
+def attach_school(df: pd.DataFrame, school_map: pd.DataFrame) -> pd.DataFrame:
+    """按小区名挂上 school_primary / school_middle / school_tier。"""
+    m = school_map.rename(columns={"primary_school": "school_primary",
+                                   "middle_school": "school_middle",
+                                   "tier": "school_tier"})
+    out = df.merge(m, on="community", how="left")
+    out["school_tier"] = out["school_tier"].fillna(UNMAPPED_TIER)
+    for col in ("school_primary", "school_middle"):
+        out[col] = out[col].fillna("")
+    return out
+
+
+def _ols(y: np.ndarray, X: np.ndarray) -> tuple[np.ndarray, np.ndarray, int]:
+    """返回 (coef, stderr, dof)。经典 OLS 标准误。"""
+    coef, *_ = np.linalg.lstsq(X, y, rcond=None)
+    resid = y - X @ coef
+    dof = len(y) - np.linalg.matrix_rank(X)
+    sigma2 = resid @ resid / dof
+    cov = sigma2 * np.linalg.pinv(X.T @ X)
+    return coef, np.sqrt(np.diag(cov)), dof
+
+
+def analyze_school_premium(df: pd.DataFrame) -> dict[str, Any]:
+    """学区溢价：分档概况 + 同片区对比 + 控制变量回归。
+
+    回归：log(单价) ~ 学区档(基准=普通) + 片区 + 期次 + 房龄 + log(面积) + 户型。
+    溢价 = exp(β) − 1。只用已标注学区档的样本。
+    """
+    n_total = len(df)
+    mapped = df[df["school_tier"] != UNMAPPED_TIER].copy()
+    result: dict[str, Any] = {
+        "n_total": n_total, "n_mapped": len(mapped),
+        "by_tier": [], "same_area": [], "same_area_median_pct": None,
+        "regression": None,
+    }
+    if mapped.empty:
+        return result
+
+    for tier in SCHOOL_TIERS:
+        g = mapped[mapped["school_tier"] == tier]
+        if g.empty:
+            continue
+        nr = g["negotiation_rate"].dropna()
+        result["by_tier"].append({
+            "tier": tier, "n": len(g),
+            "n_communities": g["community"].nunique(),
+            "median_unit_price": float(g["unit_price_wan_sqm"].median()),
+            "avg_neg_rate": float(nr.mean()) if len(nr) else None,
+        })
+
+    # 同片区：名校 vs 普通 单价中位数
+    for area, g in mapped.groupby("area"):
+        top = g[g["school_tier"] == "名校"]["unit_price_wan_sqm"]
+        base = g[g["school_tier"] == "普通"]["unit_price_wan_sqm"]
+        if len(top) >= SCHOOL_MIN_N and len(base) >= SCHOOL_MIN_N:
+            result["same_area"].append({
+                "area": area, "n_top": len(top), "n_base": len(base),
+                "median_top": float(top.median()), "median_base": float(base.median()),
+                "premium_pct": float((top.median() / base.median() - 1) * 100),
+            })
+    if result["same_area"]:
+        result["same_area_median_pct"] = float(
+            np.median([r["premium_pct"] for r in result["same_area"]]))
+
+    # 回归
+    reg = mapped.dropna(subset=["year_built"])
+    tiers_present = [t for t in ("名校", "无学位") if (reg["school_tier"] == t).sum() >= SCHOOL_MIN_N]
+    if (reg["school_tier"] == "普通").sum() < SCHOOL_MIN_N or not tiers_present or len(reg) < 30:
+        return result
+    ref_year = int(reg["deal_date"].dt.year.max())
+    X = pd.DataFrame({"const": 1.0,
+                      "age": ref_year - reg["year_built"].astype(float),
+                      "log_sqm": np.log(reg["area_sqm"].astype(float))},
+                     index=reg.index)
+    for t in tiers_present:
+        X[f"tier_{t}"] = (reg["school_tier"] == t).astype(float)
+    for col, prefix in (("area", "area"), ("period", "period")):
+        X = X.join(pd.get_dummies(reg[col], prefix=prefix, drop_first=True, dtype=float))
+    X = X.join(pd.get_dummies(reg["room_type"].map(_room_type_group), prefix="rt",
+                              drop_first=True, dtype=float))
+    y = np.log(reg["unit_price_wan_sqm"].astype(float).to_numpy())
+    coef, se, dof = _ols(y, X.to_numpy())
+    resid = y - X.to_numpy() @ coef
+    r2 = 1 - resid @ resid / ((y - y.mean()) @ (y - y.mean()))
+    tcrit = _stats.t.ppf(0.975, dof)
+    terms = []
+    for t in tiers_present:
+        i = list(X.columns).index(f"tier_{t}")
+        b, s = coef[i], se[i]
+        terms.append({
+            "tier": t,
+            "premium_pct": float((np.exp(b) - 1) * 100),
+            "ci_low_pct": float((np.exp(b - tcrit * s) - 1) * 100),
+            "ci_high_pct": float((np.exp(b + tcrit * s) - 1) * 100),
+            "p_value": float(2 * _stats.t.sf(abs(b / s), dof)),
+        })
+    i_age = list(X.columns).index("age")
+    result["regression"] = {
+        "n": len(reg), "r2": float(r2), "terms": terms,
+        "age_pct_per_year": float((np.exp(coef[i_age]) - 1) * 100),
+    }
+    return result
 
 
 def detect_outliers(df: pd.DataFrame, ratio: float = OUTLIER_RATIO) -> pd.Series:
@@ -721,7 +863,9 @@ def main() -> None:
     csvs = sorted((here / "data").glob("*.csv"))
     if not csvs:
         raise SystemExit("No CSVs in data/")
-    df_raw = load_data(csvs)
+    df_raw, auctions = split_auctions(load_data(csvs))
+    if len(auctions):
+        print(f"剔除 {len(auctions)} 条法拍")
 
     if args.include_outliers:
         df = df_raw
