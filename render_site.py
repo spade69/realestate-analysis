@@ -23,6 +23,11 @@ from analyze import (
     load_data,
     filter_outliers,
     split_auctions,
+    analyze_school_premium,
+    attach_school,
+    load_school_map,
+    SCHOOL_TIERS,
+    UNMAPPED_TIER,
     analyze_by_total_price,
     analyze_by_area,
     analyze_same_community_room_delta,
@@ -717,6 +722,75 @@ def build_tldr(df: pd.DataFrame, periods: list[str]) -> str:
     return "".join(parts)
 
 
+# ── 学区溢价 ─────────────────────────────────────────────────────
+
+
+def _pct(v: float) -> str:
+    return f"{v:+.1f}%"
+
+
+def build_school_section(df: pd.DataFrame) -> str:
+    res = analyze_school_premium(df)
+    n_total, n_mapped = res["n_total"], res["n_mapped"]
+    cov = n_mapped / n_total * 100 if n_total else 0
+    parts = [
+        f'<p class="caption-note">已标注学区的成交 <strong>{n_mapped}</strong> / {n_total} 笔'
+        f'（{cov:.0f}%）· 映射表 <code>ref/school_map.csv</code> · 分档：'
+        + " / ".join(SCHOOL_TIERS) + '</p>'
+    ]
+    if n_mapped == 0:
+        parts.append('<div class="conclusion"><p>学区映射表尚未填写，暂无分析。</p></div>')
+        return "\n  ".join(parts)
+
+    rows = []
+    for t in res["by_tier"]:
+        nr = f'{t["avg_neg_rate"]:.2f}%' if t["avg_neg_rate"] is not None else "—"
+        rows.append(
+            f'<tr><td>{esc(t["tier"])}</td><td class="num">{t["n_communities"]}</td>'
+            f'<td class="num">{t["n"]}</td><td class="num">{t["median_unit_price"]:.2f}</td>'
+            f'<td class="num">{nr}</td></tr>'
+        )
+    parts.append(
+        '<div class="table-wrap"><table><thead><tr><th>学区档</th><th class="num">小区数</th>'
+        '<th class="num">成交</th><th class="num">单价中位数 (万/㎡)</th><th class="num">平均谈价率</th>'
+        '</tr></thead><tbody>' + "".join(rows) + '</tbody></table></div>'
+    )
+
+    if res["same_area"]:
+        rows = [
+            f'<tr><td>{esc(r["area"])}</td><td class="num">{r["n_top"]} / {r["n_base"]}</td>'
+            f'<td class="num">{r["median_top"]:.2f}</td><td class="num">{r["median_base"]:.2f}</td>'
+            f'<td class="num {"up" if r["premium_pct"] > 0 else "down"}">{_pct(r["premium_pct"])}</td></tr>'
+            for r in sorted(res["same_area"], key=lambda r: -r["premium_pct"])
+        ]
+        parts.append(
+            '<h3>同片区对比：名校 vs 普通</h3>'
+            '<div class="table-wrap"><table><thead><tr><th>片区</th><th class="num">笔数 名校/普通</th>'
+            '<th class="num">名校中位</th><th class="num">普通中位</th><th class="num">溢价</th>'
+            '</tr></thead><tbody>' + "".join(rows) + '</tbody></table></div>'
+        )
+
+    lines = []
+    if res["same_area_median_pct"] is not None:
+        lines.append(f'同片区对比：{len(res["same_area"])} 个片区的名校溢价中位数为 '
+                     f'<strong>{_pct(res["same_area_median_pct"])}</strong>（未控制房龄/面积）。')
+    reg = res["regression"]
+    if reg:
+        for t in reg["terms"]:
+            sig = t["p_value"] < 0.05
+            lines.append(
+                f'回归（控制片区、期次、房龄、面积、户型，n={reg["n"]}，R²={reg["r2"]:.2f}）：'
+                f'{esc(t["tier"])}相对普通学位 <strong class="{"up" if sig else "dim"}">{_pct(t["premium_pct"])}</strong>'
+                f'（95% CI {_pct(t["ci_low_pct"])} ~ {_pct(t["ci_high_pct"])}，p={t["p_value"]:.2g}，'
+                f'{"显著" if sig else "不显著"}）。'
+            )
+        lines.append(f'房龄每增加 1 年，单价约变化 {_pct(reg["age_pct_per_year"])}。')
+    else:
+        lines.append('已标注样本不足，暂不做回归（需普通档及名校或无学位档各 ≥3 笔、合计 ≥30 笔）。')
+    parts.append('<div class="conclusion">' + "".join(f"<p>{l}</p>" for l in lines) + '</div>')
+    return "\n  ".join(parts)
+
+
 # ── 小区检索数据 ─────────────────────────────────────────────────
 
 
@@ -738,6 +812,8 @@ def build_search_data(df: pd.DataFrame) -> str:
             "up": float(r["unit_price_wan_sqm"]),
             "nr": None if pd.isna(r["negotiation_rate"]) else float(r["negotiation_rate"]),
             "d": str(r["deal_date"].date()),
+            "s": " / ".join(x for x in (r["school_primary"], r["school_middle"]) if x),
+            "st": "" if r["school_tier"] == UNMAPPED_TIER else str(r["school_tier"]),
         })
     raw = json.dumps(records, ensure_ascii=False, separators=(",", ":"))
     return raw.replace("</", "<\\/")
@@ -932,6 +1008,10 @@ def main() -> None:
     df_raw = load_data(csvs)
     df_market, auctions = split_auctions(df_raw)
     df, outliers = filter_outliers(df_market)
+    school_map_path = here / "ref" / "school_map.csv"
+    school_map = (load_school_map(school_map_path) if school_map_path.exists()
+                  else pd.DataFrame(columns=["community", "primary_school", "middle_school", "tier"]))
+    df = attach_school(df, school_map)
     periods = sorted(df["period"].unique())
 
     placeholders = {
@@ -964,6 +1044,7 @@ def main() -> None:
     placeholders["PREDICTION_CAPTION"] = pred_caption
 
     placeholders["SEARCH_DATA_JSON"] = build_search_data(df)
+    placeholders["SCHOOL_SECTION_HTML"] = build_school_section(df)
 
     same_rows, same_conclusion = build_same_unit_rows(df, periods)
     placeholders["SAME_UNIT_ROWS"] = same_rows

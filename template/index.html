@@ -605,6 +605,14 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
 
 <section>
   <h2><span class="h2-icon" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>
+  </span>学区溢价</h2>
+
+  {{ SCHOOL_SECTION_HTML }}
+</section>
+
+<section>
+  <h2><span class="h2-icon" aria-hidden="true">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
   </span>各期真信号摘要</h2>
 
@@ -617,7 +625,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
   </span>小区/片区检索</h2>
 
   <p class="caption-note">
-    输入小区名、片区名（如"梅林一村"、"香蜜湖"）或户型（如"3室"）·
+    输入小区名、片区名（如"梅林一村"、"香蜜湖"）、户型（如"3室"）或学校/学区档（如"百花小学"、"名校"）·
     支持多关键词空格分隔，全部命中才显示 · 最多展示 200 条
   </p>
 
@@ -1090,7 +1098,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
     }
     const terms = q.split(/\s+/).filter(Boolean).map(t => t.toLowerCase());
     const matched = data.filter(r => {
-      const hay = `${r.p} ${r.a} ${r.c} ${r.rt}`.toLowerCase();
+      const hay = `${r.p} ${r.a} ${r.c} ${r.rt} ${r.s || ''} ${r.st || ''}`.toLowerCase();
       return terms.every(t => hay.includes(t));
     });
 
@@ -1111,7 +1119,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
       return `<tr>
         <td>${escapeHtml(periodShort(r.p))}</td>
         <td>${highlight(r.a, terms)}</td>
-        <td>${highlight(r.c, terms)}</td>
+        <td>${highlight(r.c, terms)}${r.s ? `<div class="dim" style="font-size:12px">${highlight(r.s, terms)}${r.st ? ' · ' + escapeHtml(r.st) : ''}</div>` : ''}</td>
         <td>${highlight(r.rt, terms)}</td>
         <td class="num">${fmtNum(r.sq, 0)}㎡</td>
         <td class="num">${fmtNum(r.tp, 0)}万</td>
