@@ -848,19 +848,38 @@ def build_school_cards(df: pd.DataFrame) -> str:
         ]
         cards.append('<div class="school-card">' + "".join(lines) + '</div>')
 
+    def td(text: str, v: float | None, cls: str = "num") -> str:
+        dv = "" if v is None else f"{v:g}"
+        return f'<td class="{cls}" data-v="{dv}">{text}</td>'
+
     rows = []
     for s in schools:
         c, c2, cr = s["cheapest"], s["cheapest_2r"], s["cheapest_recent"]
         rows.append(
-            f'<tr><td>{esc(s["school"])}{" ★" if s["is_top"] else ""}</td>'
-            f'<td class="num">{s["n_communities"]}</td><td class="num">{s["n"]}</td>'
-            f'<td class="num">{c["total"]:g}万</td><td>{esc(c["community"])}</td>'
-            f'<td class="num">{_wan(c2)}</td><td class="num">{_wan(cr)}</td>'
-            f'<td class="num">{s["median_total"]:g}万</td><td class="num">{s["median_unit"]:.2f}</td>'
-            f'<td class="num">{s["per_month"]:.1f}</td>'
-            f'<td class="num">{s["n_active_periods"]}/{s["n_periods"]}</td>'
-            f'<td class="num">{_neg(s["avg_neg_rate"])}</td></tr>'
+            f'<tr data-top="{1 if s["is_top"] else 0}">'
+            f'<td>{esc(s["school"])}{" ★" if s["is_top"] else ""}</td>'
+            + td(str(s["n_communities"]), s["n_communities"])
+            + td(str(s["n"]), s["n"])
+            + td(f'{c["total"]:g}万', c["total"])
+            + f'<td>{esc(c["community"])}</td>'
+            + td(_wan(c2), c2["total"] if c2 else None)
+            + td(_wan(cr), cr["total"] if cr else None)
+            + td(f'{s["median_total"]:g}万', s["median_total"])
+            + td(f'{s["median_unit"]:.2f}', s["median_unit"])
+            + td(f'{s["per_month"]:.1f}', round(s["per_month"], 3))
+            + td(f'{s["n_active_periods"]}/{s["n_periods"]}', s["n_active_periods"])
+            + td(_neg(s["avg_neg_rate"]), s["avg_neg_rate"])
+            + '</tr>'
         )
+    n_top = sum(1 for s in schools if s["is_top"])
+
+    def th(label: str, first: str | None = None, cls: str = "num") -> str:
+        """first: 首次点击的排序方向（desc / asc）；None = 不可排序。"""
+        if first is None:
+            return f'<th class="{cls}">{label}</th>'
+        return (f'<th class="{cls} sortable" data-first="{first}" aria-sort="none">'
+                f'<button type="button">{label}<span class="sort-ind" aria-hidden="true"></span></button></th>')
+
     hidden_note = (
         f'<p class="caption-note">另有 {len(hidden)} 所学校累计成交不足 {SCHOOL_LIST_MIN_DEALS} 笔，'
         '流通性差、价格参考意义有限，未列出：'
@@ -876,12 +895,20 @@ def build_school_cards(df: pd.DataFrame) -> str:
         '流通性：月均成交（一期 = 半个月）、有成交的期数、平均谈价率（越接近 0 越好卖）。</p>'
         '<div class="school-grid">' + "".join(cards) + '</div>'
         '<details><summary>全部学校（' + str(len(schools)) + ' 所，★ 为名校）</summary>'
-        '<div class="table-wrap" style="margin:0;border:none;box-shadow:none;"><table><thead><tr>'
-        '<th>学校</th><th class="num">小区</th><th class="num">成交</th><th class="num">最低总价</th><th>最低价小区</th>'
-        f'<th class="num">2室+最低</th><th class="num">近{SCHOOL_RECENT_PERIODS}期最低</th>'
-        '<th class="num">总价中位</th><th class="num">单价中位</th>'
-        '<th class="num">月均成交</th><th class="num">有成交期数</th><th class="num">平均谈价</th>'
-        '</tr></thead><tbody>' + "".join(rows) + '</tbody></table></div>' + hidden_note + '</details>'
+        '<div class="school-filter" role="group" aria-label="筛选学校">'
+        f'<button type="button" data-filter="all" aria-pressed="true">全部 {len(schools)}</button>'
+        f'<button type="button" data-filter="top" aria-pressed="false">名校 ★ {n_top}</button>'
+        f'<button type="button" data-filter="other" aria-pressed="false">非名校 {len(schools) - n_top}</button>'
+        '<span class="dim school-filter-hint">点表头排序，再点切换升 / 降序</span>'
+        '</div>'
+        '<div class="table-wrap" style="margin:0;border:none;box-shadow:none;">'
+        '<table id="school-table"><thead><tr>'
+        + th("学校", cls="")
+        + th("小区", "desc") + th("成交", "desc") + th("最低总价", "asc") + th("最低价小区", cls="")
+        + th("2室+最低", "asc") + th(f"近{SCHOOL_RECENT_PERIODS}期最低", "asc")
+        + th("总价中位", "asc") + th("单价中位", "asc")
+        + th("月均成交", "desc") + th("有成交期数", "desc") + th("平均谈价", "desc")
+        + '</tr></thead><tbody>' + "".join(rows) + '</tbody></table></div>' + hidden_note + '</details>'
     )
 
 
