@@ -338,6 +338,26 @@ td.num {
 .school-dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; margin: 0; font-size: 0.82rem; }
 .school-dl dt { color: var(--muted); white-space: nowrap; }
 .school-dl dd { margin: 0; color: var(--text-2); }
+.school-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 4px 0 12px; }
+.school-filter button {
+  font: inherit; font-size: 0.86rem; padding: 6px 14px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  transition: background var(--transition), border-color var(--transition);
+}
+.school-filter button:hover { border-color: var(--primary); }
+.school-filter button[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--surface); }
+.school-filter button:focus-visible, th.sortable button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.school-filter-hint { font-size: 0.8rem; }
+th.sortable { padding: 0; }
+th.sortable button {
+  all: unset; box-sizing: border-box; display: block; width: 100%; padding: 12px 14px;
+  cursor: pointer; text-align: inherit; font: inherit; color: inherit; letter-spacing: inherit;
+}
+th.sortable button:hover { color: var(--primary); }
+.sort-ind { display: inline-block; width: 1em; margin-left: 2px; color: var(--muted-2); }
+th.sortable[aria-sort="none"] .sort-ind::after { content: "↕"; opacity: 0.5; }
+th.sortable[aria-sort="ascending"] .sort-ind::after { content: "▲"; color: var(--primary); }
+th.sortable[aria-sort="descending"] .sort-ind::after { content: "▼"; color: var(--primary); }
 .school-card .warn { color: var(--warn); font-size: 0.78rem; }
 
 /* Details */
@@ -1153,6 +1173,49 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
   }
 
   input.addEventListener('input', debounce(e => render(e.target.value), 150));
+})();
+</script>
+<script>
+// 全部学校表：表头排序 + 名校 / 非名校筛选
+(function () {
+  'use strict';
+  const table = document.getElementById('school-table');
+  if (!table) return;
+  const tbody = table.tBodies[0];
+  const rows = Array.from(tbody.rows);
+  rows.forEach(function (r, i) { r.dataset.i = i; });
+  const ths = Array.from(table.tHead.rows[0].cells);
+
+  ths.forEach(function (th, col) {
+    if (!th.classList.contains('sortable')) return;
+    th.querySelector('button').addEventListener('click', function () {
+      const cur = th.getAttribute('aria-sort');
+      const dir = cur === 'none' ? (th.dataset.first === 'asc' ? 'ascending' : 'descending')
+                : (cur === 'ascending' ? 'descending' : 'ascending');
+      ths.forEach(function (h) { if (h.classList.contains('sortable')) h.setAttribute('aria-sort', 'none'); });
+      th.setAttribute('aria-sort', dir);
+      const sign = dir === 'ascending' ? 1 : -1;
+      const val = function (r) { const v = r.cells[col].dataset.v; return v === '' ? null : parseFloat(v); };
+      rows.slice().sort(function (a, b) {
+        const va = val(a), vb = val(b);
+        if (va === null && vb === null) return a.dataset.i - b.dataset.i;
+        if (va === null) return 1;   // 空值始终排最后
+        if (vb === null) return -1;
+        return (va - vb) * sign || a.dataset.i - b.dataset.i;
+      }).forEach(function (r) { tbody.appendChild(r); });
+    });
+  });
+
+  const btns = Array.from(document.querySelectorAll('.school-filter button'));
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      const f = b.dataset.filter;
+      btns.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      rows.forEach(function (r) {
+        r.hidden = (f === 'top' && r.dataset.top !== '1') || (f === 'other' && r.dataset.top !== '0');
+      });
+    });
+  });
 })();
 </script>
 </body>
