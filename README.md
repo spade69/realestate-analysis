@@ -63,7 +63,11 @@ python3 plot_trends.py    # → reports/*.png
 ## 学区映射
 
 `ref/school_map.csv` 每行一个小区（按成交笔数降序），`tier` 留空表示未标注，不参与学区分析。
-填写 `primary_school` / `middle_school` / `tier`，并在 `source` 注明依据（如“福田区2026小一地段代码图”）。
+
+- `ref/school_lists.json`：各校对口小区原文（本地宝转载的福田教育网 2023 年数据，含来源 URL）
+- `python3 tools/build_school_map.py`：按名称匹配自动填充映射表，名校名单见脚本内 `TOP_PRIMARY`（草案）
+- 人工修正的行把 `source` 写成以“人工”开头，脚本重跑时不会覆盖
+
 福田每年调整划片，映射以最新招生地段为准。
 
 ## 数据来源
