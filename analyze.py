@@ -43,6 +43,22 @@ TOTAL_PRICE_BUCKETS = [
 ]
 TOTAL_PRICE_LABELS = [b[0] for b in TOTAL_PRICE_BUCKETS]
 
+# 小区名 OCR 误字 / 异写 → 标准名。读入时统一，原始 CSV 保持截图原样。
+# 只收能确认的（同片区、一字之差、另一写法与学校名单或楼盘正式名一致）。
+COMMUNITY_ALIASES = {
+    "航天工业华庭": "航天立业华庭",
+    "恒邦壹峰": "恒邦壹峯",
+    "阁网网苑": "阁林网苑",
+    "绿景红湾": "绿景虹湾",
+    "绿景中城天悦花园": "绿景中城天邑花园",
+    "嘉葆阳光雅居": "嘉鑫阳光雅居",
+    "景源年庭": "景源华庭",
+    "富通九城公馆": "富通九曜公馆",
+    "深山上城": "深业上城",
+    "香茘绿洲": "香荔绿洲",
+    "香蜜湖水樾花都": "香蜜湖水榭花都",
+}
+
 
 def load_data(paths: Iterable[Path | str]) -> pd.DataFrame:
     """读多个 CSV，拼成单一 DataFrame，校验列、转换类型。"""
@@ -59,6 +75,7 @@ def load_data(paths: Iterable[Path | str]) -> pd.DataFrame:
                     "negotiation_rate", "year_built"]:
             df[col] = pd.to_numeric(df[col].replace("", pd.NA), errors="raise")
         df["deal_date"] = pd.to_datetime(df["deal_date"], format="%Y-%m-%d")
+        df["community"] = df["community"].replace(COMMUNITY_ALIASES)
         frames.append(df)
     return pd.concat(frames, ignore_index=True)
 
