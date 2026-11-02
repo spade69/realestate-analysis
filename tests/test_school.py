@@ -83,3 +83,28 @@ def test_load_rejects_unknown_tier(tmp_path):
     )
     with pytest.raises(ValueError, match="unknown tier"):
         load_school_map(p)
+
+
+def test_analyze_by_school_thresholds():
+    from analyze import analyze_by_school
+
+    def deal(c, school, rt, sqm, total, period):
+        return {"community": c, "school_primary": school, "school_note": "",
+                "room_type": rt, "area_sqm": sqm, "total_price_wan": total,
+                "unit_price_wan_sqm": total / sqm, "period": period,
+                "deal_date": pd.Timestamp("2026-01-10")}
+
+    df = pd.DataFrame([
+        deal("甲", "百花小学", "1室", 30, 200, "2026-01上"),
+        deal("甲", "百花小学", "-", 60, 250, "2026-01上"),
+        deal("乙", "百花小学", "2室", 60, 400, "2026-02下"),
+        deal("丙", "福民小学/福田小学", "3室", 90, 500, "2026-02下"),
+        deal("丁", "", "2室", 60, 100, "2026-02下"),
+    ])
+    by = {s["school"]: s for s in analyze_by_school(df)}
+    assert set(by) == {"百花小学", "福民小学", "福田小学"}
+    assert by["百花小学"]["is_top"] and not by["福民小学"]["is_top"]
+    assert by["百花小学"]["cheapest"]["total"] == 200
+    assert by["百花小学"]["cheapest_2r"]["community"] == "乙"
+    assert by["福田小学"]["n"] == 1
+    assert list(by)[0] == "百花小学"

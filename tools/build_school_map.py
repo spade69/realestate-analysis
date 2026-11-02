@@ -2,7 +2,7 @@
 
 - 匹配：小区名与名单项相同，或一方是另一方前缀（≥3 字），或去掉“花园/小区/大厦/N期”等后缀后相同。
 - source 列以“人工”开头的行视为人工确认，不会被覆盖。
-- 学区档：命中 TOP_PRIMARY 任一学校 → 名校；命中其他小学 → 普通；没命中 → 留空（未标注）。
+- 学区档：命中 analyze.TOP_SCHOOLS 任一学校 → 名校；命中其他小学 → 普通；没命中 → 留空（未标注）。
 - 名单来自本地宝转载的福田教育网 2023 年对口小区，划片逐年调整，结果需人工复核。
 
 用法：python3 tools/build_school_map.py
@@ -13,19 +13,18 @@ from __future__ import annotations
 import csv
 import json
 import re
+import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(HERE))
+
+from analyze import TOP_SCHOOLS  # noqa: E402
+
 LISTS = HERE / "ref" / "school_lists.json"
 MAP = HERE / "ref" / "school_map.csv"
 
-# 名校（草案，待确认）：社会公认的头部公办小学及集团校区
-TOP_PRIMARY = {
-    "深圳实验学校小学部", "深圳外国语小学", "百花小学", "园岭小学",
-    "荔园小学(通新岭)", "荔园小学(百花)", "荔园小学(玮鹏)", "荔园小学(八卦岭)",
-    "荔园外国语小学", "荔园外国语小学(天骄)", "荔园外国语小学(狮岭)",
-    "福田区外国语小学", "红岭实验小学", "莲花小学",
-}
+TOP_PRIMARY = set(TOP_SCHOOLS)
 
 # 名单无法按名称匹配、但页面原文能确认的情况
 OVERRIDES = {

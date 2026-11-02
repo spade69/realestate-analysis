@@ -325,6 +325,21 @@ td.num {
 }
 .signal-block h3 { margin: 0 0 10px; padding-bottom: 8px; border-bottom: 1px dashed var(--border); font-size: 0.98rem; }
 
+/* School cards */
+.school-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin: 16px 0 22px; }
+.school-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow-sm); }
+.school-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; border-bottom: 1px dashed var(--border); padding-bottom: 8px; margin-bottom: 10px; }
+.school-head h3 { margin: 0; font-size: 1rem; }
+.school-head .dim { font-size: 0.78rem; white-space: nowrap; }
+.school-label { font-size: 0.78rem; color: var(--muted); }
+.school-card .kpi-value { font-size: 1.6rem; margin: 2px 0; }
+.school-card .kpi-value .unit { font-size: 0.9rem; margin-left: 2px; }
+.school-sub { font-size: 0.82rem; color: var(--text-2); margin-bottom: 10px; }
+.school-dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; margin: 0; font-size: 0.82rem; }
+.school-dl dt { color: var(--muted); white-space: nowrap; }
+.school-dl dd { margin: 0; color: var(--text-2); }
+.school-card .warn { color: var(--warn); font-size: 0.78rem; }
+
 /* Details */
 details {
   background: var(--surface);

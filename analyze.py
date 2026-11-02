@@ -77,6 +77,15 @@ SCHOOL_MAP_COLUMNS = ["area", "community", "n_deals", "primary_school",
 SCHOOL_TIERS = ("名校", "普通", "无学位")
 UNMAPPED_TIER = "未标注"
 SCHOOL_MIN_N = 3  # 同片区对比时每档最少样本
+SCHOOL_RECENT_PERIODS = 4  # “近期最低价”看最近几期
+
+# 名校：社会公认的头部公办小学及集团校区（tools/build_school_map.py 据此给小区定档）
+TOP_SCHOOLS = (
+    "深圳实验学校小学部", "深圳外国语小学", "百花小学", "园岭小学",
+    "荔园小学(通新岭)", "荔园小学(百花)", "荔园小学(玮鹏)", "荔园小学(八卦岭)",
+    "荔园外国语小学", "荔园外国语小学(天骄)", "荔园外国语小学(狮岭)",
+    "福田区外国语小学", "红岭实验小学", "莲花小学",
+)
 
 
 def load_school_map(path: Path | str) -> pd.DataFrame:
@@ -91,18 +100,68 @@ def load_school_map(path: Path | str) -> pd.DataFrame:
     dup = m["community"][m["community"].duplicated()]
     if len(dup):
         raise ValueError(f"{path}: duplicate community {sorted(set(dup))}")
-    return m[["community", "primary_school", "middle_school", "tier"]]
+    return m[["community", "primary_school", "middle_school", "tier", "note"]]
 
 
 def attach_school(df: pd.DataFrame, school_map: pd.DataFrame) -> pd.DataFrame:
     """按小区名挂上 school_primary / school_middle / school_tier。"""
     m = school_map.rename(columns={"primary_school": "school_primary",
                                    "middle_school": "school_middle",
-                                   "tier": "school_tier"})
+                                   "tier": "school_tier",
+                                   "note": "school_note"})
     out = df.merge(m, on="community", how="left")
     out["school_tier"] = out["school_tier"].fillna(UNMAPPED_TIER)
-    for col in ("school_primary", "school_middle"):
+    for col in ("school_primary", "school_middle", "school_note"):
         out[col] = out[col].fillna("")
+    return out
+
+
+def _deal(r: pd.Series) -> dict[str, Any]:
+    return {
+        "community": r["community"], "period": r["period"],
+        "total": float(r["total_price_wan"]), "sqm": float(r["area_sqm"]),
+        "unit": float(r["unit_price_wan_sqm"]), "room_type": r["room_type"],
+        "date": str(r["deal_date"].date()),
+        "note": r.get("school_note", ""),
+    }
+
+
+def analyze_by_school(df: pd.DataFrame) -> list[dict[str, Any]]:
+    """按对口小学聚合：上车门槛（最低总价）、2室+最低总价、近期最低价、中位数。
+
+    共享/大学区的小区同时计入其对口的每所学校。名校在前，其余按成交笔数降序。
+    """
+    rows = df[df["school_primary"] != ""].copy()
+    if rows.empty:
+        return []
+    rows["school"] = rows["school_primary"].str.split("/")
+    rows = rows.explode("school")
+    periods = sorted(df["period"].unique())
+    recent = set(periods[-SCHOOL_RECENT_PERIODS:])
+
+    out = []
+    for school, g in rows.groupby("school"):
+        g2 = g[~g["room_type"].isin(["1室", "-"])]
+        gr = g[g["period"].isin(recent)]
+        comm = (g.groupby("community")
+                 .agg(n=("community", "size"), min_total=("total_price_wan", "min"),
+                      note=("school_note", "first"))
+                 .sort_values(["n", "min_total"], ascending=[False, True]))
+        out.append({
+            "school": school,
+            "is_top": school in TOP_SCHOOLS,
+            "n": len(g),
+            "n_communities": len(comm),
+            "cheapest": _deal(g.loc[g["total_price_wan"].idxmin()]),
+            "cheapest_2r": _deal(g2.loc[g2["total_price_wan"].idxmin()]) if len(g2) else None,
+            "cheapest_recent": _deal(gr.loc[gr["total_price_wan"].idxmin()]) if len(gr) else None,
+            "median_total": float(g["total_price_wan"].median()),
+            "median_unit": float(g["unit_price_wan_sqm"].median()),
+            "communities": [{"community": c, "n": int(r.n), "min_total": float(r.min_total),
+                             "note": r.note}
+                            for c, r in comm.iterrows()],
+        })
+    out.sort(key=lambda s: (not s["is_top"], -s["n"]))
     return out
 
 
