@@ -24,6 +24,8 @@ from analyze import (
     filter_outliers,
     split_auctions,
     analyze_school_premium,
+    analyze_by_school,
+    SCHOOL_RECENT_PERIODS,
     attach_school,
     load_school_map,
     SCHOOL_TIERS,
@@ -788,7 +790,73 @@ def build_school_section(df: pd.DataFrame) -> str:
     else:
         lines.append('已标注样本不足，暂不做回归（需普通档及名校或无学位档各 ≥3 笔、合计 ≥30 笔）。')
     parts.append('<div class="conclusion">' + "".join(f"<p>{l}</p>" for l in lines) + '</div>')
+    parts.append(build_school_cards(df))
     return "\n  ".join(parts)
+
+
+def _deal_line(d: dict[str, Any]) -> str:
+    warn = f' <span class="warn" title="{esc(d["note"])}">⚠ 部分楼栋</span>' if d.get("note") and "栋" in d["note"] else ""
+    return (f'{esc(d["community"])} · {d["sqm"]:g}㎡ {esc(d["room_type"])} · '
+            f'{d["unit"]:.2f}万/㎡ · {period_short(d["period"])}{warn}')
+
+
+def _wan(d: dict[str, Any] | None) -> str:
+    return f'{d["total"]:g}万' if d else "—"
+
+
+def build_school_cards(df: pd.DataFrame) -> str:
+    """名校逐校卡片（上车门槛）+ 全部学校汇总表。"""
+    schools = analyze_by_school(df)
+    if not schools:
+        return ""
+    periods = sorted(df["period"].unique())
+    recent_label = f"近 {SCHOOL_RECENT_PERIODS} 期（{period_short(periods[-SCHOOL_RECENT_PERIODS])} 起）"
+
+    cards = []
+    for s in (x for x in schools if x["is_top"]):
+        c, c2, cr = s["cheapest"], s["cheapest_2r"], s["cheapest_recent"]
+        comms = "、".join(
+            f'{esc(x["community"])}<span class="dim">({x["n"]})</span>'
+            for x in s["communities"][:5]
+        ) + ("…" if len(s["communities"]) > 5 else "")
+        lines = [
+            f'<div class="school-head"><h3>{esc(s["school"])}</h3>'
+            f'<span class="dim">{s["n"]} 笔 · {s["n_communities"]} 个小区</span></div>',
+            f'<div class="school-label">最低成交总价</div>'
+            f'<div class="kpi-value">{c["total"]:g}<span class="unit">万</span></div>'
+            f'<div class="school-sub">{_deal_line(c)}</div>',
+            '<dl class="school-dl">',
+            f'<dt>2室及以上最低</dt><dd>' + (f'<strong>{c2["total"]:g}万</strong> {_deal_line(c2)}' if c2 else '<span class="dim">无成交</span>') + '</dd>',
+            f'<dt>{recent_label}最低</dt><dd>' + (f'<strong>{cr["total"]:g}万</strong> {_deal_line(cr)}' if cr else '<span class="dim">无成交</span>') + '</dd>',
+            f'<dt>总价 / 单价中位</dt><dd>{s["median_total"]:g}万 · {s["median_unit"]:.2f}万/㎡</dd>',
+            f'<dt>对口小区</dt><dd>{comms}</dd>',
+            '</dl>',
+        ]
+        cards.append('<div class="school-card">' + "".join(lines) + '</div>')
+
+    rows = []
+    for s in schools:
+        c, c2, cr = s["cheapest"], s["cheapest_2r"], s["cheapest_recent"]
+        rows.append(
+            f'<tr><td>{esc(s["school"])}{" ★" if s["is_top"] else ""}</td>'
+            f'<td class="num">{s["n_communities"]}</td><td class="num">{s["n"]}</td>'
+            f'<td class="num">{c["total"]:g}万</td><td>{esc(c["community"])}</td>'
+            f'<td class="num">{_wan(c2)}</td><td class="num">{_wan(cr)}</td>'
+            f'<td class="num">{s["median_total"]:g}万</td><td class="num">{s["median_unit"]:.2f}</td></tr>'
+        )
+    return (
+        '<h3>重点学校：上车门槛</h3>'
+        '<p class="caption-note">按对口小学汇总全部期次成交（已剔除法拍和非市场价）。'
+        '共享学区/大学区的小区同时计入每所对口学校；括号内为该小区成交笔数。'
+        '最低价可能是商住公寓或极小户型，看「2室及以上最低」更接近家庭上车门槛。</p>'
+        '<div class="school-grid">' + "".join(cards) + '</div>'
+        '<details><summary>全部学校（' + str(len(schools)) + ' 所，★ 为名校）</summary>'
+        '<div class="table-wrap" style="margin:0;border:none;box-shadow:none;"><table><thead><tr>'
+        '<th>学校</th><th class="num">小区</th><th class="num">成交</th><th class="num">最低总价</th><th>最低价小区</th>'
+        f'<th class="num">2室+最低</th><th class="num">近{SCHOOL_RECENT_PERIODS}期最低</th>'
+        '<th class="num">总价中位</th><th class="num">单价中位</th>'
+        '</tr></thead><tbody>' + "".join(rows) + '</tbody></table></div></details>'
+    )
 
 
 # ── 小区检索数据 ─────────────────────────────────────────────────
@@ -1010,7 +1078,7 @@ def main() -> None:
     df, outliers = filter_outliers(df_market)
     school_map_path = here / "ref" / "school_map.csv"
     school_map = (load_school_map(school_map_path) if school_map_path.exists()
-                  else pd.DataFrame(columns=["community", "primary_school", "middle_school", "tier"]))
+                  else pd.DataFrame(columns=["community", "primary_school", "middle_school", "tier", "note"]))
     df = attach_school(df, school_map)
     periods = sorted(df["period"].unique())
 
