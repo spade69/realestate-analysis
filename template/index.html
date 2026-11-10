@@ -337,6 +337,13 @@ td.num {
 .school-filter button[aria-pressed="true"], .pill-group button[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--surface); }
 .school-filter button:focus-visible, .pill-group button:focus-visible, th.sortable button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .school-filter-hint { font-size: 0.8rem; }
+.scope-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 8px 0 12px; font-size: 0.9rem; }
+.scope-bar label { color: var(--muted); }
+.scope-bar select {
+  font: inherit; font-size: 0.9rem; padding: 6px 30px 6px 12px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--border); background-color: var(--surface); color: var(--text);
+}
+.scope-bar select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 th.sortable { padding: 0; }
 th.sortable button {
   all: unset; box-sizing: border-box; display: block; width: 100%; padding: 12px 14px;
@@ -868,14 +875,46 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
 
   // 200 万以下：片区横向堆叠条（名校 / 非名校），分类色取 dataviz 默认色板第 1、2 位，已校验
   const LOW_COLORS = { light: ['#2a78d6', '#eb6834'], dark: ['#3987e5', '#d95926'] };
+  let lowScope = 'all';
+  const esc = (v) => String(v).replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+  const fmtG = (v) => String(Math.round(v * 100) / 100);
+  function lowAreaRow(a) {
+    const td = (text, v) => `<td class="num" data-v="${v === null || v === undefined ? '' : v}">${text}</td>`;
+    const neg = a.avg_neg_rate === null ? '—' : a.avg_neg_rate.toFixed(1) + '%';
+    return '<tr>' + `<td>${esc(a.area)}</td>`
+      + td(a.n, a.n) + td(a.n_communities, a.n_communities)
+      + td(Math.round(a.top_share * 100) + '%', a.top_share)
+      + td(fmtG(a.median_total) + '万', a.median_total)
+      + td(a.median_unit.toFixed(2), a.median_unit)
+      + td(fmtG(a.median_sqm) + '㎡', a.median_sqm)
+      + td(a.per_month === null ? '—' : a.per_month.toFixed(1), a.per_month)
+      + td(neg, a.avg_neg_rate) + '</tr>';
+  }
+  function updateLowScope() {
+    const sc = DATA && DATA.low_price && DATA.low_price.scopes[lowScope];
+    if (!sc) return;
+    const note = document.getElementById('low-scope-note');
+    if (note) note.textContent = (lowScope === 'all' ? '全部累计' : lowScope) + ' · ' + sc.n + ' 笔 · ' + sc.areas.length + ' 个片区';
+    const table = document.getElementById('low-area-table');
+    if (table) {
+      table.tBodies[0].innerHTML = sc.areas.length ? sc.areas.map(lowAreaRow).join('')
+        : '<tr><td colspan="9" class="dim">本期无 ' + DATA.low_price.max + ' 万以下成交</td></tr>';
+      table.dispatchEvent(new Event('rows-replaced'));
+    }
+    const el = document.getElementById('chart-low-price');
+    if (el) renderLowPrice(el);
+  }
+  const lowSel = document.getElementById('low-scope');
+  if (lowSel) lowSel.addEventListener('change', () => { lowScope = lowSel.value; updateLowScope(); });
   function renderLowPrice(el) {
     const t = chartTheme();
     const mob = isMobile();
-    const lp = DATA.low_price;
-    if (!lp || !lp.areas.length) return;
+    const sc = DATA.low_price && DATA.low_price.scopes[lowScope];
+    if (!sc) return;
     const col = isDark() ? LOW_COLORS.dark : LOW_COLORS.light;
-    // 横向条：顶部为成交最多的片区
-    const areas = lp.areas.slice().reverse(), top = lp.top.slice().reverse(), other = lp.other.slice().reverse();
+    // 横向条：顶部为成交最多的片区（只含有成交的片区）
+    const rev = sc.areas.slice().reverse();
+    const areas = rev.map((a) => a.area), top = rev.map((a) => a.n_top), other = rev.map((a) => a.n - a.n_top);
     el.style.height = (areas.length * (mob ? 24 : 26) + 90) + 'px';
     if (charts.lowPrice) charts.lowPrice.dispose();
     const c = echarts.init(el);
@@ -1002,7 +1041,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
         const avgEl = document.getElementById('chart-area-avg');
         const pmEl = document.getElementById('chart-price-mix');
         const lpEl = document.getElementById('chart-low-price');
-        if (lpEl) { clearLoading(lpEl); renderLowPrice(lpEl); }
+        if (lpEl) { clearLoading(lpEl); updateLowScope(); }
         if (volEl) { clearLoading(volEl); renderVolume(volEl); }
         if (avgEl) { clearLoading(avgEl); renderAreaLine(avgEl, DATA.avg_series, 'avgLine'); }
         if (pmEl) { clearLoading(pmEl); renderPriceMix(pmEl); }
@@ -1198,9 +1237,14 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
   'use strict';
   document.querySelectorAll('table.js-sortable').forEach(function (table) {
     const tbody = table.tBodies[0];
-    const rows = Array.from(tbody.rows);
-    rows.forEach(function (r, i) { r.dataset.i = i; });
+    const index = function () { Array.from(tbody.rows).forEach(function (r, i) { r.dataset.i = i; }); };
+    index();
     const ths = Array.from(table.tHead.rows[0].cells);
+    // 行被整体替换（如切换期次）后：重新编号并清除排序状态
+    table.addEventListener('rows-replaced', function () {
+      index();
+      ths.forEach(function (h) { if (h.classList.contains('sortable')) h.setAttribute('aria-sort', 'none'); });
+    });
     ths.forEach(function (th, col) {
       if (!th.classList.contains('sortable')) return;
       th.querySelector('button').addEventListener('click', function () {
@@ -1211,7 +1255,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
         th.setAttribute('aria-sort', dir);
         const sign = dir === 'ascending' ? 1 : -1;
         const val = function (r) { const v = r.cells[col].dataset.v; return v === '' ? null : parseFloat(v); };
-        rows.slice().sort(function (a, b) {
+        Array.from(tbody.rows).sort(function (a, b) {
           const va = val(a), vb = val(b);
           if (va === null && vb === null) return a.dataset.i - b.dataset.i;
           if (va === null) return 1;   // 空值始终排最后

@@ -207,7 +207,8 @@ def analyze_low_price(df: pd.DataFrame, max_total: float = LOW_PRICE_MAX,
     df 需已 attach_school（缺学区列时按未标注处理）。
     """
     periods = sorted(df["period"].unique())
-    months = len(periods) / 2 if periods else 1
+    # 月均只在多期时有意义；单期返回 None
+    months = len(periods) / 2 if len(periods) > 1 else None
     lo = df[df["total_price_wan"] < max_total].copy()
     for col, default in (("school_tier", UNMAPPED_TIER), ("school_primary", "")):
         if col not in lo:
@@ -230,7 +231,7 @@ def analyze_low_price(df: pd.DataFrame, max_total: float = LOW_PRICE_MAX,
             "median_total": float(g["total_price_wan"].median()),
             "median_unit": float(g["unit_price_wan_sqm"].median()),
             "median_sqm": float(g["area_sqm"].median()),
-            "avg_neg_rate": neg(g), "per_month": len(g) / months,
+            "avg_neg_rate": neg(g), "per_month": len(g) / months if months else None,
         })
     out["areas"].sort(key=lambda r: (-r["n"], r["area"]))
 
@@ -248,7 +249,7 @@ def analyze_low_price(df: pd.DataFrame, max_total: float = LOW_PRICE_MAX,
             "median_sqm": float(g["area_sqm"].median()),
             "one_room_share": float((g["room_type"] == "1室").mean()),
             "n_active_periods": int(g["period"].nunique()), "n_periods": len(periods),
-            "avg_neg_rate": neg(g), "per_month": len(g) / months,
+            "avg_neg_rate": neg(g), "per_month": len(g) / months if months else None,
         })
     out["communities"].sort(key=lambda r: (-r["n"], r["min_total"]))
     return out

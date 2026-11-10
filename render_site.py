@@ -503,6 +503,21 @@ def build_price_mix(df: pd.DataFrame, periods: list[str]) -> tuple[str, str]:
 # ── 低总价段（200 万以下）─────────────────────────────────────────
 
 
+def _low_area_row(a: dict[str, Any]) -> str:
+    pm = a["per_month"]
+    return ('<tr>'
+            f'<td>{esc(a["area"])}</td>'
+            + _sort_td(str(a["n"]), a["n"])
+            + _sort_td(str(a["n_communities"]), a["n_communities"])
+            + _sort_td(f'{a["top_share"] * 100:.0f}%', round(a["top_share"], 4))
+            + _sort_td(f'{a["median_total"]:g}万', a["median_total"])
+            + _sort_td(f'{a["median_unit"]:.2f}', a["median_unit"])
+            + _sort_td(f'{a["median_sqm"]:g}㎡', a["median_sqm"])
+            + _sort_td("—" if pm is None else f'{pm:.1f}', None if pm is None else round(pm, 3))
+            + _sort_td(_neg(a["avg_neg_rate"]), a["avg_neg_rate"])
+            + '</tr>')
+
+
 def build_low_price_section(df: pd.DataFrame) -> str:
     """200 万以下成交：片区表 + 小区表（图表由前端按 chart_data.low_price 渲染）。"""
     r = analyze_low_price(df)
@@ -511,19 +526,7 @@ def build_low_price_section(df: pd.DataFrame) -> str:
     n, n_all = r["n"], r["n_all"]
     n_top = sum(a["n_top"] for a in r["areas"])
 
-    area_rows = "".join(
-        '<tr>'
-        f'<td>{esc(a["area"])}</td>'
-        + _sort_td(str(a["n"]), a["n"])
-        + _sort_td(str(a["n_communities"]), a["n_communities"])
-        + _sort_td(f'{a["top_share"] * 100:.0f}%', round(a["top_share"], 4))
-        + _sort_td(f'{a["median_total"]:g}万', a["median_total"])
-        + _sort_td(f'{a["median_unit"]:.2f}', a["median_unit"])
-        + _sort_td(f'{a["median_sqm"]:g}㎡', a["median_sqm"])
-        + _sort_td(f'{a["per_month"]:.1f}', round(a["per_month"], 3))
-        + _sort_td(_neg(a["avg_neg_rate"]), a["avg_neg_rate"])
-        + '</tr>'
-        for a in r["areas"])
+    area_rows = "".join(_low_area_row(a) for a in r["areas"])
     area_table = (
         '<div class="table-wrap"><table id="low-area-table" class="js-sortable"><thead><tr>'
         + _sort_th("片区", cls="") + _sort_th("成交", "desc") + _sort_th("小区", "desc")
@@ -551,7 +554,7 @@ def build_low_price_section(df: pd.DataFrame) -> str:
               f'（合计 {r["n_hidden_deals"]} 笔），未单列；可在下方「小区/片区检索」里查。</p>'
               if r["n_hidden_communities"] else "")
     comm_table = (
-        f'<h3>小区（{LOW_PRICE_MAX} 万以下成交 ≥{r["min_deals"]} 笔，★ 为名校学位）</h3>'
+        f'<h3>小区（全部期次累计，{LOW_PRICE_MAX} 万以下成交 ≥{r["min_deals"]} 笔，★ 为名校学位）</h3>'
         + _filter_bar("low-comm-table", "筛选小区", (c_top, len(comms) - c_top))
         + '<div class="table-wrap"><table id="low-comm-table" class="js-sortable"><thead><tr>'
         + _sort_th("小区", cls="") + _sort_th("片区", cls="") + _sort_th("成交", "desc")
@@ -567,16 +570,28 @@ def build_low_price_section(df: pd.DataFrame) -> str:
               f'aria-label="{LOW_PRICE_MAX} 万以下成交按片区分布，区分名校与非名校学位">'
               '<div class="chart-loading">图表加载中…</div></div>'
               '<figcaption>各片区 200 万以下成交笔数，按是否对口名校学位分色</figcaption></figure>')
-    return intro + figure + '<h3>片区</h3>' + area_table + comm_table
+    periods = sorted(df["period"].unique())
+    opts = '<option value="all">全部累计</option>' + "".join(
+        f'<option value="{esc(p)}">{esc(p)}</option>' for p in reversed(periods))
+    scope = ('<div class="scope-bar"><label for="low-scope">片区图表期次</label>'
+             f'<select id="low-scope">{opts}</select>'
+             '<span class="dim" id="low-scope-note">全部累计</span></div>')
+    return (intro + scope + figure
+            + '<h3>片区<span class="dim" style="font-weight:400;font-size:0.85rem;"> · 随期次切换，无成交的片区不显示</span></h3>'
+            + area_table + comm_table)
 
 
 def low_price_chart_data(df: pd.DataFrame) -> dict[str, Any]:
-    r = analyze_low_price(df)
-    areas = r["areas"]
-    return {"max": LOW_PRICE_MAX,
-            "areas": [a["area"] for a in areas],
-            "top": [a["n_top"] for a in areas],
-            "other": [a["n"] - a["n_top"] for a in areas]}
+    """scopes: all + 各单期；每个 scope 给片区聚合（只含有成交的片区），供前端切换图和片区表。"""
+    keys = ["all"] + sorted(df["period"].unique())
+    scopes = {}
+    for k in keys:
+        sub = df if k == "all" else df[df["period"] == k]
+        r = analyze_low_price(sub)
+        scopes[k] = {"n": r["n"], "areas": [
+            {key: (round(v, 4) if isinstance(v, float) else v) for key, v in a.items()}
+            for a in r["areas"]]}
+    return {"max": LOW_PRICE_MAX, "scopes": scopes}
 
 
 # ── 期次详情 ─────────────────────────────────────────────────────
