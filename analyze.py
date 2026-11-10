@@ -196,6 +196,21 @@ def analyze_by_school(df: pd.DataFrame) -> list[dict[str, Any]]:
 # 低总价段：单独统计 LOW_PRICE_MAX 以下的成交（按片区 / 小区）
 LOW_PRICE_MAX = 200          # 万
 LOW_PRICE_MIN_DEALS = 5      # 小区表只列成交 ≥ 此值的小区
+LOW_PRICE_MIN_AREA_DEALS = 3  # 片区累计成交 < 此值不列（全部期次口径）
+
+
+def _low_comm(g: pd.DataFrame, comm: str, area: str) -> dict[str, Any]:
+    """单个小区在低总价段的摘要（片区展开行用）。"""
+    cheapest = g.loc[g["total_price_wan"].idxmin()]
+    nr = g["negotiation_rate"].dropna()
+    return {
+        "community": comm, "area": area, "n": len(g),
+        "school_primary": g["school_primary"].iloc[0], "tier": g["school_tier"].iloc[0],
+        "min_total": float(cheapest["total_price_wan"]), "min_sqm": float(cheapest["area_sqm"]),
+        "median_total": float(g["total_price_wan"].median()),
+        "median_sqm": float(g["area_sqm"].median()),
+        "avg_neg_rate": float(nr.mean()) if len(nr) else None,
+    }
 
 
 def analyze_low_price(df: pd.DataFrame, max_total: float = LOW_PRICE_MAX,
@@ -232,7 +247,9 @@ def analyze_low_price(df: pd.DataFrame, max_total: float = LOW_PRICE_MAX,
             "median_unit": float(g["unit_price_wan_sqm"].median()),
             "median_sqm": float(g["area_sqm"].median()),
             "avg_neg_rate": neg(g), "per_month": len(g) / months if months else None,
+            "communities": [_low_comm(cg, comm, area) for comm, cg in g.groupby("community")],
         })
+        out["areas"][-1]["communities"].sort(key=lambda c: (-c["n"], c["min_total"]))
     out["areas"].sort(key=lambda r: (-r["n"], r["area"]))
 
     for (area, comm), g in lo.groupby(["area", "community"]):

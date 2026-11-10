@@ -337,6 +337,19 @@ td.num {
 .school-filter button[aria-pressed="true"], .pill-group button[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--surface); }
 .school-filter button:focus-visible, .pill-group button:focus-visible, th.sortable button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .school-filter-hint { font-size: 0.8rem; }
+.row-toggle {
+  all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  color: var(--primary); font-weight: 600;
+}
+.row-toggle:hover { text-decoration: underline; text-underline-offset: 3px; }
+.row-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.row-toggle .caret::before { content: "▸"; display: inline-block; width: 0.8em; transition: transform var(--transition); }
+.row-toggle[aria-expanded="true"] .caret::before { transform: rotate(90deg); }
+tr.sub-row > td { background: var(--surface-2); padding: 8px 10px 12px 28px; }
+#low-area-table th, #low-area-table td, .sub-table th, .sub-table td { white-space: nowrap; }
+.sub-table { width: 100%; font-size: 0.86rem; }
+.sub-table th, .sub-table td { padding: 6px 8px; }
+.sub-table th { background: transparent; color: var(--muted); }
 .scope-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 8px 0 12px; font-size: 0.9rem; }
 .scope-bar label { color: var(--muted); }
 .scope-bar select {
@@ -881,7 +894,7 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
   function lowAreaRow(a) {
     const td = (text, v) => `<td class="num" data-v="${v === null || v === undefined ? '' : v}">${text}</td>`;
     const neg = a.avg_neg_rate === null ? '—' : a.avg_neg_rate.toFixed(1) + '%';
-    return '<tr>' + `<td>${esc(a.area)}</td>`
+    return `<tr data-area="${esc(a.area)}">` + `<td><button type="button" class="row-toggle" aria-expanded="false"><span class="caret" aria-hidden="true"></span>${esc(a.area)}</button></td>`
       + td(a.n, a.n) + td(a.n_communities, a.n_communities)
       + td(Math.round(a.top_share * 100) + '%', a.top_share)
       + td(fmtG(a.median_total) + '万', a.median_total)
@@ -890,6 +903,48 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
       + td(a.per_month === null ? '—' : a.per_month.toFixed(1), a.per_month)
       + td(neg, a.avg_neg_rate) + '</tr>';
   }
+  // 片区行展开：在该行下插入一行，内含该片区（当前期次）的全部小区
+  function lowCommTable(a) {
+    const rows = a.communities.map((c) => {
+      const star = c.tier === '名校' ? ' ★' : '';
+      const school = c.school_primary ? esc(c.school_primary) + (c.tier === '无学位' ? ' <span class="dim">(无学位)</span>' : '')
+                                      : '<span class="dim">' + (c.tier === '无学位' ? '无学位' : '未标注') + '</span>';
+      const neg = c.avg_neg_rate === null ? '—' : c.avg_neg_rate.toFixed(1) + '%';
+      return `<tr><td>${esc(c.community)}${star}</td><td class="num">${c.n}</td><td>${school}</td>`
+        + `<td class="num">${fmtG(c.min_total)}万<span class="dim"> · ${fmtG(c.min_sqm)}㎡</span></td>`
+        + `<td class="num">${fmtG(c.median_total)}万</td><td class="num">${fmtG(c.median_sqm)}㎡</td><td class="num">${neg}</td></tr>`;
+    }).join('');
+    return '<table class="sub-table"><thead><tr><th>小区（★ 名校学位）</th><th class="num">成交</th><th>对口小学</th>'
+      + '<th class="num">最低总价</th><th class="num">总价中位</th><th class="num">面积中位</th><th class="num">平均谈价</th></tr></thead>'
+      + '<tbody>' + rows + '</tbody></table>';
+  }
+  function toggleLowArea(tr) {
+    const btn = tr.querySelector('.row-toggle');
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    if (open) {
+      if (tr.subRow) tr.subRow.remove();
+      tr.subRow = null;
+      btn.setAttribute('aria-expanded', 'false');
+      return;
+    }
+    const sc = DATA.low_price.scopes[lowScope];
+    const a = sc.areas.find((x) => x.area === tr.dataset.area);
+    if (!a) return;
+    const sub = document.createElement('tr');
+    sub.className = 'sub-row';
+    sub.innerHTML = `<td colspan="9">${lowCommTable(a)}</td>`;
+    tr.after(sub);
+    tr.subRow = sub;
+    btn.setAttribute('aria-expanded', 'true');
+  }
+  const lowAreaTable = document.getElementById('low-area-table');
+  if (lowAreaTable) {
+    lowAreaTable.tBodies[0].addEventListener('click', (e) => {
+      const btn = e.target.closest('.row-toggle');
+      if (btn && DATA) toggleLowArea(btn.closest('tr'));
+    });
+  }
+
   function updateLowScope() {
     const sc = DATA && DATA.low_price && DATA.low_price.scopes[lowScope];
     if (!sc) return;
@@ -1237,7 +1292,8 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
   'use strict';
   document.querySelectorAll('table.js-sortable').forEach(function (table) {
     const tbody = table.tBodies[0];
-    const index = function () { Array.from(tbody.rows).forEach(function (r, i) { r.dataset.i = i; }); };
+    const mainRows = function () { return Array.from(tbody.rows).filter(function (r) { return !r.classList.contains('sub-row'); }); };
+    const index = function () { mainRows().forEach(function (r, i) { r.dataset.i = i; }); };
     index();
     const ths = Array.from(table.tHead.rows[0].cells);
     // 行被整体替换（如切换期次）后：重新编号并清除排序状态
@@ -1255,13 +1311,16 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
         th.setAttribute('aria-sort', dir);
         const sign = dir === 'ascending' ? 1 : -1;
         const val = function (r) { const v = r.cells[col].dataset.v; return v === '' ? null : parseFloat(v); };
-        Array.from(tbody.rows).sort(function (a, b) {
+        mainRows().sort(function (a, b) {
           const va = val(a), vb = val(b);
           if (va === null && vb === null) return a.dataset.i - b.dataset.i;
           if (va === null) return 1;   // 空值始终排最后
           if (vb === null) return -1;
           return (va - vb) * sign || a.dataset.i - b.dataset.i;
-        }).forEach(function (r) { tbody.appendChild(r); });
+        }).forEach(function (r) {
+          tbody.appendChild(r);
+          if (r.subRow && r.subRow.isConnected) tbody.appendChild(r.subRow);  // 展开的子行跟着父行
+        });
       });
     });
   });
