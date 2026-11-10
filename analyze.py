@@ -33,12 +33,15 @@ DIST_BUCKETS = [
     ("≤-50%",       lambda r: r < -50),
 ]
 
+# 总价段分析（结构图 / 假设检验）只看 1000 万以下；豪宅成交另计，不影响其他板块
+PRICE_ANALYSIS_MAX = 1000
+
 TOTAL_PRICE_BUCKETS = [
     ("<200万",    lambda p: p < 200),
     ("200-300万", lambda p: 200 <= p < 300),
     ("300-400万", lambda p: 300 <= p < 400),
     ("400-600万", lambda p: 400 <= p < 600),
-    ("≥600万",    lambda p: p >= 600),
+    ("600-1000万", lambda p: 600 <= p < PRICE_ANALYSIS_MAX),
 ]
 TOTAL_PRICE_LABELS = [b[0] for b in TOTAL_PRICE_BUCKETS]
 
@@ -461,15 +464,20 @@ def analyze_by_room_type(df: pd.DataFrame) -> list[dict[str, Any]]:
     return rows
 
 
-def total_price_bucket(p: float) -> str:
+def total_price_bucket(p: float) -> str | None:
+    """总价段标签；≥ PRICE_ANALYSIS_MAX 不归档，返回 None。"""
     for label, pred in TOTAL_PRICE_BUCKETS:
         if pred(p):
             return label
+    if p >= PRICE_ANALYSIS_MAX:
+        return None
     raise ValueError(f"unbucketed: {p}")
 
 
 def analyze_by_total_price(df: pd.DataFrame) -> dict[str, Any]:
-    """spec §4.5: 总价段聚合 + 总价 vs 谈价率相关性假设检验。"""
+    """spec §4.5: 总价段聚合 + 总价 vs 谈价率相关性假设检验（只看 PRICE_ANALYSIS_MAX 以下）。"""
+    n_excluded = int((df["total_price_wan"] >= PRICE_ANALYSIS_MAX).sum())
+    df = df[df["total_price_wan"] < PRICE_ANALYSIS_MAX]
     df2 = df.assign(_bucket=df["total_price_wan"].map(total_price_bucket))
 
     bucket_rows = []
@@ -503,6 +511,7 @@ def analyze_by_total_price(df: pd.DataFrame) -> dict[str, Any]:
         conclusion = f"样本不足 (n={n})"
 
     return {
+        "n_excluded": n_excluded,
         "buckets": bucket_rows,
         "correlation": {
             "n": n, "pearson_r": pr, "pearson_p": pp,

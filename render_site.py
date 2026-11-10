@@ -34,6 +34,7 @@ from analyze import (
     analyze_by_total_price,
     total_price_bucket,
     TOTAL_PRICE_LABELS,
+    PRICE_ANALYSIS_MAX,
     analyze_same_community_room_delta,
 )
 
@@ -481,16 +482,19 @@ def build_price_mix(df: pd.DataFrame, periods: list[str]) -> tuple[str, str]:
     def low_share(js):
         n = sum(totals[j] for j in js)
         return sum(counts[i][j] for i in low_idx for j in js) / n * 100 if n else 0.0
+    n_excl = int((df["total_price_wan"] >= PRICE_ANALYSIS_MAX).sum())
+    excl_note = (f'只统计 {PRICE_ANALYSIS_MAX} 万以下，另有 {n_excl} 笔 ≥{PRICE_ANALYSIS_MAX} 万成交未计入（占比也按 {PRICE_ANALYSIS_MAX} 万以下计算）。'
+                 if n_excl else '')
     w = min(PRICE_MIX_WINDOW, len(periods) // 2)
     if w >= 1:
         early, late = low_share(range(w)), low_share(range(len(periods) - w, len(periods)))
         diff = round(late - early)
         trend = "上升" if diff > 2 else ("下降" if diff < -2 else "基本持平")
         caption = (f'每期成交按总价分段堆叠（已剔除法拍与非市场价），可切换笔数 / 占比。'
-                   f'300 万以下成交占比：最早 {w} 期 <strong>{early:.0f}%</strong> → '
+                   f'{excl_note}300 万以下成交占比：最早 {w} 期 <strong>{early:.0f}%</strong> → '
                    f'最近 {w} 期 <strong>{late:.0f}%</strong>（{trend}，{f'{diff:+d}' if diff else '0'} 个百分点）。')
     else:
-        caption = '每期成交按总价分段堆叠（已剔除法拍与非市场价），可切换笔数 / 占比。'
+        caption = f'每期成交按总价分段堆叠（已剔除法拍与非市场价），可切换笔数 / 占比。{excl_note}'
     return table, caption
 
 
@@ -951,6 +955,8 @@ def main() -> None:
         "OUTLIER_COUNT": str(len(outliers)),
         "OUTLIER_NOTICE": build_outlier_notice(outliers) + build_auction_notice(auctions),
         "TOTAL_WITH_NR": str(int(df["negotiation_rate"].notna().sum())),
+        "HYPOTHESIS_N": str(int(df.loc[df["total_price_wan"] < PRICE_ANALYSIS_MAX, "negotiation_rate"].notna().sum())),
+        "PRICE_ANALYSIS_MAX": str(PRICE_ANALYSIS_MAX),
         "UPDATED_DATE": datetime.now().strftime("%Y-%m-%d"),
         "TLDR_HTML": build_tldr(df, periods),
         "VOLUME_CAPTION": build_volume_caption(df, periods),
