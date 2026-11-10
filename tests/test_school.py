@@ -113,3 +113,24 @@ def test_analyze_by_school_thresholds():
     assert by["百花小学"]["n_active_periods"] == 2 and by["百花小学"]["active_ratio"] == 1.0
     assert by["百花小学"]["avg_neg_rate"] == pytest.approx(-8.0)
     assert by["福田小学"]["n_active_periods"] == 1 and by["福田小学"]["active_ratio"] == 0.5
+
+
+def test_analyze_low_price_groups_and_threshold():
+    from analyze import analyze_low_price
+
+    def deal(c, area, total, tier, school, period="2026-01上", rt="1室"):
+        return {"community": c, "area": area, "total_price_wan": total, "area_sqm": 30.0,
+                "unit_price_wan_sqm": total / 30, "negotiation_rate": -10.0, "room_type": rt,
+                "period": period, "school_tier": tier, "school_primary": school}
+
+    rows = [deal("甲", "A", 100, "名校", "百花小学", p) for p in ("2026-01上", "2026-01下")] * 3  # 甲 6 笔
+    rows += [deal("乙", "A", 150, "普通", "福民小学"), deal("丙", "B", 190, "未标注", "")]
+    rows += [deal("丁", "B", 450, "普通", "福民小学")]  # ≥200 万，不计入
+    r = analyze_low_price(pd.DataFrame(rows), max_total=200, min_deals=5)
+    assert r["n"] == 8 and r["n_all"] == 9
+    areas = {a["area"]: a for a in r["areas"]}
+    assert areas["A"]["n"] == 7 and areas["A"]["n_top"] == 6 and areas["B"]["n"] == 1
+    assert areas["A"]["per_month"] == 7.0  # 2 期 = 1 个月
+    assert [c["community"] for c in r["communities"]] == ["甲"]
+    assert r["communities"][0]["n_active_periods"] == 2
+    assert r["n_hidden_communities"] == 2 and r["n_hidden_deals"] == 2

@@ -193,6 +193,68 @@ def analyze_by_school(df: pd.DataFrame) -> list[dict[str, Any]]:
     return out
 
 
+# 低总价段：单独统计 LOW_PRICE_MAX 以下的成交（按片区 / 小区）
+LOW_PRICE_MAX = 200          # 万
+LOW_PRICE_MIN_DEALS = 5      # 小区表只列成交 ≥ 此值的小区
+
+
+def analyze_low_price(df: pd.DataFrame, max_total: float = LOW_PRICE_MAX,
+                      min_deals: int = LOW_PRICE_MIN_DEALS) -> dict[str, Any]:
+    """总价 < max_total 的成交，按片区、按小区聚合。
+
+    片区：笔数、小区数、对口名校笔数、总价 / 单价 / 面积中位、平均谈价率、月均成交（一期 = 半月）。
+    小区：只列 ≥ min_deals 笔的，带对口小学与学区档；其余小区计入 n_hidden_*。
+    df 需已 attach_school（缺学区列时按未标注处理）。
+    """
+    periods = sorted(df["period"].unique())
+    # 月均只在多期时有意义；单期返回 None
+    months = len(periods) / 2 if len(periods) > 1 else None
+    lo = df[df["total_price_wan"] < max_total].copy()
+    for col, default in (("school_tier", UNMAPPED_TIER), ("school_primary", "")):
+        if col not in lo:
+            lo[col] = default
+    out: dict[str, Any] = {"max_total": max_total, "min_deals": min_deals, "n": len(lo),
+                           "n_all": len(df), "areas": [], "communities": [],
+                           "n_hidden_communities": 0, "n_hidden_deals": 0}
+    if lo.empty:
+        return out
+
+    def neg(g: pd.DataFrame) -> float | None:
+        nr = g["negotiation_rate"].dropna()
+        return float(nr.mean()) if len(nr) else None
+
+    for area, g in lo.groupby("area"):
+        n_top = int((g["school_tier"] == "名校").sum())
+        out["areas"].append({
+            "area": area, "n": len(g), "n_communities": int(g["community"].nunique()),
+            "n_top": n_top, "top_share": n_top / len(g),
+            "median_total": float(g["total_price_wan"].median()),
+            "median_unit": float(g["unit_price_wan_sqm"].median()),
+            "median_sqm": float(g["area_sqm"].median()),
+            "avg_neg_rate": neg(g), "per_month": len(g) / months if months else None,
+        })
+    out["areas"].sort(key=lambda r: (-r["n"], r["area"]))
+
+    for (area, comm), g in lo.groupby(["area", "community"]):
+        if len(g) < min_deals:
+            out["n_hidden_communities"] += 1
+            out["n_hidden_deals"] += len(g)
+            continue
+        cheapest = g.loc[g["total_price_wan"].idxmin()]
+        out["communities"].append({
+            "community": comm, "area": area, "n": len(g),
+            "school_primary": g["school_primary"].iloc[0], "tier": g["school_tier"].iloc[0],
+            "min_total": float(cheapest["total_price_wan"]), "min_sqm": float(cheapest["area_sqm"]),
+            "median_total": float(g["total_price_wan"].median()),
+            "median_sqm": float(g["area_sqm"].median()),
+            "one_room_share": float((g["room_type"] == "1室").mean()),
+            "n_active_periods": int(g["period"].nunique()), "n_periods": len(periods),
+            "avg_neg_rate": neg(g), "per_month": len(g) / months if months else None,
+        })
+    out["communities"].sort(key=lambda r: (-r["n"], r["min_total"]))
+    return out
+
+
 def _ols(y: np.ndarray, X: np.ndarray) -> tuple[np.ndarray, np.ndarray, int]:
     """返回 (coef, stderr, dof)。经典 OLS 标准误。"""
     coef, *_ = np.linalg.lstsq(X, y, rcond=None)
