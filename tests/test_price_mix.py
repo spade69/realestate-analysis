@@ -12,8 +12,8 @@ def _df():
 
 def test_price_mix_counts_by_bucket_and_period():
     counts = price_mix_counts(_df(), ["2026-01上", "2026-01下"])
-    # 行：<200万, 200-300万, 300-400万, 400-500万, 500-600万, ≥600万
-    assert counts == [[1, 1], [1, 0], [0, 0], [0, 1], [0, 0], [1, 0]]
+    # 行：<200万, 200-300万, 300-400万, 400-600万, ≥600万
+    assert counts == [[1, 1], [1, 0], [0, 0], [0, 1], [1, 0]]
     assert sum(map(sum, counts)) == 5
 
 
