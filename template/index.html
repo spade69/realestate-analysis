@@ -327,15 +327,15 @@ td.num {
 .school-dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; margin: 0; font-size: 0.82rem; }
 .school-dl dt { color: var(--muted); white-space: nowrap; }
 .school-dl dd { margin: 0; color: var(--text-2); }
-.school-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 4px 0 12px; }
-.school-filter button {
+.school-filter, .pill-group { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 4px 0 12px; }
+.school-filter button, .pill-group button {
   font: inherit; font-size: 0.86rem; padding: 6px 14px; border-radius: 999px; cursor: pointer;
   border: 1px solid var(--border); background: var(--surface); color: var(--text);
   transition: background var(--transition), border-color var(--transition);
 }
-.school-filter button:hover { border-color: var(--primary); }
-.school-filter button[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--surface); }
-.school-filter button:focus-visible, th.sortable button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.school-filter button:hover, .pill-group button:hover { border-color: var(--primary); }
+.school-filter button[aria-pressed="true"], .pill-group button[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--surface); }
+.school-filter button:focus-visible, .pill-group button:focus-visible, th.sortable button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .school-filter-hint { font-size: 0.8rem; }
 th.sortable { padding: 0; }
 th.sortable button {
@@ -519,6 +519,28 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
 
 <section>
   <h2><span class="h2-icon" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="12" width="4" height="8"/><rect x="10" y="6" width="4" height="14"/><rect x="16" y="9" width="4" height="11"/><line x1="10" y1="12" x2="14" y2="12"/><line x1="16" y1="15" x2="20" y2="15"/></svg>
+  </span>总价段成交结构</h2>
+
+  <div class="pill-group" role="group" aria-label="切换显示口径">
+    <button type="button" data-mode="count" aria-pressed="true">笔数</button>
+    <button type="button" data-mode="share" aria-pressed="false">占比</button>
+  </div>
+  <figure>
+    <div id="chart-price-mix" class="chart chart-tall" role="img" aria-label="{{ N_PERIODS }} 期各总价段成交笔数堆叠柱状图"><div class="chart-loading">图表加载中…</div></div>
+    <figcaption>{{ PRICE_MIX_CAPTION }}</figcaption>
+  </figure>
+
+  <details>
+    <summary>各期 × 总价段笔数明细</summary>
+    <div class="table-wrap" style="margin:0;border:none;box-shadow:none;">
+      {{ PRICE_MIX_TABLE }}
+    </div>
+  </details>
+</section>
+
+<section>
+  <h2><span class="h2-icon" aria-hidden="true">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
   </span>核心片区均价走势</h2>
 
@@ -541,65 +563,6 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
         {{ AREA_OBSERVATIONS_ROWS }}
       </tbody>
     </table>
-  </div>
-</section>
-
-<section>
-  <h2><span class="h2-icon" aria-hidden="true">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>
-  </span>下期预测（{{ NEXT_PERIOD_LABEL }}）</h2>
-
-  <p class="caption-note">
-    线性回归外推 · 仅基于已观测的 {{ N_PERIODS }} 期 ≥5 笔的片区均价 ·
-    <strong>R² &lt; 0.3 视为噪音</strong>，CI 为 95% 预测置信区间（越宽越不确定）。
-  </p>
-
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>片区</th>
-          <th class="num">当期均价</th>
-          <th class="num">预测均价</th>
-          <th class="num">95% CI</th>
-          <th class="num">预测变化%</th>
-          <th class="num">R²</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{ PREDICTION_ROWS }}
-      </tbody>
-    </table>
-  </div>
-
-  <div class="conclusion">
-    <p>{{ PREDICTION_CAPTION }}</p>
-  </div>
-</section>
-
-<section>
-  <h2><span class="h2-icon" aria-hidden="true">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-  </span>同小区同户型 真实变化</h2>
-
-  <figure>
-    <div id="chart-same-unit" class="chart" role="img" aria-label="同小区同户型相邻期变化柱状图"><div class="chart-loading">图表加载中…</div></div>
-    <figcaption>剔除品种偏移后的真实信号 · 仅看同一小区+同户型两期都 ≥2 笔的高可信对子</figcaption>
-  </figure>
-
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr><th>区间</th><th>对子数</th><th>变化%</th><th>说明</th></tr>
-      </thead>
-      <tbody>
-        {{ SAME_UNIT_ROWS }}
-      </tbody>
-    </table>
-  </div>
-
-  <div class="conclusion">
-    <p>{{ SAME_UNIT_CONCLUSION_HTML }}</p>
   </div>
 </section>
 
@@ -895,67 +858,79 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
     });
   }
 
-  function renderSameUnit(el) {
+  // 总价段 × 期次 堆叠柱：有序分档用单色蓝阶（低总价浅 → 高总价深；深色模式反向），已过 dataviz 校验
+  const PRICE_RAMP = {
+    light: ['#86b6ef', '#6d9bd3', '#5480b8', '#3c679e', '#254e84', '#0d366b'],
+    dark:  ['#256abf', '#3987e5', '#6da7ec', '#9ec5f4', '#cde2fb', '#f0f6fe'],
+  };
+  let priceMixMode = 'count';
+  function renderPriceMix(el) {
     const t = chartTheme();
     const mob = isMobile();
+    const pm = DATA.price_mix;
+    const ramp = isDark() ? PRICE_RAMP.dark : PRICE_RAMP.light;
+    const share = priceMixMode === 'share';
+    const totals = DATA.periods.map((_, j) => pm.counts.reduce((acc, row) => acc + row[j], 0));
+    const val = (n, j) => share ? (totals[j] ? Math.round(n / totals[j] * 1000) / 10 : 0) : n;
+    if (charts.priceMix) charts.priceMix.dispose();
     const c = echarts.init(el);
-    charts.sameUnit = c;
-    const items = DATA.same_unit;
-    // 手机上缩短 label：'2026-04下 vs 2026-04上' → '4下→4上'
-    const shortLabel = (s) => s.replace(/2026-(\d{2})([上下])\s*vs\s*2026-(\d{2})([上下])/, (_, m1, t1, m2, t2) => `${parseInt(m2,10)}${t2}→${parseInt(m1,10)}${t1}`);
+    charts.priceMix = c;
     c.setOption({
       animation: !prefersReducedMotion(),
-      grid: { left: mob ? 44 : 60, right: mob ? 12 : 30, top: 30, bottom: mob ? 50 : 70 },
+      grid: { left: mob ? 40 : 52, right: mob ? 12 : 24, top: mob ? 64 : 48, bottom: mob ? 36 : 44 },
       tooltip: Object.assign(tooltipStyle(t.text, t.surface, t.border), {
+        axisPointer: { type: 'shadow' },
         confine: true,
-        formatter: (p) => {
-          const item = items[p[0].dataIndex];
-          return `<b>${item.label}</b><br/>变化 <b>${item.value > 0 ? '+' : ''}${item.value}%</b> · ${item.n} 对`;
+        formatter: (ps) => {
+          const j = ps[0].dataIndex;
+          const lines = ps.slice().reverse().map((p) => {
+            const n = pm.counts[p.seriesIndex][j];
+            const pct = totals[j] ? (n / totals[j] * 100).toFixed(1) : '0.0';
+            return `${p.marker}${p.seriesName}<span style="float:right;margin-left:16px;font-family:JetBrains Mono,monospace">${n} 笔 · ${pct}%</span>`;
+          });
+          return `<b>${DATA.periods[j]}</b> · 共 ${totals[j]} 笔<br/>` + lines.join('<br/>');
         },
       }),
+      legend: {
+        data: pm.labels,
+        textStyle: { color: t.text, fontFamily: 'Josefin Sans, sans-serif', fontSize: mob ? 10 : 12 },
+        top: 4, icon: 'roundRect', itemGap: mob ? 8 : 14, itemWidth: 14, itemHeight: 10,
+      },
       xAxis: Object.assign({
         type: 'category',
-        data: items.map((i) => mob ? shortLabel(i.label) : i.label.replace(' vs ', '\nvs ')),
-        axisLabel: { color: t.text, fontFamily: 'Josefin Sans, sans-serif', fontSize: mob ? 10 : 11, interval: 0, lineHeight: 14 },
-      }, { axisLine: { lineStyle: { color: t.line } }, axisTick: { show: false } }),
+        data: mob ? DATA.periods.map(shortPeriod) : DATA.periods,
+      }, commonAxis(t.text, t.line), {
+        splitLine: { show: false },
+        axisLabel: { color: t.text, fontFamily: 'Josefin Sans, sans-serif', fontSize: mob ? 10 : 11, interval: 0, rotate: mob ? 0 : 30 },
+      }),
       yAxis: Object.assign({
-        type: 'value', name: '变化 %',
-        // 自适应对称范围：以 max(|v|)*1.2 为上下限，至少 ±5%
-        max: (v) => Math.max(5, Math.ceil(Math.max(Math.abs(v.min), Math.abs(v.max)) * 1.2)),
-        min: (v) => -Math.max(5, Math.ceil(Math.max(Math.abs(v.min), Math.abs(v.max)) * 1.2)),
+        type: 'value', name: share ? '占比 %' : '笔数',
+        max: share ? 100 : null,
         nameTextStyle: { color: t.muted, fontFamily: 'Josefin Sans, sans-serif' },
-        axisLabel: { formatter: '{value}%' },
-      }, commonAxis(t.text, t.line)),
-      series: [{
-        type: 'bar',
-        barWidth: mob ? '60%' : '50%',
-        data: items.map((i) => ({
-          value: i.value,
-          itemStyle: {
-            color: i.value >= 0 ? t.up : t.down,
-            borderRadius: i.value >= 0 ? [8, 8, 0, 0] : [0, 0, 8, 8],
-          },
-        })),
-        label: {
-          show: true,
-          color: t.text,
-          fontFamily: 'JetBrains Mono, monospace',
-          fontSize: mob ? 10 : 12,
-          fontWeight: 'bold',
-          formatter: (p) => {
-            const item = items[p.dataIndex];
-            return (item.value >= 0 ? '+' : '') + item.value + '%\n(' + item.n + ' 对)';
-          },
-          position: (params) => params.value >= 0 ? 'top' : 'bottom',
+      }, commonAxis(t.text, t.line),
+      share ? { axisLabel: { color: t.text, fontFamily: 'Josefin Sans, sans-serif', fontSize: 12, formatter: '{value}%' } } : {}),
+      series: pm.labels.map((label, i) => ({
+        name: label, type: 'bar', stack: 'mix',
+        barWidth: mob ? '62%' : '48%',
+        emphasis: { focus: 'series' },
+        itemStyle: {
+          color: ramp[i],
+          // 1px 表面色描边 → 段与段之间约 2px 间隙
+          borderColor: t.surface, borderWidth: 1,
+          borderRadius: i === pm.labels.length - 1 ? [4, 4, 0, 0] : 0,
         },
-        markLine: {
-          silent: true, symbol: 'none',
-          lineStyle: { color: t.muted, type: 'solid', opacity: 0.4 },
-          data: [{ yAxis: 0 }],
-        },
-      }],
+        data: pm.counts[i].map(val),
+      })),
     });
   }
+  document.querySelectorAll('.pill-group button[data-mode]').forEach((b) => {
+    b.addEventListener('click', () => {
+      priceMixMode = b.dataset.mode;
+      document.querySelectorAll('.pill-group button[data-mode]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      const el = document.getElementById('chart-price-mix');
+      if (el && DATA) renderPriceMix(el);
+    });
+  });
 
   function bootstrap() {
     if (typeof echarts === 'undefined') {
@@ -969,10 +944,10 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
         DATA = data;
         const volEl = document.getElementById('chart-volume');
         const avgEl = document.getElementById('chart-area-avg');
-        const suEl = document.getElementById('chart-same-unit');
+        const pmEl = document.getElementById('chart-price-mix');
         if (volEl) { clearLoading(volEl); renderVolume(volEl); }
         if (avgEl) { clearLoading(avgEl); renderAreaLine(avgEl, DATA.avg_series, 'avgLine'); }
-        if (suEl) { clearLoading(suEl); renderSameUnit(suEl); }
+        if (pmEl) { clearLoading(pmEl); renderPriceMix(pmEl); }
 
         // 中位图：details 展开时再渲染（节省首屏开销）
         const detEl = document.getElementById('details-median');
@@ -1007,10 +982,10 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
           Object.entries(charts).forEach(([k, c]) => { if (c) { c.dispose(); delete charts[k]; } });
           const volEl = document.getElementById('chart-volume');
           const avgEl = document.getElementById('chart-area-avg');
-          const suEl = document.getElementById('chart-same-unit');
+          const pmEl = document.getElementById('chart-price-mix');
           if (volEl && DATA) renderVolume(volEl);
           if (avgEl && DATA) renderAreaLine(avgEl, DATA.avg_series, 'avgLine');
-          if (suEl && DATA) renderSameUnit(suEl);
+          if (pmEl && DATA) renderPriceMix(pmEl);
           const detEl = document.getElementById('details-median');
           if (detEl && detEl.open && DATA) {
             renderAreaLine(document.getElementById('chart-area-median'), DATA.median_series, 'medLine');
@@ -1032,10 +1007,10 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
         // 重新渲染已经存在的图表
         const volEl = document.getElementById('chart-volume');
         const avgEl = document.getElementById('chart-area-avg');
-        const suEl = document.getElementById('chart-same-unit');
+        const pmEl = document.getElementById('chart-price-mix');
         if (volEl && DATA) renderVolume(volEl);
         if (avgEl && DATA) renderAreaLine(avgEl, DATA.avg_series, 'avgLine');
-        if (suEl && DATA) renderSameUnit(suEl);
+        if (pmEl && DATA) renderPriceMix(pmEl);
         const detEl = document.getElementById('details-median');
         if (detEl && detEl.open && DATA) {
           renderAreaLine(document.getElementById('chart-area-median'), DATA.median_series, 'medLine');
