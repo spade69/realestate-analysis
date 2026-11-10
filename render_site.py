@@ -25,6 +25,8 @@ from analyze import (
     split_auctions,
     analyze_school_premium,
     analyze_by_school,
+    analyze_low_price,
+    LOW_PRICE_MAX,
     SCHOOL_LIST_MIN_DEALS,
     SCHOOL_RECENT_PERIODS,
     attach_school,
@@ -498,6 +500,85 @@ def build_price_mix(df: pd.DataFrame, periods: list[str]) -> tuple[str, str]:
     return table, caption
 
 
+# ── 低总价段（200 万以下）─────────────────────────────────────────
+
+
+def build_low_price_section(df: pd.DataFrame) -> str:
+    """200 万以下成交：片区表 + 小区表（图表由前端按 chart_data.low_price 渲染）。"""
+    r = analyze_low_price(df)
+    if not r["n"]:
+        return '<p class="dim">暂无 {} 万以下成交。</p>'.format(LOW_PRICE_MAX)
+    n, n_all = r["n"], r["n_all"]
+    n_top = sum(a["n_top"] for a in r["areas"])
+
+    area_rows = "".join(
+        '<tr>'
+        f'<td>{esc(a["area"])}</td>'
+        + _sort_td(str(a["n"]), a["n"])
+        + _sort_td(str(a["n_communities"]), a["n_communities"])
+        + _sort_td(f'{a["top_share"] * 100:.0f}%', round(a["top_share"], 4))
+        + _sort_td(f'{a["median_total"]:g}万', a["median_total"])
+        + _sort_td(f'{a["median_unit"]:.2f}', a["median_unit"])
+        + _sort_td(f'{a["median_sqm"]:g}㎡', a["median_sqm"])
+        + _sort_td(f'{a["per_month"]:.1f}', round(a["per_month"], 3))
+        + _sort_td(_neg(a["avg_neg_rate"]), a["avg_neg_rate"])
+        + '</tr>'
+        for a in r["areas"])
+    area_table = (
+        '<div class="table-wrap"><table id="low-area-table" class="js-sortable"><thead><tr>'
+        + _sort_th("片区", cls="") + _sort_th("成交", "desc") + _sort_th("小区", "desc")
+        + _sort_th("名校占比", "desc") + _sort_th("总价中位", "asc") + _sort_th("单价中位", "asc")
+        + _sort_th("面积中位", "desc") + _sort_th("月均成交", "desc") + _sort_th("平均谈价", "desc")
+        + '</tr></thead><tbody>' + area_rows + '</tbody></table></div>')
+
+    comms = r["communities"]
+    c_top = sum(1 for c in comms if c["tier"] == "名校")
+    comm_rows = "".join(
+        f'<tr data-group="{"top" if c["tier"] == "名校" else "other"}">'
+        f'<td>{esc(c["community"])}{" ★" if c["tier"] == "名校" else ""}</td>'
+        f'<td>{esc(c["area"])}</td>'
+        + _sort_td(str(c["n"]), c["n"])
+        + f'<td>{esc(c["school_primary"]) or "<span class=dim>未标注</span>"}'
+        + (f' <span class="dim">({esc(c["tier"])})</span>' if c["tier"] in ("无学位",) else "") + '</td>'
+        + _sort_td(f'{c["min_total"]:g}万<span class="dim"> · {c["min_sqm"]:g}㎡</span>', c["min_total"])
+        + _sort_td(f'{c["median_total"]:g}万', c["median_total"])
+        + _sort_td(f'{c["median_sqm"]:g}㎡', c["median_sqm"])
+        + _sort_td(f'{c["n_active_periods"]}/{c["n_periods"]}', c["n_active_periods"])
+        + _sort_td(_neg(c["avg_neg_rate"]), c["avg_neg_rate"])
+        + '</tr>'
+        for c in comms)
+    hidden = (f'<p class="caption-note">另有 {r["n_hidden_communities"]} 个小区各不足 {r["min_deals"]} 笔'
+              f'（合计 {r["n_hidden_deals"]} 笔），未单列；可在下方「小区/片区检索」里查。</p>'
+              if r["n_hidden_communities"] else "")
+    comm_table = (
+        f'<h3>小区（{LOW_PRICE_MAX} 万以下成交 ≥{r["min_deals"]} 笔，★ 为名校学位）</h3>'
+        + _filter_bar("low-comm-table", "筛选小区", (c_top, len(comms) - c_top))
+        + '<div class="table-wrap"><table id="low-comm-table" class="js-sortable"><thead><tr>'
+        + _sort_th("小区", cls="") + _sort_th("片区", cls="") + _sort_th("成交", "desc")
+        + _sort_th("对口小学", cls="") + _sort_th("最低总价", "asc") + _sort_th("总价中位", "asc")
+        + _sort_th("面积中位", "desc") + _sort_th("有成交期数", "desc") + _sort_th("平均谈价", "desc")
+        + '</tr></thead><tbody>' + comm_rows + '</tbody></table></div>' + hidden)
+
+    one_room = int((df.loc[df["total_price_wan"] < LOW_PRICE_MAX, "room_type"] == "1室").sum())
+    intro = (f'<p class="caption-note">共 <strong>{n}</strong> 笔（占全部 {n / n_all * 100:.0f}%），'
+             f'分布在 {len(r["areas"])} 个片区；其中 1 室 {one_room} 笔，基本是小户型 / 公寓。'
+             f'对口名校学位的 {n_top} 笔（{n_top / n * 100:.0f}%）。已剔除法拍与非市场价。</p>')
+    figure = ('<figure><div id="chart-low-price" class="chart" role="img" '
+              f'aria-label="{LOW_PRICE_MAX} 万以下成交按片区分布，区分名校与非名校学位">'
+              '<div class="chart-loading">图表加载中…</div></div>'
+              '<figcaption>各片区 200 万以下成交笔数，按是否对口名校学位分色</figcaption></figure>')
+    return intro + figure + '<h3>片区</h3>' + area_table + comm_table
+
+
+def low_price_chart_data(df: pd.DataFrame) -> dict[str, Any]:
+    r = analyze_low_price(df)
+    areas = r["areas"]
+    return {"max": LOW_PRICE_MAX,
+            "areas": [a["area"] for a in areas],
+            "top": [a["n_top"] for a in areas],
+            "other": [a["n"] - a["n_top"] for a in areas]}
+
+
 # ── 期次详情 ─────────────────────────────────────────────────────
 
 
@@ -715,6 +796,31 @@ def _liquidity(s: dict[str, Any]) -> str:
             f' · 谈价 {nr}')
 
 
+def _sort_td(text: str, v: float | None, cls: str = "num") -> str:
+    """可排序表格的单元格：data-v 存排序用的原始数值，空值排最后。"""
+    dv = "" if v is None else f"{v:g}"
+    return f'<td class="{cls}" data-v="{dv}">{text}</td>'
+
+
+def _sort_th(label: str, first: str | None = None, cls: str = "num") -> str:
+    """first: 首次点击的排序方向（desc / asc）；None = 不可排序。"""
+    if first is None:
+        return f'<th class="{cls}">{label}</th>'
+    return (f'<th class="{cls} sortable" data-first="{first}" aria-sort="none">'
+            f'<button type="button">{label}<span class="sort-ind" aria-hidden="true"></span></button></th>')
+
+
+def _filter_bar(table_id: str, label: str, counts: tuple[int, int]) -> str:
+    """全部 / 名校 / 非名校 筛选按钮；行上用 data-group="top|other"。"""
+    total = counts[0] + counts[1]
+    return (f'<div class="school-filter" role="group" aria-label="{esc(label)}" data-for="{table_id}">'
+            f'<button type="button" data-filter="all" aria-pressed="true">全部 {total}</button>'
+            f'<button type="button" data-filter="top" aria-pressed="false">名校 ★ {counts[0]}</button>'
+            f'<button type="button" data-filter="other" aria-pressed="false">非名校 {counts[1]}</button>'
+            '<span class="dim school-filter-hint">点表头排序，再点切换升 / 降序</span>'
+            '</div>')
+
+
 def build_school_cards(df: pd.DataFrame) -> str:
     """名校逐校卡片（上车门槛 + 流通性）+ 全部学校汇总表。成交过少的学校不展示。"""
     all_schools = analyze_by_school(df)
@@ -748,37 +854,26 @@ def build_school_cards(df: pd.DataFrame) -> str:
         ]
         cards.append('<div class="school-card">' + "".join(lines) + '</div>')
 
-    def td(text: str, v: float | None, cls: str = "num") -> str:
-        dv = "" if v is None else f"{v:g}"
-        return f'<td class="{cls}" data-v="{dv}">{text}</td>'
-
     rows = []
     for s in schools:
         c, c2, cr = s["cheapest"], s["cheapest_2r"], s["cheapest_recent"]
         rows.append(
-            f'<tr data-top="{1 if s["is_top"] else 0}">'
+            f'<tr data-group="{"top" if s["is_top"] else "other"}">'
             f'<td>{esc(s["school"])}{" ★" if s["is_top"] else ""}</td>'
-            + td(str(s["n_communities"]), s["n_communities"])
-            + td(str(s["n"]), s["n"])
-            + td(f'{c["total"]:g}万', c["total"])
+            + _sort_td(str(s["n_communities"]), s["n_communities"])
+            + _sort_td(str(s["n"]), s["n"])
+            + _sort_td(f'{c["total"]:g}万', c["total"])
             + f'<td>{esc(c["community"])}</td>'
-            + td(_wan(c2), c2["total"] if c2 else None)
-            + td(_wan(cr), cr["total"] if cr else None)
-            + td(f'{s["median_total"]:g}万', s["median_total"])
-            + td(f'{s["median_unit"]:.2f}', s["median_unit"])
-            + td(f'{s["per_month"]:.1f}', round(s["per_month"], 3))
-            + td(f'{s["n_active_periods"]}/{s["n_periods"]}', s["n_active_periods"])
-            + td(_neg(s["avg_neg_rate"]), s["avg_neg_rate"])
+            + _sort_td(_wan(c2), c2["total"] if c2 else None)
+            + _sort_td(_wan(cr), cr["total"] if cr else None)
+            + _sort_td(f'{s["median_total"]:g}万', s["median_total"])
+            + _sort_td(f'{s["median_unit"]:.2f}', s["median_unit"])
+            + _sort_td(f'{s["per_month"]:.1f}', round(s["per_month"], 3))
+            + _sort_td(f'{s["n_active_periods"]}/{s["n_periods"]}', s["n_active_periods"])
+            + _sort_td(_neg(s["avg_neg_rate"]), s["avg_neg_rate"])
             + '</tr>'
         )
     n_top = sum(1 for s in schools if s["is_top"])
-
-    def th(label: str, first: str | None = None, cls: str = "num") -> str:
-        """first: 首次点击的排序方向（desc / asc）；None = 不可排序。"""
-        if first is None:
-            return f'<th class="{cls}">{label}</th>'
-        return (f'<th class="{cls} sortable" data-first="{first}" aria-sort="none">'
-                f'<button type="button">{label}<span class="sort-ind" aria-hidden="true"></span></button></th>')
 
     hidden_note = (
         f'<p class="caption-note">另有 {len(hidden)} 所学校累计成交不足 {SCHOOL_LIST_MIN_DEALS} 笔，'
@@ -795,19 +890,14 @@ def build_school_cards(df: pd.DataFrame) -> str:
         '流通性：月均成交（一期 = 半个月）、有成交的期数、平均谈价率（越接近 0 越好卖）。</p>'
         '<div class="school-grid">' + "".join(cards) + '</div>'
         '<details><summary>全部学校（' + str(len(schools)) + ' 所，★ 为名校）</summary>'
-        '<div class="school-filter" role="group" aria-label="筛选学校">'
-        f'<button type="button" data-filter="all" aria-pressed="true">全部 {len(schools)}</button>'
-        f'<button type="button" data-filter="top" aria-pressed="false">名校 ★ {n_top}</button>'
-        f'<button type="button" data-filter="other" aria-pressed="false">非名校 {len(schools) - n_top}</button>'
-        '<span class="dim school-filter-hint">点表头排序，再点切换升 / 降序</span>'
-        '</div>'
+        + _filter_bar("school-table", "筛选学校", (n_top, len(schools) - n_top)) +
         '<div class="table-wrap" style="margin:0;border:none;box-shadow:none;">'
-        '<table id="school-table"><thead><tr>'
-        + th("学校", cls="")
-        + th("小区", "desc") + th("成交", "desc") + th("最低总价", "asc") + th("最低价小区", cls="")
-        + th("2室+最低", "asc") + th(f"近{SCHOOL_RECENT_PERIODS}期最低", "asc")
-        + th("总价中位", "asc") + th("单价中位", "asc")
-        + th("月均成交", "desc") + th("有成交期数", "desc") + th("平均谈价", "desc")
+        '<table id="school-table" class="js-sortable"><thead><tr>'
+        + _sort_th("学校", cls="")
+        + _sort_th("小区", "desc") + _sort_th("成交", "desc") + _sort_th("最低总价", "asc") + _sort_th("最低价小区", cls="")
+        + _sort_th("2室+最低", "asc") + _sort_th(f"近{SCHOOL_RECENT_PERIODS}期最低", "asc")
+        + _sort_th("总价中位", "asc") + _sort_th("单价中位", "asc")
+        + _sort_th("月均成交", "desc") + _sort_th("有成交期数", "desc") + _sort_th("平均谈价", "desc")
         + '</tr></thead><tbody>' + "".join(rows) + '</tbody></table></div>' + hidden_note + '</details>'
     )
 
@@ -928,6 +1018,7 @@ def build_chart_data(df: pd.DataFrame, periods: list[str]) -> dict[str, Any]:
         "median_series": series(med_pivot),
         "volume": [int(per_period.loc[p, "n_total"]) for p in periods],
         "big_drop_rate": [float(per_period.loc[p, "big_drop_rate"]) for p in periods],
+        "low_price": low_price_chart_data(df),
         "price_mix": {"labels": TOTAL_PRICE_LABELS, "counts": price_mix_counts(df, periods)},
     }
 
@@ -970,6 +1061,7 @@ def main() -> None:
 
     mix_table, mix_caption = build_price_mix(df, periods)
     placeholders["PRICE_MIX_TABLE"] = mix_table
+    placeholders["LOW_PRICE_SECTION_HTML"] = build_low_price_section(df)
     placeholders["PRICE_MIX_CAPTION"] = mix_caption
 
     placeholders["SEARCH_DATA_JSON"] = build_search_data(df)

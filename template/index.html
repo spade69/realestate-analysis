@@ -541,6 +541,14 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
 
 <section>
   <h2><span class="h2-icon" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>
+  </span>200 万以下成交</h2>
+
+  {{ LOW_PRICE_SECTION_HTML }}
+</section>
+
+<section>
+  <h2><span class="h2-icon" aria-hidden="true">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
   </span>核心片区均价走势</h2>
 
@@ -858,6 +866,54 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
     });
   }
 
+  // 200 万以下：片区横向堆叠条（名校 / 非名校），分类色取 dataviz 默认色板第 1、2 位，已校验
+  const LOW_COLORS = { light: ['#2a78d6', '#eb6834'], dark: ['#3987e5', '#d95926'] };
+  function renderLowPrice(el) {
+    const t = chartTheme();
+    const mob = isMobile();
+    const lp = DATA.low_price;
+    if (!lp || !lp.areas.length) return;
+    const col = isDark() ? LOW_COLORS.dark : LOW_COLORS.light;
+    // 横向条：顶部为成交最多的片区
+    const areas = lp.areas.slice().reverse(), top = lp.top.slice().reverse(), other = lp.other.slice().reverse();
+    el.style.height = (areas.length * (mob ? 24 : 26) + 90) + 'px';
+    if (charts.lowPrice) charts.lowPrice.dispose();
+    const c = echarts.init(el);
+    charts.lowPrice = c;
+    const series = [['名校学位', top, col[0]], ['非名校 / 未标注', other, col[1]]].map(([name, data, color], i) => ({
+      name, type: 'bar', stack: 'low', data,
+      barWidth: '62%',
+      emphasis: { focus: 'series' },
+      itemStyle: { color, borderColor: t.surface, borderWidth: 1, borderRadius: i === 1 ? [0, 4, 4, 0] : 0 },
+    }));
+    // 末端标总数（选择性直接标注）
+    series[1].label = {
+      show: true, position: 'right', color: t.text, fontFamily: 'JetBrains Mono, monospace', fontSize: mob ? 10 : 11,
+      formatter: (p) => String(top[p.dataIndex] + other[p.dataIndex]),
+    };
+    c.setOption({
+      animation: !prefersReducedMotion(),
+      grid: { left: 8, right: mob ? 30 : 40, top: 36, bottom: 8, containLabel: true },
+      tooltip: Object.assign(tooltipStyle(t.text, t.surface, t.border), {
+        axisPointer: { type: 'shadow' }, confine: true,
+        formatter: (ps) => {
+          const j = ps[0].dataIndex, n = top[j] + other[j];
+          return `<b>${areas[j]}</b> · ${n} 笔<br/>` + ps.map((p) =>
+            `${p.marker}${p.seriesName}<span style="float:right;margin-left:16px;font-family:JetBrains Mono,monospace">${p.value} 笔 · ${(p.value / n * 100).toFixed(0)}%</span>`).join('<br/>');
+        },
+      }),
+      legend: {
+        data: ['名校学位', '非名校 / 未标注'], top: 4, icon: 'roundRect', itemWidth: 14, itemHeight: 10,
+        textStyle: { color: t.text, fontFamily: 'Josefin Sans, sans-serif', fontSize: mob ? 10 : 12 },
+      },
+      xAxis: Object.assign({ type: 'value' }, commonAxis(t.text, t.line)),
+      yAxis: Object.assign({ type: 'category', data: areas }, commonAxis(t.text, t.line),
+        { splitLine: { show: false }, axisTick: { show: false },
+          axisLabel: { color: t.text, fontFamily: 'Josefin Sans, sans-serif', fontSize: mob ? 11 : 12, interval: 0 } }),
+      series,
+    });
+  }
+
   // 总价段 × 期次 堆叠柱：有序分档用单色蓝阶（低总价浅 → 高总价深；深色模式反向），已过 dataviz 校验
   const PRICE_RAMP = {
     light: ['#86b6ef', '#6694cd', '#4874ab', '#2b548b', '#0d366b'],
@@ -945,6 +1001,8 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
         const volEl = document.getElementById('chart-volume');
         const avgEl = document.getElementById('chart-area-avg');
         const pmEl = document.getElementById('chart-price-mix');
+        const lpEl = document.getElementById('chart-low-price');
+        if (lpEl) { clearLoading(lpEl); renderLowPrice(lpEl); }
         if (volEl) { clearLoading(volEl); renderVolume(volEl); }
         if (avgEl) { clearLoading(avgEl); renderAreaLine(avgEl, DATA.avg_series, 'avgLine'); }
         if (pmEl) { clearLoading(pmEl); renderPriceMix(pmEl); }
@@ -986,6 +1044,8 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
           if (volEl && DATA) renderVolume(volEl);
           if (avgEl && DATA) renderAreaLine(avgEl, DATA.avg_series, 'avgLine');
           if (pmEl && DATA) renderPriceMix(pmEl);
+          const lpEl2 = document.getElementById('chart-low-price');
+          if (lpEl2 && DATA) renderLowPrice(lpEl2);
           const detEl = document.getElementById('details-median');
           if (detEl && detEl.open && DATA) {
             renderAreaLine(document.getElementById('chart-area-median'), DATA.median_series, 'medLine');
@@ -1011,6 +1071,8 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
         if (volEl && DATA) renderVolume(volEl);
         if (avgEl && DATA) renderAreaLine(avgEl, DATA.avg_series, 'avgLine');
         if (pmEl && DATA) renderPriceMix(pmEl);
+          const lpEl2 = document.getElementById('chart-low-price');
+          if (lpEl2 && DATA) renderLowPrice(lpEl2);
         const detEl = document.getElementById('details-median');
         if (detEl && detEl.open && DATA) {
           renderAreaLine(document.getElementById('chart-area-median'), DATA.median_series, 'medLine');
@@ -1131,43 +1193,46 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border
 })();
 </script>
 <script>
-// 全部学校表：表头排序 + 名校 / 非名校筛选
+// 可排序表格（table.js-sortable）+ 名校 / 非名校筛选（.school-filter[data-for]）
 (function () {
   'use strict';
-  const table = document.getElementById('school-table');
-  if (!table) return;
-  const tbody = table.tBodies[0];
-  const rows = Array.from(tbody.rows);
-  rows.forEach(function (r, i) { r.dataset.i = i; });
-  const ths = Array.from(table.tHead.rows[0].cells);
-
-  ths.forEach(function (th, col) {
-    if (!th.classList.contains('sortable')) return;
-    th.querySelector('button').addEventListener('click', function () {
-      const cur = th.getAttribute('aria-sort');
-      const dir = cur === 'none' ? (th.dataset.first === 'asc' ? 'ascending' : 'descending')
-                : (cur === 'ascending' ? 'descending' : 'ascending');
-      ths.forEach(function (h) { if (h.classList.contains('sortable')) h.setAttribute('aria-sort', 'none'); });
-      th.setAttribute('aria-sort', dir);
-      const sign = dir === 'ascending' ? 1 : -1;
-      const val = function (r) { const v = r.cells[col].dataset.v; return v === '' ? null : parseFloat(v); };
-      rows.slice().sort(function (a, b) {
-        const va = val(a), vb = val(b);
-        if (va === null && vb === null) return a.dataset.i - b.dataset.i;
-        if (va === null) return 1;   // 空值始终排最后
-        if (vb === null) return -1;
-        return (va - vb) * sign || a.dataset.i - b.dataset.i;
-      }).forEach(function (r) { tbody.appendChild(r); });
+  document.querySelectorAll('table.js-sortable').forEach(function (table) {
+    const tbody = table.tBodies[0];
+    const rows = Array.from(tbody.rows);
+    rows.forEach(function (r, i) { r.dataset.i = i; });
+    const ths = Array.from(table.tHead.rows[0].cells);
+    ths.forEach(function (th, col) {
+      if (!th.classList.contains('sortable')) return;
+      th.querySelector('button').addEventListener('click', function () {
+        const cur = th.getAttribute('aria-sort');
+        const dir = cur === 'none' ? (th.dataset.first === 'asc' ? 'ascending' : 'descending')
+                  : (cur === 'ascending' ? 'descending' : 'ascending');
+        ths.forEach(function (h) { if (h.classList.contains('sortable')) h.setAttribute('aria-sort', 'none'); });
+        th.setAttribute('aria-sort', dir);
+        const sign = dir === 'ascending' ? 1 : -1;
+        const val = function (r) { const v = r.cells[col].dataset.v; return v === '' ? null : parseFloat(v); };
+        rows.slice().sort(function (a, b) {
+          const va = val(a), vb = val(b);
+          if (va === null && vb === null) return a.dataset.i - b.dataset.i;
+          if (va === null) return 1;   // 空值始终排最后
+          if (vb === null) return -1;
+          return (va - vb) * sign || a.dataset.i - b.dataset.i;
+        }).forEach(function (r) { tbody.appendChild(r); });
+      });
     });
   });
 
-  const btns = Array.from(document.querySelectorAll('.school-filter button'));
-  btns.forEach(function (b) {
-    b.addEventListener('click', function () {
-      const f = b.dataset.filter;
-      btns.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
-      rows.forEach(function (r) {
-        r.hidden = (f === 'top' && r.dataset.top !== '1') || (f === 'other' && r.dataset.top !== '0');
+  document.querySelectorAll('.school-filter[data-for]').forEach(function (bar) {
+    const table = document.getElementById(bar.dataset.for);
+    if (!table) return;
+    const btns = Array.from(bar.querySelectorAll('button[data-filter]'));
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        const f = b.dataset.filter;
+        btns.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+        Array.from(table.tBodies[0].rows).forEach(function (r) {
+          r.hidden = f !== 'all' && r.dataset.group !== f;
+        });
       });
     });
   });
