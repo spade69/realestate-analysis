@@ -675,7 +675,7 @@
     "max": 200,
     "scopes": {
       "all": {
-        "n": 318,
+        "n": 314,
         "areas": [
           {
             "area": "八卦岭",
@@ -687,7 +687,130 @@
             "median_unit": 3.68,
             "median_sqm": 32.0,
             "avg_neg_rate": -11.5331,
-            "per_month": 11.3333
+            "per_month": 11.3333,
+            "communities": [
+              {
+                "community": "八卦岭宿舍",
+                "n": 24,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 85.0,
+                "min_sqm": 23.0,
+                "median_total": 101.0,
+                "median_sqm": 25.0,
+                "avg_neg_rate": -10.0096
+              },
+              {
+                "community": "旭飞花园",
+                "n": 22,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 68.0,
+                "min_sqm": 10.0,
+                "median_total": 118.5,
+                "median_sqm": 29.5,
+                "avg_neg_rate": -11.3874
+              },
+              {
+                "community": "鹏盛村",
+                "n": 22,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 90.0,
+                "min_sqm": 32.0,
+                "median_total": 125.0,
+                "median_sqm": 38.5,
+                "avg_neg_rate": -12.58
+              },
+              {
+                "community": "鹏益花园",
+                "n": 6,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 109.0,
+                "min_sqm": 30.0,
+                "median_total": 132.5,
+                "median_sqm": 36.0,
+                "avg_neg_rate": -5.185
+              },
+              {
+                "community": "鹏盛年华",
+                "n": 4,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 148.0,
+                "min_sqm": 35.0,
+                "median_total": 157.5,
+                "median_sqm": 38.5,
+                "avg_neg_rate": -17.7475
+              },
+              {
+                "community": "先科机电大厦",
+                "n": 2,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 105.0,
+                "min_sqm": 39.0,
+                "median_total": 108.5,
+                "median_sqm": 41.5,
+                "avg_neg_rate": -19.085
+              },
+              {
+                "community": "鹏盛花园",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 70.0,
+                "min_sqm": 16.0,
+                "median_total": 70.0,
+                "median_sqm": 16.0,
+                "avg_neg_rate": -30.0
+              },
+              {
+                "community": "光纤小区",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 114.0,
+                "min_sqm": 42.0,
+                "median_total": 114.0,
+                "median_sqm": 42.0,
+                "avg_neg_rate": -8.23
+              },
+              {
+                "community": "翠馨居花园",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 185.0,
+                "min_sqm": 43.0,
+                "median_total": 185.0,
+                "median_sqm": 43.0,
+                "avg_neg_rate": -8.87
+              },
+              {
+                "community": "岭尚时代园",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 190.0,
+                "min_sqm": 29.0,
+                "median_total": 190.0,
+                "median_sqm": 29.0,
+                "avg_neg_rate": -14.41
+              },
+              {
+                "community": "庆安航空大厦",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 190.0,
+                "min_sqm": 49.0,
+                "median_total": 190.0,
+                "median_sqm": 49.0,
+                "avg_neg_rate": -11.63
+              }
+            ]
           },
           {
             "area": "华强北",
@@ -699,7 +822,75 @@
             "median_unit": 4.115,
             "median_sqm": 33.0,
             "avg_neg_rate": -11.2408,
-            "per_month": 5.3333
+            "per_month": 5.3333,
+            "communities": [
+              {
+                "community": "恒邦壹峯",
+                "n": 15,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 128.0,
+                "min_sqm": 29.0,
+                "median_total": 135.0,
+                "median_sqm": 33.0,
+                "avg_neg_rate": -17.6293
+              },
+              {
+                "community": "宝树台",
+                "n": 12,
+                "school_primary": "荔园小学(通新岭)",
+                "tier": "名校",
+                "min_total": 170.0,
+                "min_sqm": 43.0,
+                "median_total": 178.0,
+                "median_sqm": 43.0,
+                "avg_neg_rate": -8.4983
+              },
+              {
+                "community": "滨江爱义南方大厦",
+                "n": 5,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 115.0,
+                "min_sqm": 25.0,
+                "median_total": 121.0,
+                "median_sqm": 25.0,
+                "avg_neg_rate": -6.626
+              },
+              {
+                "community": "东方时代广场",
+                "n": 4,
+                "school_primary": "华富小学",
+                "tier": "普通",
+                "min_total": 162.0,
+                "min_sqm": 27.0,
+                "median_total": 163.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -3.59
+              },
+              {
+                "community": "阁林网苑",
+                "n": 3,
+                "school_primary": "荔园小学(通新岭)",
+                "tier": "名校",
+                "min_total": 196.0,
+                "min_sqm": 16.0,
+                "median_total": 196.0,
+                "median_sqm": 16.0,
+                "avg_neg_rate": -9.7067
+              },
+              {
+                "community": "世纪汇都会轩",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 195.0,
+                "min_sqm": 34.0,
+                "median_total": 195.0,
+                "median_sqm": 34.0,
+                "avg_neg_rate": -5.34
+              }
+            ]
           },
           {
             "area": "梅林",
@@ -711,7 +902,174 @@
             "median_unit": 3.93,
             "median_sqm": 32.0,
             "avg_neg_rate": -13.1689,
-            "per_month": 4.9333
+            "per_month": 4.9333,
+            "communities": [
+              {
+                "community": "凯伦花园",
+                "n": 5,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 79.0,
+                "min_sqm": 18.0,
+                "median_total": 85.0,
+                "median_sqm": 19.0,
+                "avg_neg_rate": -12.426
+              },
+              {
+                "community": "御锦公馆",
+                "n": 5,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 95.0,
+                "min_sqm": 30.0,
+                "median_total": 127.0,
+                "median_sqm": 30.0,
+                "avg_neg_rate": -20.81
+              },
+              {
+                "community": "大众公寓",
+                "n": 5,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 103.0,
+                "min_sqm": 32.0,
+                "median_total": 112.0,
+                "median_sqm": 32.0,
+                "avg_neg_rate": -13.464
+              },
+              {
+                "community": "海康大厦",
+                "n": 4,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 130.0,
+                "min_sqm": 29.0,
+                "median_total": 134.5,
+                "median_sqm": 29.0,
+                "avg_neg_rate": -10.445
+              },
+              {
+                "community": "旭飞华安园",
+                "n": 3,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 93.0,
+                "min_sqm": 19.0,
+                "median_total": 95.0,
+                "median_sqm": 21.0,
+                "avg_neg_rate": -8.0567
+              },
+              {
+                "community": "梅兴苑",
+                "n": 3,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 160.0,
+                "min_sqm": 42.0,
+                "median_total": 168.0,
+                "median_sqm": 46.0,
+                "avg_neg_rate": -10.4067
+              },
+              {
+                "community": "红梅苑",
+                "n": 2,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 115.0,
+                "min_sqm": 36.0,
+                "median_total": 115.0,
+                "median_sqm": 36.5,
+                "avg_neg_rate": -23.33
+              },
+              {
+                "community": "蓝天绿都家园",
+                "n": 2,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 119.0,
+                "min_sqm": 32.0,
+                "median_total": 141.5,
+                "median_sqm": 37.5,
+                "avg_neg_rate": -11.1
+              },
+              {
+                "community": "凯丰花园二期",
+                "n": 2,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 163.0,
+                "min_sqm": 29.0,
+                "median_total": 165.0,
+                "median_sqm": 30.5,
+                "avg_neg_rate": -6.52
+              },
+              {
+                "community": "凯丰花园综合楼",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 83.0,
+                "min_sqm": 27.0,
+                "median_total": 83.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -2.35
+              },
+              {
+                "community": "荔园阁一期",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 109.0,
+                "min_sqm": 34.0,
+                "median_total": 109.0,
+                "median_sqm": 34.0,
+                "avg_neg_rate": -31.87
+              },
+              {
+                "community": "先科花园",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 143.0,
+                "min_sqm": 39.0,
+                "median_total": 143.0,
+                "median_sqm": 39.0,
+                "avg_neg_rate": -2.4
+              },
+              {
+                "community": "翰岭院",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 160.0,
+                "min_sqm": 25.0,
+                "median_total": 160.0,
+                "median_sqm": 25.0,
+                "avg_neg_rate": -10.11
+              },
+              {
+                "community": "汇龙花园",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 185.0,
+                "min_sqm": 41.0,
+                "median_total": 185.0,
+                "median_sqm": 41.0,
+                "avg_neg_rate": -11.9
+              },
+              {
+                "community": "梅沁楼",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 190.0,
+                "min_sqm": 56.0,
+                "median_total": 190.0,
+                "median_sqm": 56.0,
+                "avg_neg_rate": -23.69
+              }
+            ]
           },
           {
             "area": "上下沙",
@@ -723,7 +1081,53 @@
             "median_unit": 4.065,
             "median_sqm": 36.0,
             "avg_neg_rate": -10.1476,
-            "per_month": 4.2667
+            "per_month": 4.2667,
+            "communities": [
+              {
+                "community": "中洲滨海商业中心",
+                "n": 12,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 137.0,
+                "min_sqm": 36.0,
+                "median_total": 147.0,
+                "median_sqm": 37.0,
+                "avg_neg_rate": -9.9064
+              },
+              {
+                "community": "京基滨河时代",
+                "n": 9,
+                "school_primary": "下沙小学",
+                "tier": "普通",
+                "min_total": 138.0,
+                "min_sqm": 33.0,
+                "median_total": 173.0,
+                "median_sqm": 41.0,
+                "avg_neg_rate": -7.18
+              },
+              {
+                "community": "中洲滨海华府一期",
+                "n": 7,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 126.0,
+                "min_sqm": 34.0,
+                "median_total": 126.0,
+                "median_sqm": 35.0,
+                "avg_neg_rate": -14.4343
+              },
+              {
+                "community": "花好园",
+                "n": 4,
+                "school_primary": "下沙小学",
+                "tier": "普通",
+                "min_total": 154.0,
+                "min_sqm": 29.0,
+                "median_total": 154.5,
+                "median_sqm": 31.0,
+                "avg_neg_rate": -8.5025
+              }
+            ]
           },
           {
             "area": "上步",
@@ -735,7 +1139,53 @@
             "median_unit": 2.41,
             "median_sqm": 33.0,
             "avg_neg_rate": -8.656,
-            "per_month": 2.6667
+            "per_month": 2.6667,
+            "communities": [
+              {
+                "community": "佳兆业中心",
+                "n": 12,
+                "school_primary": "上步小学",
+                "tier": "普通",
+                "min_total": 45.0,
+                "min_sqm": 22.0,
+                "median_total": 76.5,
+                "median_sqm": 32.0,
+                "avg_neg_rate": -7.7883
+              },
+              {
+                "community": "御河堤",
+                "n": 6,
+                "school_primary": "上步小学",
+                "tier": "普通",
+                "min_total": 116.0,
+                "min_sqm": 33.0,
+                "median_total": 120.5,
+                "median_sqm": 33.0,
+                "avg_neg_rate": -12.4683
+              },
+              {
+                "community": "国企大厦",
+                "n": 1,
+                "school_primary": "上步小学",
+                "tier": "普通",
+                "min_total": 177.0,
+                "min_sqm": 84.0,
+                "median_total": 177.0,
+                "median_sqm": 84.0,
+                "avg_neg_rate": -1.67
+              },
+              {
+                "community": "红岭大厦",
+                "n": 1,
+                "school_primary": "上步小学",
+                "tier": "普通",
+                "min_total": 189.0,
+                "min_sqm": 50.0,
+                "median_total": 189.0,
+                "median_sqm": 50.0,
+                "avg_neg_rate": -3.18
+              }
+            ]
           },
           {
             "area": "福田保税区",
@@ -747,7 +1197,64 @@
             "median_unit": 4.6,
             "median_sqm": 33.0,
             "avg_neg_rate": -8.03,
-            "per_month": 2.6667
+            "per_month": 2.6667,
+            "communities": [
+              {
+                "community": "自由港湾公寓",
+                "n": 9,
+                "school_primary": "福苑小学",
+                "tier": "普通",
+                "min_total": 129.0,
+                "min_sqm": 27.0,
+                "median_total": 134.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -8.1356
+              },
+              {
+                "community": "加福广场华尔登府邸",
+                "n": 5,
+                "school_primary": "外国语学校福保小学部",
+                "tier": "普通",
+                "min_total": 181.0,
+                "min_sqm": 42.0,
+                "median_total": 183.0,
+                "median_sqm": 42.0,
+                "avg_neg_rate": -7.06
+              },
+              {
+                "community": "城市3米6公寓",
+                "n": 4,
+                "school_primary": "福苑小学",
+                "tier": "普通",
+                "min_total": 139.0,
+                "min_sqm": 35.0,
+                "median_total": 169.0,
+                "median_sqm": 44.0,
+                "avg_neg_rate": -11.3433
+              },
+              {
+                "community": "红树城",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 173.0,
+                "min_sqm": 33.0,
+                "median_total": 173.0,
+                "median_sqm": 33.0,
+                "avg_neg_rate": -1.99
+              },
+              {
+                "community": "加福广场华盛御府邸",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 189.0,
+                "min_sqm": 42.0,
+                "median_total": 189.0,
+                "median_sqm": 42.0,
+                "avg_neg_rate": null
+              }
+            ]
           },
           {
             "area": "皇岗",
@@ -759,7 +1266,97 @@
             "median_unit": 4.355,
             "median_sqm": 38.0,
             "avg_neg_rate": -12.4364,
-            "per_month": 2.1333
+            "per_month": 2.1333,
+            "communities": [
+              {
+                "community": "晨晖家园",
+                "n": 4,
+                "school_primary": "荔园外国语小学(水围)",
+                "tier": "普通",
+                "min_total": 112.0,
+                "min_sqm": 26.0,
+                "median_total": 125.0,
+                "median_sqm": 32.5,
+                "avg_neg_rate": -15.0975
+              },
+              {
+                "community": "深荣大厦",
+                "n": 4,
+                "school_primary": "皇岗创新实验学校(小学部)/福民小学/第二实验学校南校区小学部",
+                "tier": "普通",
+                "min_total": 129.0,
+                "min_sqm": 38.0,
+                "median_total": 149.5,
+                "median_sqm": 42.0,
+                "avg_neg_rate": -16.19
+              },
+              {
+                "community": "金地名津",
+                "n": 2,
+                "school_primary": "皇岗创新实验学校(小学部)/福民小学/第二实验学校南校区小学部",
+                "tier": "普通",
+                "min_total": 169.0,
+                "min_sqm": 45.0,
+                "median_total": 174.5,
+                "median_sqm": 44.0,
+                "avg_neg_rate": -10.38
+              },
+              {
+                "community": "皇御苑四期",
+                "n": 2,
+                "school_primary": "皇岗创新实验学校(小学部)/福民小学/第二实验学校南校区小学部",
+                "tier": "普通",
+                "min_total": 188.0,
+                "min_sqm": 38.0,
+                "median_total": 188.5,
+                "median_sqm": 40.0,
+                "avg_neg_rate": -13.305
+              },
+              {
+                "community": "皇御苑一期",
+                "n": 1,
+                "school_primary": "皇岗创新实验学校(小学部)/福民小学/第二实验学校南校区小学部",
+                "tier": "普通",
+                "min_total": 152.0,
+                "min_sqm": 30.0,
+                "median_total": 152.0,
+                "median_sqm": 30.0,
+                "avg_neg_rate": -7.88
+              },
+              {
+                "community": "阳基阳光城市",
+                "n": 1,
+                "school_primary": "皇岗创新实验学校(小学部)/福民小学/第二实验学校南校区小学部",
+                "tier": "普通",
+                "min_total": 183.0,
+                "min_sqm": 33.0,
+                "median_total": 183.0,
+                "median_sqm": 33.0,
+                "avg_neg_rate": -3.17
+              },
+              {
+                "community": "天泽花园",
+                "n": 1,
+                "school_primary": "皇岗创新实验学校(小学部)/福民小学/第二实验学校南校区小学部",
+                "tier": "普通",
+                "min_total": 188.0,
+                "min_sqm": 41.0,
+                "median_total": 188.0,
+                "median_sqm": 41.0,
+                "avg_neg_rate": -14.55
+              },
+              {
+                "community": "福民新村",
+                "n": 1,
+                "school_primary": "皇岗创新实验学校(小学部)/福民小学/第二实验学校南校区小学部",
+                "tier": "普通",
+                "min_total": 188.0,
+                "min_sqm": 47.0,
+                "median_total": 188.0,
+                "median_sqm": 47.0,
+                "avg_neg_rate": -8.37
+              }
+            ]
           },
           {
             "area": "新洲",
@@ -771,7 +1368,53 @@
             "median_unit": 4.55,
             "median_sqm": 41.0,
             "avg_neg_rate": -10.3387,
-            "per_month": 2.0
+            "per_month": 2.0,
+            "communities": [
+              {
+                "community": "韵动家园",
+                "n": 6,
+                "school_primary": "绿洲小学",
+                "tier": "普通",
+                "min_total": 172.0,
+                "min_sqm": 45.0,
+                "median_total": 187.0,
+                "median_sqm": 41.5,
+                "avg_neg_rate": -13.1083
+              },
+              {
+                "community": "嘉葆润金座",
+                "n": 5,
+                "school_primary": "新沙小学/新洲小学",
+                "tier": "普通",
+                "min_total": 161.0,
+                "min_sqm": 23.0,
+                "median_total": 173.0,
+                "median_sqm": 34.0,
+                "avg_neg_rate": -9.044
+              },
+              {
+                "community": "南溪新苑",
+                "n": 3,
+                "school_primary": "新沙小学",
+                "tier": "普通",
+                "min_total": 173.0,
+                "min_sqm": 41.0,
+                "median_total": 175.0,
+                "median_sqm": 41.0,
+                "avg_neg_rate": -7.6267
+              },
+              {
+                "community": "祥云天都世纪大厦",
+                "n": 1,
+                "school_primary": "新沙小学",
+                "tier": "普通",
+                "min_total": 165.0,
+                "min_sqm": 39.0,
+                "median_total": 165.0,
+                "median_sqm": 39.0,
+                "avg_neg_rate": -8.33
+              }
+            ]
           },
           {
             "area": "华强南",
@@ -783,7 +1426,86 @@
             "median_unit": 4.38,
             "median_sqm": 32.0,
             "avg_neg_rate": -11.7809,
-            "per_month": 1.4667
+            "per_month": 1.4667,
+            "communities": [
+              {
+                "community": "桐林公寓",
+                "n": 2,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 88.0,
+                "min_sqm": 23.0,
+                "median_total": 93.0,
+                "median_sqm": 22.0,
+                "avg_neg_rate": -9.14
+              },
+              {
+                "community": "锦林公寓",
+                "n": 2,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 100.0,
+                "min_sqm": 23.0,
+                "median_total": 124.0,
+                "median_sqm": 27.5,
+                "avg_neg_rate": -9.31
+              },
+              {
+                "community": "漾福居",
+                "n": 2,
+                "school_primary": "福田小学",
+                "tier": "普通",
+                "min_total": 101.0,
+                "min_sqm": 23.0,
+                "median_total": 140.5,
+                "median_sqm": 30.0,
+                "avg_neg_rate": -5.87
+              },
+              {
+                "community": "飞扬时代大厦",
+                "n": 2,
+                "school_primary": "南园小学",
+                "tier": "普通",
+                "min_total": 153.0,
+                "min_sqm": 38.0,
+                "median_total": 174.5,
+                "median_sqm": 43.0,
+                "avg_neg_rate": -8.605
+              },
+              {
+                "community": "桐林城市广场",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 105.0,
+                "min_sqm": 23.0,
+                "median_total": 105.0,
+                "median_sqm": 23.0,
+                "avg_neg_rate": -4.55
+              },
+              {
+                "community": "南光捷佳大厦",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 145.0,
+                "min_sqm": 58.0,
+                "median_total": 145.0,
+                "median_sqm": 58.0,
+                "avg_neg_rate": -50.0
+              },
+              {
+                "community": "庆福园大厦",
+                "n": 1,
+                "school_primary": "福田小学",
+                "tier": "普通",
+                "min_total": 168.0,
+                "min_sqm": 37.0,
+                "median_total": 168.0,
+                "median_sqm": 37.0,
+                "avg_neg_rate": -9.19
+              }
+            ]
           },
           {
             "area": "赤尾",
@@ -795,7 +1517,42 @@
             "median_unit": 4.21,
             "median_sqm": 35.0,
             "avg_neg_rate": -9.0382,
-            "per_month": 1.4667
+            "per_month": 1.4667,
+            "communities": [
+              {
+                "community": "京基御景华城",
+                "n": 8,
+                "school_primary": "南华小学",
+                "tier": "普通",
+                "min_total": 108.0,
+                "min_sqm": 27.0,
+                "median_total": 139.0,
+                "median_sqm": 34.5,
+                "avg_neg_rate": -6.4312
+              },
+              {
+                "community": "京基朝晖华城",
+                "n": 2,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 125.0,
+                "min_sqm": 35.0,
+                "median_total": 150.5,
+                "median_sqm": 36.5,
+                "avg_neg_rate": -16.94
+              },
+              {
+                "community": "汇港名苑",
+                "n": 1,
+                "school_primary": "南华小学",
+                "tier": "普通",
+                "min_total": 99.0,
+                "min_sqm": 23.0,
+                "median_total": 99.0,
+                "median_sqm": 23.0,
+                "avg_neg_rate": -14.09
+              }
+            ]
           },
           {
             "area": "香梅北",
@@ -807,7 +1564,31 @@
             "median_unit": 4.26,
             "median_sqm": 27.0,
             "avg_neg_rate": -13.8089,
-            "per_month": 1.2
+            "per_month": 1.2,
+            "communities": [
+              {
+                "community": "深房传麒景苑",
+                "n": 7,
+                "school_primary": "福田区外国语小学",
+                "tier": "名校",
+                "min_total": 117.0,
+                "min_sqm": 27.0,
+                "median_total": 121.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -14.9329
+              },
+              {
+                "community": "七街公馆",
+                "n": 2,
+                "school_primary": "福田区外国语小学",
+                "tier": "名校",
+                "min_total": 114.0,
+                "min_sqm": 30.0,
+                "median_total": 141.0,
+                "median_sqm": 36.5,
+                "avg_neg_rate": -9.875
+              }
+            ]
           },
           {
             "area": "车公庙",
@@ -819,7 +1600,42 @@
             "median_unit": 4.9,
             "median_sqm": 36.0,
             "avg_neg_rate": -6.5575,
-            "per_month": 0.6667
+            "per_month": 0.6667,
+            "communities": [
+              {
+                "community": "泰然小区",
+                "n": 3,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 158.0,
+                "min_sqm": 32.0,
+                "median_total": 170.0,
+                "median_sqm": 34.0,
+                "avg_neg_rate": -8.12
+              },
+              {
+                "community": "杭钢富春大厦",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 162.0,
+                "min_sqm": 52.0,
+                "median_total": 162.0,
+                "median_sqm": 52.0,
+                "avg_neg_rate": -2.99
+              },
+              {
+                "community": "君临天下",
+                "n": 1,
+                "school_primary": "福新小学",
+                "tier": "普通",
+                "min_total": 186.0,
+                "min_sqm": 39.0,
+                "median_total": 186.0,
+                "median_sqm": 39.0,
+                "avg_neg_rate": -7.0
+              }
+            ]
           },
           {
             "area": "银湖",
@@ -831,7 +1647,53 @@
             "median_unit": 2.79,
             "median_sqm": 39.0,
             "avg_neg_rate": -12.5375,
-            "per_month": 0.6667
+            "per_month": 0.6667,
+            "communities": [
+              {
+                "community": "新都小区",
+                "n": 2,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 171.0,
+                "min_sqm": 50.0,
+                "median_total": 174.5,
+                "median_sqm": 50.0,
+                "avg_neg_rate": -14.395
+              },
+              {
+                "community": "华海公寓",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 70.0,
+                "min_sqm": 27.0,
+                "median_total": 70.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -12.03
+              },
+              {
+                "community": "新都名苑",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 105.0,
+                "min_sqm": 39.0,
+                "median_total": 105.0,
+                "median_sqm": 39.0,
+                "avg_neg_rate": null
+              },
+              {
+                "community": "新阁小区",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 109.0,
+                "min_sqm": 39.0,
+                "median_total": 109.0,
+                "median_sqm": 39.0,
+                "avg_neg_rate": -9.33
+              }
+            ]
           },
           {
             "area": "景田",
@@ -843,7 +1705,31 @@
             "median_unit": 4.865,
             "median_sqm": 38.0,
             "avg_neg_rate": -7.83,
-            "per_month": 0.5333
+            "per_month": 0.5333,
+            "communities": [
+              {
+                "community": "TT国际公寓",
+                "n": 2,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 158.0,
+                "min_sqm": 29.0,
+                "median_total": 166.5,
+                "median_sqm": 30.0,
+                "avg_neg_rate": -5.46
+              },
+              {
+                "community": "锦文阁大厦",
+                "n": 2,
+                "school_primary": "人民小学/景鹏小学",
+                "tier": "普通",
+                "min_total": 180.0,
+                "min_sqm": 45.0,
+                "median_total": 185.5,
+                "median_sqm": 45.0,
+                "avg_neg_rate": -12.57
+              }
+            ]
           },
           {
             "area": "福田中心",
@@ -855,43 +1741,53 @@
             "median_unit": 3.29,
             "median_sqm": 38.0,
             "avg_neg_rate": -9.155,
-            "per_month": 0.5333
-          },
-          {
-            "area": "莲花",
-            "n": 2,
-            "n_communities": 1,
-            "n_top": 0,
-            "top_share": 0.0,
-            "median_total": 186.5,
-            "median_unit": 4.99,
-            "median_sqm": 37.5,
-            "avg_neg_rate": -13.17,
-            "per_month": 0.2667
-          },
-          {
-            "area": "沙尾",
-            "n": 1,
-            "n_communities": 1,
-            "n_top": 0,
-            "top_share": 0.0,
-            "median_total": 134.0,
-            "median_unit": 4.1,
-            "median_sqm": 33.0,
-            "avg_neg_rate": -10.67,
-            "per_month": 0.1333
-          },
-          {
-            "area": "竹子林",
-            "n": 1,
-            "n_communities": 1,
-            "n_top": 0,
-            "top_share": 0.0,
-            "median_total": 193.0,
-            "median_unit": 4.08,
-            "median_sqm": 47.0,
-            "avg_neg_rate": -12.27,
-            "per_month": 0.1333
+            "per_month": 0.5333,
+            "communities": [
+              {
+                "community": "金中环国际商务大厦",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 99.0,
+                "min_sqm": 30.0,
+                "median_total": 99.0,
+                "median_sqm": 30.0,
+                "avg_neg_rate": -10.0
+              },
+              {
+                "community": "澳新亚大厦",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 134.0,
+                "min_sqm": 41.0,
+                "median_total": 134.0,
+                "median_sqm": 41.0,
+                "avg_neg_rate": -10.67
+              },
+              {
+                "community": "彩天名苑",
+                "n": 1,
+                "school_primary": "文天祥小学(岗厦)",
+                "tier": "普通",
+                "min_total": 177.0,
+                "min_sqm": 35.0,
+                "median_total": 177.0,
+                "median_sqm": 35.0,
+                "avg_neg_rate": -7.11
+              },
+              {
+                "community": "大中华国际金融中心",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 196.0,
+                "min_sqm": 66.0,
+                "median_total": 196.0,
+                "median_sqm": 66.0,
+                "avg_neg_rate": -8.84
+              }
+            ]
           }
         ]
       },
@@ -908,7 +1804,53 @@
             "median_unit": 3.31,
             "median_sqm": 29.5,
             "avg_neg_rate": -12.5125,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "八卦岭宿舍",
+                "n": 3,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 97.0,
+                "min_sqm": 29.0,
+                "median_total": 104.0,
+                "median_sqm": 29.0,
+                "avg_neg_rate": -6.91
+              },
+              {
+                "community": "旭飞花园",
+                "n": 2,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 90.0,
+                "min_sqm": 30.0,
+                "median_total": 90.0,
+                "median_sqm": 25.5,
+                "avg_neg_rate": -9.95
+              },
+              {
+                "community": "鹏盛村",
+                "n": 2,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 92.0,
+                "min_sqm": 32.0,
+                "median_total": 106.0,
+                "median_sqm": 35.5,
+                "avg_neg_rate": -14.735
+              },
+              {
+                "community": "鹏盛花园",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 70.0,
+                "min_sqm": 16.0,
+                "median_total": 70.0,
+                "median_sqm": 16.0,
+                "avg_neg_rate": -30.0
+              }
+            ]
           },
           {
             "area": "梅林",
@@ -920,7 +1862,31 @@
             "median_unit": 3.89,
             "median_sqm": 29.5,
             "avg_neg_rate": -14.1475,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "御锦公馆",
+                "n": 2,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 95.0,
+                "min_sqm": 30.0,
+                "median_total": 95.5,
+                "median_sqm": 29.5,
+                "avg_neg_rate": -20.17
+              },
+              {
+                "community": "海康大厦",
+                "n": 2,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 135.0,
+                "min_sqm": 29.0,
+                "median_total": 145.0,
+                "median_sqm": 31.0,
+                "avg_neg_rate": -8.125
+              }
+            ]
           },
           {
             "area": "华强北",
@@ -932,7 +1898,31 @@
             "median_unit": 7.975,
             "median_sqm": 29.0,
             "avg_neg_rate": -13.19,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "恒邦壹峯",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 145.0,
+                "min_sqm": 42.0,
+                "median_total": 145.0,
+                "median_sqm": 42.0,
+                "avg_neg_rate": -12.56
+              },
+              {
+                "community": "阁林网苑",
+                "n": 1,
+                "school_primary": "荔园小学(通新岭)",
+                "tier": "名校",
+                "min_total": 197.0,
+                "min_sqm": 16.0,
+                "median_total": 197.0,
+                "median_sqm": 16.0,
+                "avg_neg_rate": -13.82
+              }
+            ]
           },
           {
             "area": "华强南",
@@ -944,7 +1934,20 @@
             "median_unit": 4.48,
             "median_sqm": 27.5,
             "avg_neg_rate": -9.31,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "锦林公寓",
+                "n": 2,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 100.0,
+                "min_sqm": 23.0,
+                "median_total": 124.0,
+                "median_sqm": 27.5,
+                "avg_neg_rate": -9.31
+              }
+            ]
           },
           {
             "area": "香梅北",
@@ -956,7 +1959,20 @@
             "median_unit": 4.26,
             "median_sqm": 27.0,
             "avg_neg_rate": -15.475,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "深房传麒景苑",
+                "n": 2,
+                "school_primary": "福田区外国语小学",
+                "tier": "名校",
+                "min_total": 117.0,
+                "min_sqm": 27.0,
+                "median_total": 117.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -15.475
+              }
+            ]
           },
           {
             "area": "上下沙",
@@ -968,7 +1984,20 @@
             "median_unit": 3.67,
             "median_sqm": 43.0,
             "avg_neg_rate": -21.5,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "中洲滨海华府一期",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 157.0,
+                "min_sqm": 43.0,
+                "median_total": 157.0,
+                "median_sqm": 43.0,
+                "avg_neg_rate": -21.5
+              }
+            ]
           },
           {
             "area": "新洲",
@@ -980,7 +2009,20 @@
             "median_unit": 4.46,
             "median_sqm": 41.0,
             "avg_neg_rate": -20.0,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "韵动家园",
+                "n": 1,
+                "school_primary": "绿洲小学",
+                "tier": "普通",
+                "min_total": 184.0,
+                "min_sqm": 41.0,
+                "median_total": 184.0,
+                "median_sqm": 41.0,
+                "avg_neg_rate": -20.0
+              }
+            ]
           },
           {
             "area": "皇岗",
@@ -992,7 +2034,20 @@
             "median_unit": 4.49,
             "median_sqm": 42.0,
             "avg_neg_rate": -8.35,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "皇御苑四期",
+                "n": 1,
+                "school_primary": "皇岗创新实验学校(小学部)/福民小学/第二实验学校南校区小学部",
+                "tier": "普通",
+                "min_total": 189.0,
+                "min_sqm": 42.0,
+                "median_total": 189.0,
+                "median_sqm": 42.0,
+                "avg_neg_rate": -8.35
+              }
+            ]
           },
           {
             "area": "福田保税区",
@@ -1004,7 +2059,20 @@
             "median_unit": 5.21,
             "median_sqm": 33.0,
             "avg_neg_rate": -1.99,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "红树城",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 173.0,
+                "min_sqm": 33.0,
+                "median_total": 173.0,
+                "median_sqm": 33.0,
+                "avg_neg_rate": -1.99
+              }
+            ]
           },
           {
             "area": "赤尾",
@@ -1016,7 +2084,20 @@
             "median_unit": 3.56,
             "median_sqm": 35.0,
             "avg_neg_rate": -21.88,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "京基朝晖华城",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 125.0,
+                "min_sqm": 35.0,
+                "median_total": 125.0,
+                "median_sqm": 35.0,
+                "avg_neg_rate": -21.88
+              }
+            ]
           },
           {
             "area": "银湖",
@@ -1028,7 +2109,20 @@
             "median_unit": 3.41,
             "median_sqm": 50.0,
             "avg_neg_rate": -17.79,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "新都小区",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 171.0,
+                "min_sqm": 50.0,
+                "median_total": 171.0,
+                "median_sqm": 50.0,
+                "avg_neg_rate": -17.79
+              }
+            ]
           }
         ]
       },
@@ -1045,7 +2139,42 @@
             "median_unit": 3.74,
             "median_sqm": 35.0,
             "avg_neg_rate": -13.0438,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "中洲滨海华府一期",
+                "n": 6,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 126.0,
+                "min_sqm": 34.0,
+                "median_total": 126.0,
+                "median_sqm": 35.0,
+                "avg_neg_rate": -13.2567
+              },
+              {
+                "community": "中洲滨海商业中心",
+                "n": 1,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 147.0,
+                "min_sqm": 37.0,
+                "median_total": 147.0,
+                "median_sqm": 37.0,
+                "avg_neg_rate": -13.53
+              },
+              {
+                "community": "京基滨河时代",
+                "n": 1,
+                "school_primary": "下沙小学",
+                "tier": "普通",
+                "min_total": 173.0,
+                "min_sqm": 43.0,
+                "median_total": 173.0,
+                "median_sqm": 43.0,
+                "avg_neg_rate": -11.28
+              }
+            ]
           },
           {
             "area": "梅林",
@@ -1057,7 +2186,42 @@
             "median_unit": 4.87,
             "median_sqm": 25.0,
             "avg_neg_rate": -15.5833,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "旭飞华安园",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 93.0,
+                "min_sqm": 19.0,
+                "median_total": 93.0,
+                "median_sqm": 19.0,
+                "avg_neg_rate": -7.2
+              },
+              {
+                "community": "御锦公馆",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 127.0,
+                "min_sqm": 29.0,
+                "median_total": 127.0,
+                "median_sqm": 29.0,
+                "avg_neg_rate": -29.44
+              },
+              {
+                "community": "翰岭院",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 160.0,
+                "min_sqm": 25.0,
+                "median_total": 160.0,
+                "median_sqm": 25.0,
+                "avg_neg_rate": -10.11
+              }
+            ]
           },
           {
             "area": "新洲",
@@ -1069,7 +2233,20 @@
             "median_unit": 4.86,
             "median_sqm": 35.0,
             "avg_neg_rate": -9.04,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "嘉葆润金座",
+                "n": 1,
+                "school_primary": "新沙小学/新洲小学",
+                "tier": "普通",
+                "min_total": 171.0,
+                "min_sqm": 35.0,
+                "median_total": 171.0,
+                "median_sqm": 35.0,
+                "avg_neg_rate": -9.04
+              }
+            ]
           },
           {
             "area": "景田",
@@ -1081,7 +2258,20 @@
             "median_unit": 5.72,
             "median_sqm": 31.0,
             "avg_neg_rate": -2.78,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "TT国际公寓",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 175.0,
+                "min_sqm": 31.0,
+                "median_total": 175.0,
+                "median_sqm": 31.0,
+                "avg_neg_rate": -2.78
+              }
+            ]
           },
           {
             "area": "车公庙",
@@ -1093,7 +2283,20 @@
             "median_unit": 4.94,
             "median_sqm": 36.0,
             "avg_neg_rate": -12.0,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "泰然小区",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 176.0,
+                "min_sqm": 36.0,
+                "median_total": 176.0,
+                "median_sqm": 36.0,
+                "avg_neg_rate": -12.0
+              }
+            ]
           }
         ]
       },
@@ -1110,7 +2313,64 @@
             "median_unit": 3.93,
             "median_sqm": 36.5,
             "avg_neg_rate": -11.6471,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "旭飞花园",
+                "n": 4,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 78.0,
+                "min_sqm": 15.0,
+                "median_total": 126.0,
+                "median_sqm": 35.5,
+                "avg_neg_rate": -10.1733
+              },
+              {
+                "community": "鹏盛村",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 96.0,
+                "min_sqm": 31.0,
+                "median_total": 96.0,
+                "median_sqm": 31.0,
+                "avg_neg_rate": -5.71
+              },
+              {
+                "community": "先科机电大厦",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 112.0,
+                "min_sqm": 44.0,
+                "median_total": 112.0,
+                "median_sqm": 44.0,
+                "avg_neg_rate": -25.67
+              },
+              {
+                "community": "鹏盛年华",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 161.0,
+                "min_sqm": 39.0,
+                "median_total": 161.0,
+                "median_sqm": 39.0,
+                "avg_neg_rate": -8.0
+              },
+              {
+                "community": "庆安航空大厦",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 190.0,
+                "min_sqm": 49.0,
+                "median_total": 190.0,
+                "median_sqm": 49.0,
+                "avg_neg_rate": -11.63
+              }
+            ]
           },
           {
             "area": "华强北",
@@ -1122,7 +2382,42 @@
             "median_unit": 4.095,
             "median_sqm": 32.5,
             "avg_neg_rate": -14.0217,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "恒邦壹峯",
+                "n": 4,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 132.0,
+                "min_sqm": 32.0,
+                "median_total": 135.0,
+                "median_sqm": 32.5,
+                "avg_neg_rate": -24.7433
+              },
+              {
+                "community": "东方时代广场",
+                "n": 2,
+                "school_primary": "华富小学",
+                "tier": "普通",
+                "min_total": 162.0,
+                "min_sqm": 27.0,
+                "median_total": 162.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -1.82
+              },
+              {
+                "community": "宝树台",
+                "n": 2,
+                "school_primary": "荔园小学(通新岭)",
+                "tier": "名校",
+                "min_total": 188.0,
+                "min_sqm": 47.0,
+                "median_total": 190.0,
+                "median_sqm": 47.0,
+                "avg_neg_rate": -4.04
+              }
+            ]
           },
           {
             "area": "新洲",
@@ -1134,7 +2429,31 @@
             "median_unit": 4.86,
             "median_sqm": 37.5,
             "avg_neg_rate": -11.135,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "嘉葆润金座",
+                "n": 1,
+                "school_primary": "新沙小学/新洲小学",
+                "tier": "普通",
+                "min_total": 173.0,
+                "min_sqm": 34.0,
+                "median_total": 173.0,
+                "median_sqm": 34.0,
+                "avg_neg_rate": -12.75
+              },
+              {
+                "community": "韵动家园",
+                "n": 1,
+                "school_primary": "绿洲小学",
+                "tier": "普通",
+                "min_total": 190.0,
+                "min_sqm": 41.0,
+                "median_total": 190.0,
+                "median_sqm": 41.0,
+                "avg_neg_rate": -9.52
+              }
+            ]
           },
           {
             "area": "景田",
@@ -1146,7 +2465,31 @@
             "median_unit": 4.745,
             "median_sqm": 37.0,
             "avg_neg_rate": -8.14,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "TT国际公寓",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 158.0,
+                "min_sqm": 29.0,
+                "median_total": 158.0,
+                "median_sqm": 29.0,
+                "avg_neg_rate": -8.14
+              },
+              {
+                "community": "锦文阁大厦",
+                "n": 1,
+                "school_primary": "人民小学/景鹏小学",
+                "tier": "普通",
+                "min_total": 180.0,
+                "min_sqm": 45.0,
+                "median_total": 180.0,
+                "median_sqm": 45.0,
+                "avg_neg_rate": null
+              }
+            ]
           },
           {
             "area": "皇岗",
@@ -1158,7 +2501,31 @@
             "median_unit": 3.765,
             "median_sqm": 39.5,
             "avg_neg_rate": -15.13,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "晨晖家园",
+                "n": 1,
+                "school_primary": "荔园外国语小学(水围)",
+                "tier": "普通",
+                "min_total": 120.0,
+                "min_sqm": 36.0,
+                "median_total": 120.0,
+                "median_sqm": 36.0,
+                "avg_neg_rate": -25.0
+              },
+              {
+                "community": "金地名津",
+                "n": 1,
+                "school_primary": "皇岗创新实验学校(小学部)/福民小学/第二实验学校南校区小学部",
+                "tier": "普通",
+                "min_total": 180.0,
+                "min_sqm": 43.0,
+                "median_total": 180.0,
+                "median_sqm": 43.0,
+                "avg_neg_rate": -5.26
+              }
+            ]
           },
           {
             "area": "福田保税区",
@@ -1170,7 +2537,31 @@
             "median_unit": 4.63,
             "median_sqm": 34.5,
             "avg_neg_rate": -3.08,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "自由港湾公寓",
+                "n": 1,
+                "school_primary": "福苑小学",
+                "tier": "普通",
+                "min_total": 129.0,
+                "min_sqm": 27.0,
+                "median_total": 129.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -3.08
+              },
+              {
+                "community": "加福广场华盛御府邸",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 189.0,
+                "min_sqm": 42.0,
+                "median_total": 189.0,
+                "median_sqm": 42.0,
+                "avg_neg_rate": null
+              }
+            ]
           },
           {
             "area": "香梅北",
@@ -1182,7 +2573,20 @@
             "median_unit": 4.45,
             "median_sqm": 27.0,
             "avg_neg_rate": -23.54,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "深房传麒景苑",
+                "n": 2,
+                "school_primary": "福田区外国语小学",
+                "tier": "名校",
+                "min_total": 121.0,
+                "min_sqm": 27.0,
+                "median_total": 122.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -23.54
+              }
+            ]
           },
           {
             "area": "上下沙",
@@ -1194,7 +2598,20 @@
             "median_unit": 4.21,
             "median_sqm": 37.0,
             "avg_neg_rate": -13.0,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "中洲滨海商业中心",
+                "n": 1,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 157.0,
+                "min_sqm": 37.0,
+                "median_total": 157.0,
+                "median_sqm": 37.0,
+                "avg_neg_rate": -13.0
+              }
+            ]
           },
           {
             "area": "梅林",
@@ -1206,7 +2623,20 @@
             "median_unit": 4.69,
             "median_sqm": 29.0,
             "avg_neg_rate": -15.19,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "海康大厦",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 134.0,
+                "min_sqm": 29.0,
+                "median_total": 134.0,
+                "median_sqm": 29.0,
+                "avg_neg_rate": -15.19
+              }
+            ]
           },
           {
             "area": "赤尾",
@@ -1218,7 +2648,20 @@
             "median_unit": 4.61,
             "median_sqm": 38.0,
             "avg_neg_rate": -12.0,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "京基朝晖华城",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 176.0,
+                "min_sqm": 38.0,
+                "median_total": 176.0,
+                "median_sqm": 38.0,
+                "avg_neg_rate": -12.0
+              }
+            ]
           },
           {
             "area": "银湖",
@@ -1230,12 +2673,25 @@
             "median_unit": 2.69,
             "median_sqm": 39.0,
             "avg_neg_rate": null,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "新都名苑",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 105.0,
+                "min_sqm": 39.0,
+                "median_total": 105.0,
+                "median_sqm": 39.0,
+                "avg_neg_rate": null
+              }
+            ]
           }
         ]
       },
       "2026-04下": {
-        "n": 33,
+        "n": 32,
         "areas": [
           {
             "area": "八卦岭",
@@ -1247,7 +2703,31 @@
             "median_unit": 3.82,
             "median_sqm": 40.0,
             "avg_neg_rate": -16.08,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "旭飞花园",
+                "n": 6,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 97.0,
+                "min_sqm": 21.0,
+                "median_total": 136.5,
+                "median_sqm": 35.0,
+                "avg_neg_rate": -14.3625
+              },
+              {
+                "community": "鹏盛村",
+                "n": 3,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 96.0,
+                "min_sqm": 31.0,
+                "median_total": 127.0,
+                "median_sqm": 40.0,
+                "avg_neg_rate": -18.37
+              }
+            ]
           },
           {
             "area": "华强北",
@@ -1259,7 +2739,42 @@
             "median_unit": 4.08,
             "median_sqm": 43.0,
             "avg_neg_rate": -6.4337,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "宝树台",
+                "n": 6,
+                "school_primary": "荔园小学(通新岭)",
+                "tier": "名校",
+                "min_total": 170.0,
+                "min_sqm": 43.0,
+                "median_total": 176.0,
+                "median_sqm": 43.0,
+                "avg_neg_rate": -7.0767
+              },
+              {
+                "community": "滨江爱义南方大厦",
+                "n": 1,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 124.0,
+                "min_sqm": 25.0,
+                "median_total": 124.0,
+                "median_sqm": 25.0,
+                "avg_neg_rate": -2.44
+              },
+              {
+                "community": "东方时代广场",
+                "n": 1,
+                "school_primary": "华富小学",
+                "tier": "普通",
+                "min_total": 164.0,
+                "min_sqm": 27.0,
+                "median_total": 164.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -6.57
+              }
+            ]
           },
           {
             "area": "上下沙",
@@ -1271,7 +2786,31 @@
             "median_unit": 4.175,
             "median_sqm": 38.5,
             "avg_neg_rate": -7.9067,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "中洲滨海商业中心",
+                "n": 2,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 137.0,
+                "min_sqm": 36.0,
+                "median_total": 145.5,
+                "median_sqm": 36.0,
+                "avg_neg_rate": -11.195
+              },
+              {
+                "community": "京基滨河时代",
+                "n": 2,
+                "school_primary": "下沙小学",
+                "tier": "普通",
+                "min_total": 177.0,
+                "min_sqm": 43.0,
+                "median_total": 177.5,
+                "median_sqm": 42.0,
+                "avg_neg_rate": -1.33
+              }
+            ]
           },
           {
             "area": "梅林",
@@ -1283,7 +2822,53 @@
             "median_unit": 4.02,
             "median_sqm": 33.5,
             "avg_neg_rate": -15.745,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "凯伦花园",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 100.0,
+                "min_sqm": 22.0,
+                "median_total": 100.0,
+                "median_sqm": 22.0,
+                "avg_neg_rate": -16.67
+              },
+              {
+                "community": "荔园阁一期",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 109.0,
+                "min_sqm": 34.0,
+                "median_total": 109.0,
+                "median_sqm": 34.0,
+                "avg_neg_rate": -31.87
+              },
+              {
+                "community": "旭飞华安园",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 145.0,
+                "min_sqm": 33.0,
+                "median_total": 145.0,
+                "median_sqm": 33.0,
+                "avg_neg_rate": -3.33
+              },
+              {
+                "community": "梅兴苑",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 168.0,
+                "min_sqm": 46.0,
+                "median_total": 168.0,
+                "median_sqm": 46.0,
+                "avg_neg_rate": -11.11
+              }
+            ]
           },
           {
             "area": "上步",
@@ -1295,7 +2880,20 @@
             "median_unit": 2.305,
             "median_sqm": 50.5,
             "avg_neg_rate": -7.38,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "佳兆业中心",
+                "n": 2,
+                "school_primary": "上步小学",
+                "tier": "普通",
+                "min_total": 76.0,
+                "min_sqm": 32.0,
+                "median_total": 115.5,
+                "median_sqm": 50.5,
+                "avg_neg_rate": -7.38
+              }
+            ]
           },
           {
             "area": "福田保税区",
@@ -1307,7 +2905,31 @@
             "median_unit": 4.665,
             "median_sqm": 36.0,
             "avg_neg_rate": -9.125,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "自由港湾公寓",
+                "n": 1,
+                "school_primary": "福苑小学",
+                "tier": "普通",
+                "min_total": 136.0,
+                "min_sqm": 27.0,
+                "median_total": 136.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -9.33
+              },
+              {
+                "community": "加福广场华尔登府邸",
+                "n": 1,
+                "school_primary": "外国语学校福保小学部",
+                "tier": "普通",
+                "min_total": 194.0,
+                "min_sqm": 45.0,
+                "median_total": 194.0,
+                "median_sqm": 45.0,
+                "avg_neg_rate": -8.92
+              }
+            ]
           },
           {
             "area": "景田",
@@ -1319,7 +2941,20 @@
             "median_unit": 4.24,
             "median_sqm": 45.0,
             "avg_neg_rate": -12.57,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "锦文阁大厦",
+                "n": 1,
+                "school_primary": "人民小学/景鹏小学",
+                "tier": "普通",
+                "min_total": 191.0,
+                "min_sqm": 45.0,
+                "median_total": 191.0,
+                "median_sqm": 45.0,
+                "avg_neg_rate": -12.57
+              }
+            ]
           },
           {
             "area": "皇岗",
@@ -1331,19 +2966,20 @@
             "median_unit": 4.59,
             "median_sqm": 41.0,
             "avg_neg_rate": -14.55,
-            "per_month": null
-          },
-          {
-            "area": "莲花",
-            "n": 1,
-            "n_communities": 1,
-            "n_top": 0,
-            "top_share": 0.0,
-            "median_total": 178.0,
-            "median_unit": 5.1,
-            "median_sqm": 35.0,
-            "avg_neg_rate": -13.17,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "天泽花园",
+                "n": 1,
+                "school_primary": "皇岗创新实验学校(小学部)/福民小学/第二实验学校南校区小学部",
+                "tier": "普通",
+                "min_total": 188.0,
+                "min_sqm": 41.0,
+                "median_total": 188.0,
+                "median_sqm": 41.0,
+                "avg_neg_rate": -14.55
+              }
+            ]
           },
           {
             "area": "车公庙",
@@ -1355,12 +2991,25 @@
             "median_unit": 5.01,
             "median_sqm": 34.0,
             "avg_neg_rate": null,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "泰然小区",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 170.0,
+                "min_sqm": 34.0,
+                "median_total": 170.0,
+                "median_sqm": 34.0,
+                "avg_neg_rate": null
+              }
+            ]
           }
         ]
       },
       "2026-05上": {
-        "n": 21,
+        "n": 20,
         "areas": [
           {
             "area": "八卦岭",
@@ -1372,7 +3021,31 @@
             "median_unit": 3.35,
             "median_sqm": 33.0,
             "avg_neg_rate": -6.94,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "鹏盛村",
+                "n": 3,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 90.0,
+                "min_sqm": 32.0,
+                "median_total": 105.0,
+                "median_sqm": 32.0,
+                "avg_neg_rate": -12.05
+              },
+              {
+                "community": "鹏益花园",
+                "n": 3,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 118.0,
+                "min_sqm": 30.0,
+                "median_total": 127.0,
+                "median_sqm": 34.0,
+                "avg_neg_rate": -3.5333
+              }
+            ]
           },
           {
             "area": "华强北",
@@ -1384,7 +3057,31 @@
             "median_unit": 4.11,
             "median_sqm": 43.0,
             "avg_neg_rate": -4.9967,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "宝树台",
+                "n": 2,
+                "school_primary": "荔园小学(通新岭)",
+                "tier": "名校",
+                "min_total": 178.0,
+                "min_sqm": 43.0,
+                "median_total": 178.0,
+                "median_sqm": 43.0,
+                "avg_neg_rate": -6.305
+              },
+              {
+                "community": "东方时代广场",
+                "n": 1,
+                "school_primary": "华富小学",
+                "tier": "普通",
+                "min_total": 164.0,
+                "min_sqm": 25.0,
+                "median_total": 164.0,
+                "median_sqm": 25.0,
+                "avg_neg_rate": -2.38
+              }
+            ]
           },
           {
             "area": "梅林",
@@ -1396,7 +3093,31 @@
             "median_unit": 4.36,
             "median_sqm": 19.0,
             "avg_neg_rate": -9.18,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "凯伦花园",
+                "n": 2,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 79.0,
+                "min_sqm": 18.0,
+                "median_total": 81.0,
+                "median_sqm": 18.5,
+                "avg_neg_rate": -12.57
+              },
+              {
+                "community": "先科花园",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 143.0,
+                "min_sqm": 39.0,
+                "median_total": 143.0,
+                "median_sqm": 39.0,
+                "avg_neg_rate": -2.4
+              }
+            ]
           },
           {
             "area": "上步",
@@ -1408,7 +3129,31 @@
             "median_unit": 3.0,
             "median_sqm": 54.0,
             "avg_neg_rate": -10.58,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "御河堤",
+                "n": 1,
+                "school_primary": "上步小学",
+                "tier": "普通",
+                "min_total": 118.0,
+                "min_sqm": 32.0,
+                "median_total": 118.0,
+                "median_sqm": 32.0,
+                "avg_neg_rate": -14.49
+              },
+              {
+                "community": "佳兆业中心",
+                "n": 1,
+                "school_primary": "上步小学",
+                "tier": "普通",
+                "min_total": 182.0,
+                "min_sqm": 76.0,
+                "median_total": 182.0,
+                "median_sqm": 76.0,
+                "avg_neg_rate": -6.67
+              }
+            ]
           },
           {
             "area": "上下沙",
@@ -1420,7 +3165,20 @@
             "median_unit": 5.09,
             "median_sqm": 31.0,
             "avg_neg_rate": -11.36,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "花好园",
+                "n": 1,
+                "school_primary": "下沙小学",
+                "tier": "普通",
+                "min_total": 156.0,
+                "min_sqm": 31.0,
+                "median_total": 156.0,
+                "median_sqm": 31.0,
+                "avg_neg_rate": -11.36
+              }
+            ]
           },
           {
             "area": "华强南",
@@ -1432,7 +3190,20 @@
             "median_unit": 3.97,
             "median_sqm": 38.0,
             "avg_neg_rate": -7.95,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "飞扬时代大厦",
+                "n": 1,
+                "school_primary": "南园小学",
+                "tier": "普通",
+                "min_total": 153.0,
+                "min_sqm": 38.0,
+                "median_total": 153.0,
+                "median_sqm": 38.0,
+                "avg_neg_rate": -7.95
+              }
+            ]
           },
           {
             "area": "新洲",
@@ -1444,19 +3215,20 @@
             "median_unit": 5.39,
             "median_sqm": 34.0,
             "avg_neg_rate": -7.5,
-            "per_month": null
-          },
-          {
-            "area": "沙尾",
-            "n": 1,
-            "n_communities": 1,
-            "n_top": 0,
-            "top_share": 0.0,
-            "median_total": 134.0,
-            "median_unit": 4.1,
-            "median_sqm": 33.0,
-            "avg_neg_rate": -10.67,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "嘉葆润金座",
+                "n": 1,
+                "school_primary": "新沙小学/新洲小学",
+                "tier": "普通",
+                "min_total": 185.0,
+                "min_sqm": 34.0,
+                "median_total": 185.0,
+                "median_sqm": 34.0,
+                "avg_neg_rate": -7.5
+              }
+            ]
           },
           {
             "area": "皇岗",
@@ -1468,7 +3240,20 @@
             "median_unit": 4.35,
             "median_sqm": 47.0,
             "avg_neg_rate": -8.37,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "福民新村",
+                "n": 1,
+                "school_primary": "皇岗创新实验学校(小学部)/福民小学/第二实验学校南校区小学部",
+                "tier": "普通",
+                "min_total": 188.0,
+                "min_sqm": 47.0,
+                "median_total": 188.0,
+                "median_sqm": 47.0,
+                "avg_neg_rate": -8.37
+              }
+            ]
           },
           {
             "area": "福田保税区",
@@ -1480,7 +3265,20 @@
             "median_unit": 4.85,
             "median_sqm": 27.0,
             "avg_neg_rate": -2.82,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "自由港湾公寓",
+                "n": 1,
+                "school_primary": "福苑小学",
+                "tier": "普通",
+                "min_total": 131.0,
+                "min_sqm": 27.0,
+                "median_total": 131.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -2.82
+              }
+            ]
           },
           {
             "area": "银湖",
@@ -1492,7 +3290,20 @@
             "median_unit": 3.55,
             "median_sqm": 50.0,
             "avg_neg_rate": -11.0,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "新都小区",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 178.0,
+                "min_sqm": 50.0,
+                "median_total": 178.0,
+                "median_sqm": 50.0,
+                "avg_neg_rate": -11.0
+              }
+            ]
           }
         ]
       },
@@ -1509,7 +3320,53 @@
             "median_unit": 3.745,
             "median_sqm": 31.0,
             "avg_neg_rate": -6.5113,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "八卦岭宿舍",
+                "n": 3,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 95.0,
+                "min_sqm": 25.0,
+                "median_total": 102.0,
+                "median_sqm": 28.0,
+                "avg_neg_rate": -8.15
+              },
+              {
+                "community": "旭飞花园",
+                "n": 2,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 97.0,
+                "min_sqm": 22.0,
+                "median_total": 104.0,
+                "median_sqm": 24.5,
+                "avg_neg_rate": -6.69
+              },
+              {
+                "community": "鹏盛村",
+                "n": 2,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 126.0,
+                "min_sqm": 39.0,
+                "median_total": 126.5,
+                "median_sqm": 39.5,
+                "avg_neg_rate": -2.695
+              },
+              {
+                "community": "翠馨居花园",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 185.0,
+                "min_sqm": 43.0,
+                "median_total": 185.0,
+                "median_sqm": 43.0,
+                "avg_neg_rate": -8.87
+              }
+            ]
           },
           {
             "area": "华强南",
@@ -1521,7 +3378,42 @@
             "median_unit": 4.57,
             "median_sqm": 37.0,
             "avg_neg_rate": -7.9033,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "庆福园大厦",
+                "n": 1,
+                "school_primary": "福田小学",
+                "tier": "普通",
+                "min_total": 168.0,
+                "min_sqm": 37.0,
+                "median_total": 168.0,
+                "median_sqm": 37.0,
+                "avg_neg_rate": -9.19
+              },
+              {
+                "community": "漾福居",
+                "n": 1,
+                "school_primary": "福田小学",
+                "tier": "普通",
+                "min_total": 180.0,
+                "min_sqm": 37.0,
+                "median_total": 180.0,
+                "median_sqm": 37.0,
+                "avg_neg_rate": -5.26
+              },
+              {
+                "community": "飞扬时代大厦",
+                "n": 1,
+                "school_primary": "南园小学",
+                "tier": "普通",
+                "min_total": 196.0,
+                "min_sqm": 48.0,
+                "median_total": 196.0,
+                "median_sqm": 48.0,
+                "avg_neg_rate": -9.26
+              }
+            ]
           },
           {
             "area": "梅林",
@@ -1533,7 +3425,42 @@
             "median_unit": 3.93,
             "median_sqm": 32.0,
             "avg_neg_rate": -10.9467,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "大众公寓",
+                "n": 1,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 105.0,
+                "min_sqm": 32.0,
+                "median_total": 105.0,
+                "median_sqm": 32.0,
+                "avg_neg_rate": -12.5
+              },
+              {
+                "community": "海康大厦",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 130.0,
+                "min_sqm": 29.0,
+                "median_total": 130.0,
+                "median_sqm": 29.0,
+                "avg_neg_rate": -10.34
+              },
+              {
+                "community": "梅兴苑",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 180.0,
+                "min_sqm": 46.0,
+                "median_total": 180.0,
+                "median_sqm": 46.0,
+                "avg_neg_rate": -10.0
+              }
+            ]
           },
           {
             "area": "福田保税区",
@@ -1545,7 +3472,31 @@
             "median_unit": 4.545,
             "median_sqm": 35.0,
             "avg_neg_rate": -20.24,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "自由港湾公寓",
+                "n": 1,
+                "school_primary": "福苑小学",
+                "tier": "普通",
+                "min_total": 134.0,
+                "min_sqm": 29.0,
+                "median_total": 134.0,
+                "median_sqm": 29.0,
+                "avg_neg_rate": -32.9
+              },
+              {
+                "community": "加福广场华尔登府邸",
+                "n": 1,
+                "school_primary": "外国语学校福保小学部",
+                "tier": "普通",
+                "min_total": 183.0,
+                "min_sqm": 41.0,
+                "median_total": 183.0,
+                "median_sqm": 41.0,
+                "avg_neg_rate": -7.58
+              }
+            ]
           },
           {
             "area": "华强北",
@@ -1557,7 +3508,20 @@
             "median_unit": 3.84,
             "median_sqm": 40.0,
             "avg_neg_rate": -6.17,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "恒邦壹峯",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 152.0,
+                "min_sqm": 40.0,
+                "median_total": 152.0,
+                "median_sqm": 40.0,
+                "avg_neg_rate": -6.17
+              }
+            ]
           },
           {
             "area": "新洲",
@@ -1569,7 +3533,20 @@
             "median_unit": 3.86,
             "median_sqm": 45.0,
             "avg_neg_rate": -18.1,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "韵动家园",
+                "n": 1,
+                "school_primary": "绿洲小学",
+                "tier": "普通",
+                "min_total": 172.0,
+                "min_sqm": 45.0,
+                "median_total": 172.0,
+                "median_sqm": 45.0,
+                "avg_neg_rate": -18.1
+              }
+            ]
           },
           {
             "area": "皇岗",
@@ -1581,7 +3558,20 @@
             "median_unit": 4.6,
             "median_sqm": 36.0,
             "avg_neg_rate": -5.17,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "晨晖家园",
+                "n": 1,
+                "school_primary": "荔园外国语小学(水围)",
+                "tier": "普通",
+                "min_total": 165.0,
+                "min_sqm": 36.0,
+                "median_total": 165.0,
+                "median_sqm": 36.0,
+                "avg_neg_rate": -5.17
+              }
+            ]
           },
           {
             "area": "车公庙",
@@ -1593,7 +3583,20 @@
             "median_unit": 4.9,
             "median_sqm": 32.0,
             "avg_neg_rate": -4.24,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "泰然小区",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 158.0,
+                "min_sqm": 32.0,
+                "median_total": 158.0,
+                "median_sqm": 32.0,
+                "avg_neg_rate": -4.24
+              }
+            ]
           },
           {
             "area": "银湖",
@@ -1605,7 +3608,20 @@
             "median_unit": 2.61,
             "median_sqm": 27.0,
             "avg_neg_rate": -12.03,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "华海公寓",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 70.0,
+                "min_sqm": 27.0,
+                "median_total": 70.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -12.03
+              }
+            ]
           }
         ]
       },
@@ -1622,7 +3638,53 @@
             "median_unit": 4.22,
             "median_sqm": 31.0,
             "avg_neg_rate": -19.8729,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "鹏盛村",
+                "n": 3,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 95.0,
+                "min_sqm": 32.0,
+                "median_total": 98.0,
+                "median_sqm": 32.0,
+                "avg_neg_rate": -17.5633
+              },
+              {
+                "community": "旭飞花园",
+                "n": 2,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 82.0,
+                "min_sqm": 15.0,
+                "median_total": 89.0,
+                "median_sqm": 18.5,
+                "avg_neg_rate": -17.35
+              },
+              {
+                "community": "鹏盛年华",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 163.0,
+                "min_sqm": 39.0,
+                "median_total": 163.0,
+                "median_sqm": 39.0,
+                "avg_neg_rate": -37.31
+              },
+              {
+                "community": "岭尚时代园",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 190.0,
+                "min_sqm": 29.0,
+                "median_total": 190.0,
+                "median_sqm": 29.0,
+                "avg_neg_rate": -14.41
+              }
+            ]
           },
           {
             "area": "上下沙",
@@ -1634,7 +3696,31 @@
             "median_unit": 4.81,
             "median_sqm": 37.0,
             "avg_neg_rate": -7.8075,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "花好园",
+                "n": 2,
+                "school_primary": "下沙小学",
+                "tier": "普通",
+                "min_total": 154.0,
+                "min_sqm": 29.0,
+                "median_total": 154.5,
+                "median_sqm": 30.0,
+                "avg_neg_rate": -9.325
+              },
+              {
+                "community": "京基滨河时代",
+                "n": 2,
+                "school_primary": "下沙小学",
+                "tier": "普通",
+                "min_total": 198.0,
+                "min_sqm": 43.0,
+                "median_total": 198.0,
+                "median_sqm": 43.0,
+                "avg_neg_rate": -6.29
+              }
+            ]
           },
           {
             "area": "上步",
@@ -1646,7 +3732,31 @@
             "median_unit": 2.335,
             "median_sqm": 32.5,
             "avg_neg_rate": -7.67,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "佳兆业中心",
+                "n": 3,
+                "school_primary": "上步小学",
+                "tier": "普通",
+                "min_total": 45.0,
+                "min_sqm": 22.0,
+                "median_total": 75.0,
+                "median_sqm": 32.0,
+                "avg_neg_rate": -7.8267
+              },
+              {
+                "community": "御河堤",
+                "n": 1,
+                "school_primary": "上步小学",
+                "tier": "普通",
+                "min_total": 116.0,
+                "min_sqm": 33.0,
+                "median_total": 116.0,
+                "median_sqm": 33.0,
+                "avg_neg_rate": -7.2
+              }
+            ]
           },
           {
             "area": "华强北",
@@ -1658,7 +3768,20 @@
             "median_unit": 4.16,
             "median_sqm": 32.0,
             "avg_neg_rate": -29.1567,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "恒邦壹峯",
+                "n": 3,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 130.0,
+                "min_sqm": 28.0,
+                "median_total": 134.0,
+                "median_sqm": 32.0,
+                "avg_neg_rate": -29.1567
+              }
+            ]
           },
           {
             "area": "赤尾",
@@ -1670,7 +3793,20 @@
             "median_unit": 4.08,
             "median_sqm": 35.0,
             "avg_neg_rate": -8.09,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "京基御景华城",
+                "n": 3,
+                "school_primary": "南华小学",
+                "tier": "普通",
+                "min_total": 120.0,
+                "min_sqm": 27.0,
+                "median_total": 135.0,
+                "median_sqm": 35.0,
+                "avg_neg_rate": -8.09
+              }
+            ]
           },
           {
             "area": "梅林",
@@ -1682,7 +3818,31 @@
             "median_unit": 4.495,
             "median_sqm": 37.0,
             "avg_neg_rate": -8.145,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "梅兴苑",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 160.0,
+                "min_sqm": 42.0,
+                "median_total": 160.0,
+                "median_sqm": 42.0,
+                "avg_neg_rate": -10.11
+              },
+              {
+                "community": "凯丰花园二期",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 167.0,
+                "min_sqm": 32.0,
+                "median_total": 167.0,
+                "median_sqm": 32.0,
+                "avg_neg_rate": -6.18
+              }
+            ]
           },
           {
             "area": "皇岗",
@@ -1694,7 +3854,31 @@
             "median_unit": 5.295,
             "median_sqm": 31.5,
             "avg_neg_rate": -5.525,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "皇御苑一期",
+                "n": 1,
+                "school_primary": "皇岗创新实验学校(小学部)/福民小学/第二实验学校南校区小学部",
+                "tier": "普通",
+                "min_total": 152.0,
+                "min_sqm": 30.0,
+                "median_total": 152.0,
+                "median_sqm": 30.0,
+                "avg_neg_rate": -7.88
+              },
+              {
+                "community": "阳基阳光城市",
+                "n": 1,
+                "school_primary": "皇岗创新实验学校(小学部)/福民小学/第二实验学校南校区小学部",
+                "tier": "普通",
+                "min_total": 183.0,
+                "min_sqm": 33.0,
+                "median_total": 183.0,
+                "median_sqm": 33.0,
+                "avg_neg_rate": -3.17
+              }
+            ]
           },
           {
             "area": "香梅北",
@@ -1706,7 +3890,31 @@
             "median_unit": 4.27,
             "median_sqm": 35.0,
             "avg_neg_rate": -3.74,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "深房传麒景苑",
+                "n": 1,
+                "school_primary": "福田区外国语小学",
+                "tier": "名校",
+                "min_total": 127.0,
+                "min_sqm": 27.0,
+                "median_total": 127.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -6.3
+              },
+              {
+                "community": "七街公馆",
+                "n": 1,
+                "school_primary": "福田区外国语小学",
+                "tier": "名校",
+                "min_total": 168.0,
+                "min_sqm": 43.0,
+                "median_total": 168.0,
+                "median_sqm": 43.0,
+                "avg_neg_rate": -1.18
+              }
+            ]
           },
           {
             "area": "华强南",
@@ -1718,7 +3926,20 @@
             "median_unit": 4.67,
             "median_sqm": 21.0,
             "avg_neg_rate": -10.91,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "桐林公寓",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 98.0,
+                "min_sqm": 21.0,
+                "median_total": 98.0,
+                "median_sqm": 21.0,
+                "avg_neg_rate": -10.91
+              }
+            ]
           },
           {
             "area": "新洲",
@@ -1730,7 +3951,20 @@
             "median_unit": 5.19,
             "median_sqm": 34.0,
             "avg_neg_rate": -6.38,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "嘉葆润金座",
+                "n": 1,
+                "school_primary": "新沙小学/新洲小学",
+                "tier": "普通",
+                "min_total": 176.0,
+                "min_sqm": 34.0,
+                "median_total": 176.0,
+                "median_sqm": 34.0,
+                "avg_neg_rate": -6.38
+              }
+            ]
           },
           {
             "area": "福田中心",
@@ -1742,7 +3976,20 @@
             "median_unit": 3.26,
             "median_sqm": 41.0,
             "avg_neg_rate": -10.67,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "澳新亚大厦",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 134.0,
+                "min_sqm": 41.0,
+                "median_total": 134.0,
+                "median_sqm": 41.0,
+                "avg_neg_rate": -10.67
+              }
+            ]
           },
           {
             "area": "福田保税区",
@@ -1754,12 +4001,25 @@
             "median_unit": 4.86,
             "median_sqm": 28.0,
             "avg_neg_rate": -2.86,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "自由港湾公寓",
+                "n": 1,
+                "school_primary": "福苑小学",
+                "tier": "普通",
+                "min_total": 136.0,
+                "min_sqm": 28.0,
+                "median_total": 136.0,
+                "median_sqm": 28.0,
+                "avg_neg_rate": -2.86
+              }
+            ]
           }
         ]
       },
       "2026-06下": {
-        "n": 11,
+        "n": 10,
         "areas": [
           {
             "area": "赤尾",
@@ -1771,7 +4031,20 @@
             "median_unit": 4.21,
             "median_sqm": 32.0,
             "avg_neg_rate": -5.9367,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "京基御景华城",
+                "n": 3,
+                "school_primary": "南华小学",
+                "tier": "普通",
+                "min_total": 108.0,
+                "min_sqm": 27.0,
+                "median_total": 134.0,
+                "median_sqm": 32.0,
+                "avg_neg_rate": -5.9367
+              }
+            ]
           },
           {
             "area": "八卦岭",
@@ -1783,7 +4056,31 @@
             "median_unit": 3.41,
             "median_sqm": 38.0,
             "avg_neg_rate": -13.235,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "八卦岭宿舍",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 123.0,
+                "min_sqm": 34.0,
+                "median_total": 123.0,
+                "median_sqm": 34.0,
+                "avg_neg_rate": -8.89
+              },
+              {
+                "community": "鹏盛村",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 136.0,
+                "min_sqm": 42.0,
+                "median_total": 136.0,
+                "median_sqm": 42.0,
+                "avg_neg_rate": -17.58
+              }
+            ]
           },
           {
             "area": "华强北",
@@ -1795,7 +4092,31 @@
             "median_unit": 4.315,
             "median_sqm": 29.0,
             "avg_neg_rate": -6.5,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "滨江爱义南方大厦",
+                "n": 1,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 115.0,
+                "min_sqm": 25.0,
+                "median_total": 115.0,
+                "median_sqm": 25.0,
+                "avg_neg_rate": -8.0
+              },
+              {
+                "community": "恒邦壹峯",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 133.0,
+                "min_sqm": 33.0,
+                "median_total": 133.0,
+                "median_sqm": 33.0,
+                "avg_neg_rate": -5.0
+              }
+            ]
           },
           {
             "area": "梅林",
@@ -1807,7 +4128,31 @@
             "median_unit": 4.15,
             "median_sqm": 42.0,
             "avg_neg_rate": -13.9,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "蓝天绿都家园",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 164.0,
+                "min_sqm": 43.0,
+                "median_total": 164.0,
+                "median_sqm": 43.0,
+                "avg_neg_rate": -15.9
+              },
+              {
+                "community": "汇龙花园",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 185.0,
+                "min_sqm": 41.0,
+                "median_total": 185.0,
+                "median_sqm": 41.0,
+                "avg_neg_rate": -11.9
+              }
+            ]
           },
           {
             "area": "上步",
@@ -1819,24 +4164,25 @@
             "median_unit": 3.81,
             "median_sqm": 50.0,
             "avg_neg_rate": -3.18,
-            "per_month": null
-          },
-          {
-            "area": "竹子林",
-            "n": 1,
-            "n_communities": 1,
-            "n_top": 0,
-            "top_share": 0.0,
-            "median_total": 193.0,
-            "median_unit": 4.08,
-            "median_sqm": 47.0,
-            "avg_neg_rate": -12.27,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "红岭大厦",
+                "n": 1,
+                "school_primary": "上步小学",
+                "tier": "普通",
+                "min_total": 189.0,
+                "min_sqm": 50.0,
+                "median_total": 189.0,
+                "median_sqm": 50.0,
+                "avg_neg_rate": -3.18
+              }
+            ]
           }
         ]
       },
       "2026-07上": {
-        "n": 16,
+        "n": 15,
         "areas": [
           {
             "area": "八卦岭",
@@ -1848,7 +4194,42 @@
             "median_unit": 3.68,
             "median_sqm": 23.0,
             "avg_neg_rate": -9.5457,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "八卦岭宿舍",
+                "n": 5,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 85.0,
+                "min_sqm": 23.0,
+                "median_total": 85.0,
+                "median_sqm": 23.0,
+                "avg_neg_rate": -9.898
+              },
+              {
+                "community": "旭飞花园",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 136.0,
+                "min_sqm": 27.0,
+                "median_total": 136.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -9.33
+              },
+              {
+                "community": "鹏益花园",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 138.0,
+                "min_sqm": 38.0,
+                "median_total": 138.0,
+                "median_sqm": 38.0,
+                "avg_neg_rate": -8.0
+              }
+            ]
           },
           {
             "area": "上步",
@@ -1860,7 +4241,20 @@
             "median_unit": 2.41,
             "median_sqm": 32.0,
             "avg_neg_rate": -10.0,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "佳兆业中心",
+                "n": 2,
+                "school_primary": "上步小学",
+                "tier": "普通",
+                "min_total": 76.0,
+                "min_sqm": 32.0,
+                "median_total": 76.5,
+                "median_sqm": 32.0,
+                "avg_neg_rate": -10.0
+              }
+            ]
           },
           {
             "area": "梅林",
@@ -1872,7 +4266,31 @@
             "median_unit": 4.105,
             "median_sqm": 26.5,
             "avg_neg_rate": -14.32,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "旭飞华安园",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 95.0,
+                "min_sqm": 21.0,
+                "median_total": 95.0,
+                "median_sqm": 21.0,
+                "avg_neg_rate": -13.64
+              },
+              {
+                "community": "大众公寓",
+                "n": 1,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 119.0,
+                "min_sqm": 32.0,
+                "median_total": 119.0,
+                "median_sqm": 32.0,
+                "avg_neg_rate": -15.0
+              }
+            ]
           },
           {
             "area": "皇岗",
@@ -1884,7 +4302,20 @@
             "median_unit": 3.685,
             "median_sqm": 42.0,
             "avg_neg_rate": null,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "深荣大厦",
+                "n": 2,
+                "school_primary": "皇岗创新实验学校(小学部)/福民小学/第二实验学校南校区小学部",
+                "tier": "普通",
+                "min_total": 142.0,
+                "min_sqm": 38.0,
+                "median_total": 156.0,
+                "median_sqm": 42.0,
+                "avg_neg_rate": null
+              }
+            ]
           },
           {
             "area": "新洲",
@@ -1896,19 +4327,20 @@
             "median_unit": 4.7,
             "median_sqm": 41.0,
             "avg_neg_rate": -5.85,
-            "per_month": null
-          },
-          {
-            "area": "莲花",
-            "n": 1,
-            "n_communities": 1,
-            "n_top": 0,
-            "top_share": 0.0,
-            "median_total": 195.0,
-            "median_unit": 4.88,
-            "median_sqm": 40.0,
-            "avg_neg_rate": null,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "韵动家园",
+                "n": 1,
+                "school_primary": "绿洲小学",
+                "tier": "普通",
+                "min_total": 193.0,
+                "min_sqm": 41.0,
+                "median_total": 193.0,
+                "median_sqm": 41.0,
+                "avg_neg_rate": -5.85
+              }
+            ]
           },
           {
             "area": "香梅北",
@@ -1920,7 +4352,20 @@
             "median_unit": 3.8,
             "median_sqm": 30.0,
             "avg_neg_rate": -18.57,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "七街公馆",
+                "n": 1,
+                "school_primary": "福田区外国语小学",
+                "tier": "名校",
+                "min_total": 114.0,
+                "min_sqm": 30.0,
+                "median_total": 114.0,
+                "median_sqm": 30.0,
+                "avg_neg_rate": -18.57
+              }
+            ]
           }
         ]
       },
@@ -1937,7 +4382,31 @@
             "median_unit": 3.68,
             "median_sqm": 23.0,
             "avg_neg_rate": -12.8357,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "八卦岭宿舍",
+                "n": 5,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 85.0,
+                "min_sqm": 23.0,
+                "median_total": 85.0,
+                "median_sqm": 23.0,
+                "avg_neg_rate": -9.898
+              },
+              {
+                "community": "鹏盛村",
+                "n": 2,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 180.0,
+                "min_sqm": 42.0,
+                "median_total": 183.0,
+                "median_sqm": 46.5,
+                "avg_neg_rate": -20.18
+              }
+            ]
           },
           {
             "area": "梅林",
@@ -1949,7 +4418,42 @@
             "median_unit": 4.53,
             "median_sqm": 27.0,
             "avg_neg_rate": -8.1367,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "凯丰花园综合楼",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 83.0,
+                "min_sqm": 27.0,
+                "median_total": 83.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -2.35
+              },
+              {
+                "community": "凯伦花园",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 85.0,
+                "min_sqm": 19.0,
+                "median_total": 85.0,
+                "median_sqm": 19.0,
+                "avg_neg_rate": -8.6
+              },
+              {
+                "community": "御锦公馆",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 180.0,
+                "min_sqm": 40.0,
+                "median_total": 180.0,
+                "median_sqm": 40.0,
+                "avg_neg_rate": -13.46
+              }
+            ]
           },
           {
             "area": "上下沙",
@@ -1961,7 +4465,31 @@
             "median_unit": 4.225,
             "median_sqm": 35.0,
             "avg_neg_rate": -7.465,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "京基滨河时代",
+                "n": 1,
+                "school_primary": "下沙小学",
+                "tier": "普通",
+                "min_total": 145.0,
+                "min_sqm": 33.0,
+                "median_total": 145.0,
+                "median_sqm": 33.0,
+                "avg_neg_rate": -6.45
+              },
+              {
+                "community": "中洲滨海商业中心",
+                "n": 1,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 151.0,
+                "min_sqm": 37.0,
+                "median_total": 151.0,
+                "median_sqm": 37.0,
+                "avg_neg_rate": -8.48
+              }
+            ]
           },
           {
             "area": "新洲",
@@ -1973,7 +4501,31 @@
             "median_unit": 5.475,
             "median_sqm": 34.0,
             "avg_neg_rate": -9.03,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "嘉葆润金座",
+                "n": 1,
+                "school_primary": "新沙小学/新洲小学",
+                "tier": "普通",
+                "min_total": 161.0,
+                "min_sqm": 23.0,
+                "median_total": 161.0,
+                "median_sqm": 23.0,
+                "avg_neg_rate": -9.55
+              },
+              {
+                "community": "韵动家园",
+                "n": 1,
+                "school_primary": "绿洲小学",
+                "tier": "普通",
+                "min_total": 172.0,
+                "min_sqm": 45.0,
+                "median_total": 172.0,
+                "median_sqm": 45.0,
+                "avg_neg_rate": -8.51
+              }
+            ]
           },
           {
             "area": "福田保税区",
@@ -1985,7 +4537,31 @@
             "median_unit": 4.495,
             "median_sqm": 31.0,
             "avg_neg_rate": -9.67,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "自由港湾公寓",
+                "n": 1,
+                "school_primary": "福苑小学",
+                "tier": "普通",
+                "min_total": 136.0,
+                "min_sqm": 27.0,
+                "median_total": 136.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -9.67
+              },
+              {
+                "community": "城市3米6公寓",
+                "n": 1,
+                "school_primary": "福苑小学",
+                "tier": "普通",
+                "min_total": 139.0,
+                "min_sqm": 35.0,
+                "median_total": 139.0,
+                "median_sqm": 35.0,
+                "avg_neg_rate": null
+              }
+            ]
           },
           {
             "area": "华强南",
@@ -1997,7 +4573,20 @@
             "median_unit": 2.49,
             "median_sqm": 58.0,
             "avg_neg_rate": -50.0,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "南光捷佳大厦",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 145.0,
+                "min_sqm": 58.0,
+                "median_total": 145.0,
+                "median_sqm": 58.0,
+                "avg_neg_rate": -50.0
+              }
+            ]
           },
           {
             "area": "银湖",
@@ -2009,7 +4598,20 @@
             "median_unit": 2.79,
             "median_sqm": 39.0,
             "avg_neg_rate": -9.33,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "新阁小区",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 109.0,
+                "min_sqm": 39.0,
+                "median_total": 109.0,
+                "median_sqm": 39.0,
+                "avg_neg_rate": -9.33
+              }
+            ]
           }
         ]
       },
@@ -2026,7 +4628,20 @@
             "median_unit": 4.23,
             "median_sqm": 33.0,
             "avg_neg_rate": -9.31,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "京基滨河时代",
+                "n": 3,
+                "school_primary": "下沙小学",
+                "tier": "普通",
+                "min_total": 138.0,
+                "min_sqm": 33.0,
+                "median_total": 143.0,
+                "median_sqm": 33.0,
+                "avg_neg_rate": -9.31
+              }
+            ]
           },
           {
             "area": "八卦岭",
@@ -2038,7 +4653,31 @@
             "median_unit": 3.335,
             "median_sqm": 38.5,
             "avg_neg_rate": -12.4,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "先科机电大厦",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 105.0,
+                "min_sqm": 39.0,
+                "median_total": 105.0,
+                "median_sqm": 39.0,
+                "avg_neg_rate": -12.5
+              },
+              {
+                "community": "旭飞花园",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 149.0,
+                "min_sqm": 38.0,
+                "median_total": 149.0,
+                "median_sqm": 38.0,
+                "avg_neg_rate": -12.3
+              }
+            ]
           },
           {
             "area": "梅林",
@@ -2050,7 +4689,20 @@
             "median_unit": 3.395,
             "median_sqm": 32.0,
             "avg_neg_rate": -14.38,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "大众公寓",
+                "n": 2,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 103.0,
+                "min_sqm": 32.0,
+                "median_total": 107.5,
+                "median_sqm": 32.0,
+                "avg_neg_rate": -14.38
+              }
+            ]
           },
           {
             "area": "福田保税区",
@@ -2062,7 +4714,20 @@
             "median_unit": 4.205,
             "median_sqm": 44.0,
             "avg_neg_rate": -7.03,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "加福广场华尔登府邸",
+                "n": 2,
+                "school_primary": "外国语学校福保小学部",
+                "tier": "普通",
+                "min_total": 183.0,
+                "min_sqm": 41.0,
+                "median_total": 185.0,
+                "median_sqm": 44.0,
+                "avg_neg_rate": -7.03
+              }
+            ]
           },
           {
             "area": "华强北",
@@ -2074,7 +4739,20 @@
             "median_unit": 4.59,
             "median_sqm": 26.0,
             "avg_neg_rate": -11.11,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "滨江爱义南方大厦",
+                "n": 1,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 120.0,
+                "min_sqm": 26.0,
+                "median_total": 120.0,
+                "median_sqm": 26.0,
+                "avg_neg_rate": -11.11
+              }
+            ]
           },
           {
             "area": "赤尾",
@@ -2086,7 +4764,20 @@
             "median_unit": 4.21,
             "median_sqm": 23.0,
             "avg_neg_rate": -14.09,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "汇港名苑",
+                "n": 1,
+                "school_primary": "南华小学",
+                "tier": "普通",
+                "min_total": 99.0,
+                "min_sqm": 23.0,
+                "median_total": 99.0,
+                "median_sqm": 23.0,
+                "avg_neg_rate": -14.09
+              }
+            ]
           },
           {
             "area": "车公庙",
@@ -2098,7 +4789,20 @@
             "median_unit": 4.71,
             "median_sqm": 39.0,
             "avg_neg_rate": -7.0,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "君临天下",
+                "n": 1,
+                "school_primary": "福新小学",
+                "tier": "普通",
+                "min_total": 186.0,
+                "min_sqm": 39.0,
+                "median_total": 186.0,
+                "median_sqm": 39.0,
+                "avg_neg_rate": -7.0
+              }
+            ]
           },
           {
             "area": "香梅北",
@@ -2110,7 +4814,20 @@
             "median_unit": 3.9,
             "median_sqm": 45.0,
             "avg_neg_rate": -12.12,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "深房传麒景苑",
+                "n": 1,
+                "school_primary": "福田区外国语小学",
+                "tier": "名校",
+                "min_total": 174.0,
+                "min_sqm": 45.0,
+                "median_total": 174.0,
+                "median_sqm": 45.0,
+                "avg_neg_rate": -12.12
+              }
+            ]
           }
         ]
       },
@@ -2127,7 +4844,53 @@
             "median_unit": 3.915,
             "median_sqm": 30.5,
             "avg_neg_rate": -11.165,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "旭飞花园",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 68.0,
+                "min_sqm": 10.0,
+                "median_total": 68.0,
+                "median_sqm": 10.0,
+                "avg_neg_rate": -13.92
+              },
+              {
+                "community": "鹏盛村",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 98.0,
+                "min_sqm": 31.0,
+                "median_total": 98.0,
+                "median_sqm": 31.0,
+                "avg_neg_rate": -10.91
+              },
+              {
+                "community": "鹏益花园",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 109.0,
+                "min_sqm": 30.0,
+                "median_total": 109.0,
+                "median_sqm": 30.0,
+                "avg_neg_rate": -7.63
+              },
+              {
+                "community": "鹏盛年华",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 148.0,
+                "min_sqm": 35.0,
+                "median_total": 148.0,
+                "median_sqm": 35.0,
+                "avg_neg_rate": -12.2
+              }
+            ]
           },
           {
             "area": "华强北",
@@ -2139,7 +4902,31 @@
             "median_unit": 4.25,
             "median_sqm": 32.0,
             "avg_neg_rate": -7.7233,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "恒邦壹峯",
+                "n": 2,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 135.0,
+                "min_sqm": 32.0,
+                "median_total": 135.0,
+                "median_sqm": 32.5,
+                "avg_neg_rate": -9.39
+              },
+              {
+                "community": "阁林网苑",
+                "n": 1,
+                "school_primary": "荔园小学(通新岭)",
+                "tier": "名校",
+                "min_total": 196.0,
+                "min_sqm": 16.0,
+                "median_total": 196.0,
+                "median_sqm": 16.0,
+                "avg_neg_rate": -4.39
+              }
+            ]
           },
           {
             "area": "福田中心",
@@ -2151,7 +4938,42 @@
             "median_unit": 3.32,
             "median_sqm": 35.0,
             "avg_neg_rate": -8.65,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "金中环国际商务大厦",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 99.0,
+                "min_sqm": 30.0,
+                "median_total": 99.0,
+                "median_sqm": 30.0,
+                "avg_neg_rate": -10.0
+              },
+              {
+                "community": "彩天名苑",
+                "n": 1,
+                "school_primary": "文天祥小学(岗厦)",
+                "tier": "普通",
+                "min_total": 177.0,
+                "min_sqm": 35.0,
+                "median_total": 177.0,
+                "median_sqm": 35.0,
+                "avg_neg_rate": -7.11
+              },
+              {
+                "community": "大中华国际金融中心",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 196.0,
+                "min_sqm": 66.0,
+                "median_total": 196.0,
+                "median_sqm": 66.0,
+                "avg_neg_rate": -8.84
+              }
+            ]
           },
           {
             "area": "上下沙",
@@ -2163,7 +4985,20 @@
             "median_unit": 3.94,
             "median_sqm": 37.0,
             "avg_neg_rate": -10.37,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "中洲滨海商业中心",
+                "n": 2,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 145.0,
+                "min_sqm": 37.0,
+                "median_total": 145.0,
+                "median_sqm": 37.0,
+                "avg_neg_rate": -10.37
+              }
+            ]
           },
           {
             "area": "上步",
@@ -2175,7 +5010,20 @@
             "median_unit": 3.855,
             "median_sqm": 34.5,
             "avg_neg_rate": -11.625,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "御河堤",
+                "n": 2,
+                "school_primary": "上步小学",
+                "tier": "普通",
+                "min_total": 117.0,
+                "min_sqm": 31.0,
+                "median_total": 134.0,
+                "median_sqm": 34.5,
+                "avg_neg_rate": -11.625
+              }
+            ]
           },
           {
             "area": "梅林",
@@ -2187,7 +5035,20 @@
             "median_unit": 3.16,
             "median_sqm": 36.5,
             "avg_neg_rate": -23.33,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "红梅苑",
+                "n": 2,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 115.0,
+                "min_sqm": 36.0,
+                "median_total": 115.0,
+                "median_sqm": 36.5,
+                "avg_neg_rate": -23.33
+              }
+            ]
           },
           {
             "area": "皇岗",
@@ -2199,7 +5060,31 @@
             "median_unit": 4.07,
             "median_sqm": 35.5,
             "avg_neg_rate": -14.0,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "晨晖家园",
+                "n": 1,
+                "school_primary": "荔园外国语小学(水围)",
+                "tier": "普通",
+                "min_total": 112.0,
+                "min_sqm": 26.0,
+                "median_total": 112.0,
+                "median_sqm": 26.0,
+                "avg_neg_rate": -12.5
+              },
+              {
+                "community": "金地名津",
+                "n": 1,
+                "school_primary": "皇岗创新实验学校(小学部)/福民小学/第二实验学校南校区小学部",
+                "tier": "普通",
+                "min_total": 169.0,
+                "min_sqm": 45.0,
+                "median_total": 169.0,
+                "median_sqm": 45.0,
+                "avg_neg_rate": -15.5
+              }
+            ]
           },
           {
             "area": "华强南",
@@ -2211,7 +5096,20 @@
             "median_unit": 4.56,
             "median_sqm": 23.0,
             "avg_neg_rate": -4.55,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "桐林城市广场",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 105.0,
+                "min_sqm": 23.0,
+                "median_total": 105.0,
+                "median_sqm": 23.0,
+                "avg_neg_rate": -4.55
+              }
+            ]
           },
           {
             "area": "福田保税区",
@@ -2223,7 +5121,20 @@
             "median_unit": 4.95,
             "median_sqm": 27.0,
             "avg_neg_rate": -3.26,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "自由港湾公寓",
+                "n": 1,
+                "school_primary": "福苑小学",
+                "tier": "普通",
+                "min_total": 134.0,
+                "min_sqm": 27.0,
+                "median_total": 134.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -3.26
+              }
+            ]
           },
           {
             "area": "赤尾",
@@ -2235,7 +5146,20 @@
             "median_unit": 4.58,
             "median_sqm": 38.0,
             "avg_neg_rate": -4.37,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "京基御景华城",
+                "n": 1,
+                "school_primary": "南华小学",
+                "tier": "普通",
+                "min_total": 175.0,
+                "min_sqm": 38.0,
+                "median_total": 175.0,
+                "median_sqm": 38.0,
+                "avg_neg_rate": -4.37
+              }
+            ]
           }
         ]
       },
@@ -2252,7 +5176,31 @@
             "median_unit": 3.66,
             "median_sqm": 28.5,
             "avg_neg_rate": -6.79,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "八卦岭宿舍",
+                "n": 2,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 93.0,
+                "min_sqm": 23.0,
+                "median_total": 100.0,
+                "median_sqm": 24.0,
+                "avg_neg_rate": -8.765
+              },
+              {
+                "community": "鹏盛村",
+                "n": 2,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 102.0,
+                "min_sqm": 32.0,
+                "median_total": 113.0,
+                "median_sqm": 35.0,
+                "avg_neg_rate": -4.815
+              }
+            ]
           },
           {
             "area": "上步",
@@ -2264,7 +5212,42 @@
             "median_unit": 2.43,
             "median_sqm": 44.0,
             "avg_neg_rate": -4.7067,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "佳兆业中心",
+                "n": 1,
+                "school_primary": "上步小学",
+                "tier": "普通",
+                "min_total": 86.0,
+                "min_sqm": 35.0,
+                "median_total": 86.0,
+                "median_sqm": 35.0,
+                "avg_neg_rate": -0.58
+              },
+              {
+                "community": "国企大厦",
+                "n": 1,
+                "school_primary": "上步小学",
+                "tier": "普通",
+                "min_total": 177.0,
+                "min_sqm": 84.0,
+                "median_total": 177.0,
+                "median_sqm": 84.0,
+                "avg_neg_rate": -1.67
+              },
+              {
+                "community": "御河堤",
+                "n": 1,
+                "school_primary": "上步小学",
+                "tier": "普通",
+                "min_total": 193.0,
+                "min_sqm": 44.0,
+                "median_total": 193.0,
+                "median_sqm": 44.0,
+                "avg_neg_rate": -11.87
+              }
+            ]
           },
           {
             "area": "皇岗",
@@ -2276,7 +5259,31 @@
             "median_unit": 3.38,
             "median_sqm": 38.0,
             "avg_neg_rate": -16.88,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "深荣大厦",
+                "n": 2,
+                "school_primary": "皇岗创新实验学校(小学部)/福民小学/第二实验学校南校区小学部",
+                "tier": "普通",
+                "min_total": 129.0,
+                "min_sqm": 38.0,
+                "median_total": 143.0,
+                "median_sqm": 42.0,
+                "avg_neg_rate": -16.19
+              },
+              {
+                "community": "皇御苑四期",
+                "n": 1,
+                "school_primary": "皇岗创新实验学校(小学部)/福民小学/第二实验学校南校区小学部",
+                "tier": "普通",
+                "min_total": 188.0,
+                "min_sqm": 38.0,
+                "median_total": 188.0,
+                "median_sqm": 38.0,
+                "avg_neg_rate": -18.26
+              }
+            ]
           },
           {
             "area": "华强北",
@@ -2288,7 +5295,31 @@
             "median_unit": 4.895,
             "median_sqm": 33.0,
             "avg_neg_rate": -9.335,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "恒邦壹峯",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 130.0,
+                "min_sqm": 32.0,
+                "median_total": 130.0,
+                "median_sqm": 32.0,
+                "avg_neg_rate": -13.33
+              },
+              {
+                "community": "世纪汇都会轩",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 195.0,
+                "min_sqm": 34.0,
+                "median_total": 195.0,
+                "median_sqm": 34.0,
+                "avg_neg_rate": -5.34
+              }
+            ]
           },
           {
             "area": "华强南",
@@ -2300,7 +5331,20 @@
             "median_unit": 4.38,
             "median_sqm": 23.0,
             "avg_neg_rate": -6.48,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "漾福居",
+                "n": 1,
+                "school_primary": "福田小学",
+                "tier": "普通",
+                "min_total": 101.0,
+                "min_sqm": 23.0,
+                "median_total": 101.0,
+                "median_sqm": 23.0,
+                "avg_neg_rate": -6.48
+              }
+            ]
           },
           {
             "area": "梅林",
@@ -2312,7 +5356,20 @@
             "median_unit": 3.75,
             "median_sqm": 34.0,
             "avg_neg_rate": -11.72,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "凯伦花园",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 128.0,
+                "min_sqm": 34.0,
+                "median_total": 128.0,
+                "median_sqm": 34.0,
+                "avg_neg_rate": -11.72
+              }
+            ]
           },
           {
             "area": "赤尾",
@@ -2324,7 +5381,20 @@
             "median_unit": 4.06,
             "median_sqm": 35.0,
             "avg_neg_rate": -5.0,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "京基御景华城",
+                "n": 1,
+                "school_primary": "南华小学",
+                "tier": "普通",
+                "min_total": 143.0,
+                "min_sqm": 35.0,
+                "median_total": 143.0,
+                "median_sqm": 35.0,
+                "avg_neg_rate": -5.0
+              }
+            ]
           }
         ]
       },
@@ -2341,7 +5411,53 @@
             "median_unit": 3.43,
             "median_sqm": 42.0,
             "avg_neg_rate": -10.218,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "旭飞花园",
+                "n": 2,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 99.0,
+                "min_sqm": 22.0,
+                "median_total": 127.0,
+                "median_sqm": 33.0,
+                "avg_neg_rate": -10.08
+              },
+              {
+                "community": "八卦岭宿舍",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 100.0,
+                "min_sqm": 29.0,
+                "median_total": 100.0,
+                "median_sqm": 29.0,
+                "avg_neg_rate": -13.04
+              },
+              {
+                "community": "光纤小区",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 114.0,
+                "min_sqm": 42.0,
+                "median_total": 114.0,
+                "median_sqm": 42.0,
+                "avg_neg_rate": -8.23
+              },
+              {
+                "community": "鹏盛村",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 131.0,
+                "min_sqm": 42.0,
+                "median_total": 131.0,
+                "median_sqm": 42.0,
+                "avg_neg_rate": -9.66
+              }
+            ]
           },
           {
             "area": "华强北",
@@ -2353,7 +5469,53 @@
             "median_unit": 4.11,
             "median_sqm": 42.0,
             "avg_neg_rate": -13.508,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "宝树台",
+                "n": 2,
+                "school_primary": "荔园小学(通新岭)",
+                "tier": "名校",
+                "min_total": 174.0,
+                "min_sqm": 43.0,
+                "median_total": 176.0,
+                "median_sqm": 43.0,
+                "avg_neg_rate": -19.415
+              },
+              {
+                "community": "滨江爱义南方大厦",
+                "n": 1,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 121.0,
+                "min_sqm": 25.0,
+                "median_total": 121.0,
+                "median_sqm": 25.0,
+                "avg_neg_rate": -3.2
+              },
+              {
+                "community": "恒邦壹峯",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 171.0,
+                "min_sqm": 42.0,
+                "median_total": 171.0,
+                "median_sqm": 42.0,
+                "avg_neg_rate": -14.6
+              },
+              {
+                "community": "阁林网苑",
+                "n": 1,
+                "school_primary": "荔园小学(通新岭)",
+                "tier": "名校",
+                "min_total": 196.0,
+                "min_sqm": 16.0,
+                "median_total": 196.0,
+                "median_sqm": 16.0,
+                "avg_neg_rate": -10.91
+              }
+            ]
           },
           {
             "area": "上下沙",
@@ -2365,7 +5527,31 @@
             "median_unit": 4.08,
             "median_sqm": 36.0,
             "avg_neg_rate": -7.89,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "中洲滨海商业中心",
+                "n": 2,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 138.0,
+                "min_sqm": 36.0,
+                "median_total": 142.5,
+                "median_sqm": 36.0,
+                "avg_neg_rate": -9.835
+              },
+              {
+                "community": "花好园",
+                "n": 1,
+                "school_primary": "下沙小学",
+                "tier": "普通",
+                "min_total": 154.0,
+                "min_sqm": 31.0,
+                "median_total": 154.0,
+                "median_sqm": 31.0,
+                "avg_neg_rate": -4.0
+              }
+            ]
           },
           {
             "area": "梅林",
@@ -2377,7 +5563,42 @@
             "median_unit": 3.93,
             "median_sqm": 47.0,
             "avg_neg_rate": -13.87,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "凯丰花园二期",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 163.0,
+                "min_sqm": 29.0,
+                "median_total": 163.0,
+                "median_sqm": 29.0,
+                "avg_neg_rate": -6.86
+              },
+              {
+                "community": "大众公寓",
+                "n": 1,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 185.0,
+                "min_sqm": 47.0,
+                "median_total": 185.0,
+                "median_sqm": 47.0,
+                "avg_neg_rate": -11.06
+              },
+              {
+                "community": "梅沁楼",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 190.0,
+                "min_sqm": 56.0,
+                "median_total": 190.0,
+                "median_sqm": 56.0,
+                "avg_neg_rate": -23.69
+              }
+            ]
           },
           {
             "area": "福田保税区",
@@ -2389,7 +5610,31 @@
             "median_unit": 4.82,
             "median_sqm": 27.0,
             "avg_neg_rate": -7.0667,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "自由港湾公寓",
+                "n": 2,
+                "school_primary": "福苑小学",
+                "tier": "普通",
+                "min_total": 130.0,
+                "min_sqm": 27.0,
+                "median_total": 133.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -4.65
+              },
+              {
+                "community": "城市3米6公寓",
+                "n": 1,
+                "school_primary": "福苑小学",
+                "tier": "普通",
+                "min_total": 148.0,
+                "min_sqm": 33.0,
+                "median_total": 148.0,
+                "median_sqm": 33.0,
+                "avg_neg_rate": -11.9
+              }
+            ]
           },
           {
             "area": "新洲",
@@ -2401,7 +5646,31 @@
             "median_unit": 4.42,
             "median_sqm": 41.5,
             "avg_neg_rate": -12.695,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "南溪新苑",
+                "n": 1,
+                "school_primary": "新沙小学",
+                "tier": "普通",
+                "min_total": 178.0,
+                "min_sqm": 41.0,
+                "median_total": 178.0,
+                "median_sqm": 41.0,
+                "avg_neg_rate": -8.72
+              },
+              {
+                "community": "韵动家园",
+                "n": 1,
+                "school_primary": "绿洲小学",
+                "tier": "普通",
+                "min_total": 190.0,
+                "min_sqm": 42.0,
+                "median_total": 190.0,
+                "median_sqm": 42.0,
+                "avg_neg_rate": -16.67
+              }
+            ]
           },
           {
             "area": "华强南",
@@ -2413,7 +5682,20 @@
             "median_unit": 3.82,
             "median_sqm": 23.0,
             "avg_neg_rate": -7.37,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "桐林公寓",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 88.0,
+                "min_sqm": 23.0,
+                "median_total": 88.0,
+                "median_sqm": 23.0,
+                "avg_neg_rate": -7.37
+              }
+            ]
           },
           {
             "area": "皇岗",
@@ -2425,7 +5707,20 @@
             "median_unit": 4.44,
             "median_sqm": 29.0,
             "avg_neg_rate": -17.72,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "晨晖家园",
+                "n": 1,
+                "school_primary": "荔园外国语小学(水围)",
+                "tier": "普通",
+                "min_total": 130.0,
+                "min_sqm": 29.0,
+                "median_total": 130.0,
+                "median_sqm": 29.0,
+                "avg_neg_rate": -17.72
+              }
+            ]
           },
           {
             "area": "车公庙",
@@ -2437,7 +5732,20 @@
             "median_unit": 3.11,
             "median_sqm": 52.0,
             "avg_neg_rate": -2.99,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "杭钢富春大厦",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 162.0,
+                "min_sqm": 52.0,
+                "median_total": 162.0,
+                "median_sqm": 52.0,
+                "avg_neg_rate": -2.99
+              }
+            ]
           }
         ]
       },
@@ -2454,7 +5762,64 @@
             "median_unit": 3.55,
             "median_sqm": 37.0,
             "avg_neg_rate": -10.405,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "八卦岭宿舍",
+                "n": 4,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 105.0,
+                "min_sqm": 30.0,
+                "median_total": 105.5,
+                "median_sqm": 30.0,
+                "avg_neg_rate": -14.1525
+              },
+              {
+                "community": "鹏盛村",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 135.0,
+                "min_sqm": 37.0,
+                "median_total": 135.0,
+                "median_sqm": 37.0,
+                "avg_neg_rate": -3.57
+              },
+              {
+                "community": "旭飞花园",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 142.0,
+                "min_sqm": 43.0,
+                "median_total": 142.0,
+                "median_sqm": 43.0,
+                "avg_neg_rate": -4.7
+              },
+              {
+                "community": "鹏盛年华",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 154.0,
+                "min_sqm": 38.0,
+                "median_total": 154.0,
+                "median_sqm": 38.0,
+                "avg_neg_rate": -13.48
+              },
+              {
+                "community": "鹏益花园",
+                "n": 1,
+                "school_primary": "荔园小学(八卦岭)",
+                "tier": "名校",
+                "min_total": 195.0,
+                "min_sqm": 61.0,
+                "median_total": 195.0,
+                "median_sqm": 61.0,
+                "avg_neg_rate": -4.88
+              }
+            ]
           },
           {
             "area": "上步",
@@ -2466,7 +5831,31 @@
             "median_unit": 2.155,
             "median_sqm": 27.5,
             "avg_neg_rate": -11.4925,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "佳兆业中心",
+                "n": 3,
+                "school_primary": "上步小学",
+                "tier": "普通",
+                "min_total": 45.0,
+                "min_sqm": 22.0,
+                "median_total": 48.0,
+                "median_sqm": 22.0,
+                "avg_neg_rate": -9.3233
+              },
+              {
+                "community": "御河堤",
+                "n": 1,
+                "school_primary": "上步小学",
+                "tier": "普通",
+                "min_total": 123.0,
+                "min_sqm": 33.0,
+                "median_total": 123.0,
+                "median_sqm": 33.0,
+                "avg_neg_rate": -18.0
+              }
+            ]
           },
           {
             "area": "上下沙",
@@ -2478,7 +5867,20 @@
             "median_unit": 4.02,
             "median_sqm": 37.0,
             "avg_neg_rate": -5.58,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "中洲滨海商业中心",
+                "n": 3,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 138.0,
+                "min_sqm": 37.0,
+                "median_total": 148.0,
+                "median_sqm": 37.0,
+                "avg_neg_rate": -5.58
+              }
+            ]
           },
           {
             "area": "新洲",
@@ -2490,7 +5892,31 @@
             "median_unit": 4.22,
             "median_sqm": 41.0,
             "avg_neg_rate": -7.4967,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "南溪新苑",
+                "n": 2,
+                "school_primary": "新沙小学",
+                "tier": "普通",
+                "min_total": 173.0,
+                "min_sqm": 41.0,
+                "median_total": 174.0,
+                "median_sqm": 41.0,
+                "avg_neg_rate": -7.08
+              },
+              {
+                "community": "祥云天都世纪大厦",
+                "n": 1,
+                "school_primary": "新沙小学",
+                "tier": "普通",
+                "min_total": 165.0,
+                "min_sqm": 39.0,
+                "median_total": 165.0,
+                "median_sqm": 39.0,
+                "avg_neg_rate": -8.33
+              }
+            ]
           },
           {
             "area": "福田保税区",
@@ -2502,7 +5928,31 @@
             "median_unit": 3.6,
             "median_sqm": 53.0,
             "avg_neg_rate": -8.9567,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "城市3米6公寓",
+                "n": 2,
+                "school_primary": "福苑小学",
+                "tier": "普通",
+                "min_total": 190.0,
+                "min_sqm": 53.0,
+                "median_total": 190.5,
+                "median_sqm": 55.0,
+                "avg_neg_rate": -11.065
+              },
+              {
+                "community": "加福广场华尔登府邸",
+                "n": 1,
+                "school_primary": "外国语学校福保小学部",
+                "tier": "普通",
+                "min_total": 181.0,
+                "min_sqm": 42.0,
+                "median_total": 181.0,
+                "median_sqm": 42.0,
+                "avg_neg_rate": -4.74
+              }
+            ]
           },
           {
             "area": "华强北",
@@ -2514,7 +5964,31 @@
             "median_unit": 4.715,
             "median_sqm": 31.5,
             "avg_neg_rate": -11.525,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "恒邦壹峯",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 128.0,
+                "min_sqm": 29.0,
+                "median_total": 128.0,
+                "median_sqm": 29.0,
+                "avg_neg_rate": -14.67
+              },
+              {
+                "community": "滨江爱义南方大厦",
+                "n": 1,
+                "school_primary": "",
+                "tier": "无学位",
+                "min_total": 170.0,
+                "min_sqm": 34.0,
+                "median_total": 170.0,
+                "median_sqm": 34.0,
+                "avg_neg_rate": -8.38
+              }
+            ]
           },
           {
             "area": "梅林",
@@ -2526,7 +6000,31 @@
             "median_unit": 4.135,
             "median_sqm": 37.0,
             "avg_neg_rate": -6.3,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "蓝天绿都家园",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 119.0,
+                "min_sqm": 32.0,
+                "median_total": 119.0,
+                "median_sqm": 32.0,
+                "avg_neg_rate": -6.3
+              },
+              {
+                "community": "御锦公馆",
+                "n": 1,
+                "school_primary": "",
+                "tier": "未标注",
+                "min_total": 190.0,
+                "min_sqm": 42.0,
+                "median_total": 190.0,
+                "median_sqm": 42.0,
+                "avg_neg_rate": null
+              }
+            ]
           },
           {
             "area": "香梅北",
@@ -2538,7 +6036,20 @@
             "median_unit": 4.36,
             "median_sqm": 27.0,
             "avg_neg_rate": -8.08,
-            "per_month": null
+            "per_month": null,
+            "communities": [
+              {
+                "community": "深房传麒景苑",
+                "n": 1,
+                "school_primary": "福田区外国语小学",
+                "tier": "名校",
+                "min_total": 120.0,
+                "min_sqm": 27.0,
+                "median_total": 120.0,
+                "median_sqm": 27.0,
+                "avg_neg_rate": -8.08
+              }
+            ]
           }
         ]
       }
