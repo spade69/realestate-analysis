@@ -37,8 +37,7 @@ TOTAL_PRICE_BUCKETS = [
     ("<200万",    lambda p: p < 200),
     ("200-300万", lambda p: 200 <= p < 300),
     ("300-400万", lambda p: 300 <= p < 400),
-    ("400-500万", lambda p: 400 <= p < 500),
-    ("500-600万", lambda p: 500 <= p < 600),
+    ("400-600万", lambda p: 400 <= p < 600),
     ("≥600万",    lambda p: p >= 600),
 ]
 TOTAL_PRICE_LABELS = [b[0] for b in TOTAL_PRICE_BUCKETS]
