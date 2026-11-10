@@ -100,14 +100,14 @@ def build_kpi_grid(df: pd.DataFrame, periods: list[str]) -> str:
         max_drop_val = 0
         max_drop_label = "—"
 
-    # ≤200 万 大跌占比
+    # 200 万以下 大跌占比
     tp = analyze_by_total_price(df)
-    bucket_200 = next((b for b in tp["buckets"] if b["bucket"] == "≤200万"), None)
+    bucket_200 = next((b for b in tp["buckets"] if b["bucket"] == "<200万"), None)
     bucket_200_rate = bucket_200["big_drop_rate"] * 100 if bucket_200 and bucket_200["big_drop_rate"] is not None else 0
     other_rates = [
         b["big_drop_rate"] * 100
         for b in tp["buckets"]
-        if b["bucket"] != "≤200万" and b["big_drop_rate"] is not None
+        if b["bucket"] != "<200万" and b["big_drop_rate"] is not None
     ]
     other_min = min(other_rates) if other_rates else 0
     other_max = max(other_rates) if other_rates else 0
@@ -133,7 +133,7 @@ def build_kpi_grid(df: pd.DataFrame, periods: list[str]) -> str:
             status="down",
         ),
         render_kpi(
-            "≤200 万大跌占比",
+            "200 万以下大跌占比",
             fmt_pct(bucket_200_rate, 1),
             f"vs 其他段 {other_min:.0f}-{other_max:.0f}%",
             status="warn",
@@ -381,7 +381,7 @@ def build_hypothesis(df: pd.DataFrame) -> tuple[str, str]:
 
     rows = []
     for b in buckets:
-        is_top = b["bucket"] == "≤200万"
+        is_top = b["bucket"] == "<200万"
         n = b["n"]
         avg_nr = b["avg_neg_rate"]
         rate = b["big_drop_rate"] * 100 if b["big_drop_rate"] is not None else 0
@@ -391,7 +391,7 @@ def build_hypothesis(df: pd.DataFrame) -> tuple[str, str]:
         if is_top:
             rows.append(
                 f'        <tr class="row-highlight">\n'
-                f'          <td><strong>{b["bucket"]}</strong></td>\n'
+                f'          <td><strong>{esc(b["bucket"])}</strong></td>\n'
                 f'          <td class="num">{n}</td>\n'
                 f'          <td class="num down">{avg_nr_str}</td>\n'
                 f'          <td class="num warn"><strong>{rate_str}</strong></td>\n'
@@ -399,7 +399,7 @@ def build_hypothesis(df: pd.DataFrame) -> tuple[str, str]:
             )
         else:
             rows.append(
-                f'        <tr><td>{b["bucket"]}</td><td class="num">{n}</td>'
+                f'        <tr><td>{esc(b["bucket"])}</td><td class="num">{n}</td>'
                 f'<td class="num">{avg_nr_str}</td><td class="num">{rate_str}</td></tr>'
             )
 
@@ -411,8 +411,8 @@ def build_hypothesis(df: pd.DataFrame) -> tuple[str, str]:
     spearman_sig = sr is not None and sp is not None and sp < 0.05
 
     # 桶 200 万 vs 其他段范围
-    other_rates = [b["big_drop_rate"] * 100 for b in buckets if b["bucket"] != "≤200万" and b["big_drop_rate"] is not None]
-    bucket_200 = next((b for b in buckets if b["bucket"] == "≤200万"), None)
+    other_rates = [b["big_drop_rate"] * 100 for b in buckets if b["bucket"] != "<200万" and b["big_drop_rate"] is not None]
+    bucket_200 = next((b for b in buckets if b["bucket"] == "<200万"), None)
     bucket_200_rate = bucket_200["big_drop_rate"] * 100 if bucket_200 and bucket_200["big_drop_rate"] is not None else 0
 
     other_str = f"{min(other_rates):.0f}-{max(other_rates):.0f}%" if other_rates else "—"
@@ -428,11 +428,11 @@ def build_hypothesis(df: pd.DataFrame) -> tuple[str, str]:
         meaning = f'<strong>支持假设</strong>：总价越低，砍价确实越深 (Pearson r={pr:.3f}, p={pp:.2g})。'
     elif spearman_sig and bucket_200_rate > max(other_rates or [0]):
         meaning = (
-            f'<strong>≤200 万 段砍价幅度依然最狠（{bucket_200_rate:.1f}% vs 其他段 {other_str}）</strong>，'
+            f'<strong>200 万以下砍价幅度依然最狠（{bucket_200_rate:.1f}% vs 其他段 {other_str}）</strong>，'
             '但桶间不是严格线性递增——大概率因为高总价段也出现零星大砍价。'
         )
     elif spearman_sig:
-        meaning = f'秩相关显著但 ≤200 万 段并非全段最高，结论需谨慎。'
+        meaning = f'秩相关显著但 200 万以下并非全段最高，结论需谨慎。'
     else:
         meaning = '<strong>未发现显著相关</strong>，假设暂不成立（样本可能仍不足）。'
 
@@ -444,7 +444,7 @@ def build_hypothesis(df: pd.DataFrame) -> tuple[str, str]:
 # ── 总价段成交结构 ─────────────────────────────────────────────────
 
 
-PRICE_MIX_LOW = ("≤200万", "200-400万")  # 「低总价」= 400 万以下
+PRICE_MIX_LOW = ("<200万", "200-300万")  # 「低总价」= 300 万以下
 PRICE_MIX_WINDOW = 4  # 说明文字：最早 N 期 vs 最近 N 期
 
 
@@ -484,11 +484,11 @@ def build_price_mix(df: pd.DataFrame, periods: list[str]) -> tuple[str, str]:
     w = min(PRICE_MIX_WINDOW, len(periods) // 2)
     if w >= 1:
         early, late = low_share(range(w)), low_share(range(len(periods) - w, len(periods)))
-        diff = late - early
+        diff = round(late - early)
         trend = "上升" if diff > 2 else ("下降" if diff < -2 else "基本持平")
         caption = (f'每期成交按总价分段堆叠（已剔除法拍与非市场价），可切换笔数 / 占比。'
-                   f'400 万以下成交占比：最早 {w} 期 <strong>{early:.0f}%</strong> → '
-                   f'最近 {w} 期 <strong>{late:.0f}%</strong>（{trend}，{signed(diff, 0)} 个百分点）。')
+                   f'300 万以下成交占比：最早 {w} 期 <strong>{early:.0f}%</strong> → '
+                   f'最近 {w} 期 <strong>{late:.0f}%</strong>（{trend}，{f'{diff:+d}' if diff else '0'} 个百分点）。')
     else:
         caption = '每期成交按总价分段堆叠（已剔除法拍与非市场价），可切换笔数 / 占比。'
     return table, caption
@@ -561,9 +561,9 @@ def build_tldr(df: pd.DataFrame, periods: list[str]) -> str:
 
     # 假设检验
     tp = analyze_by_total_price(df)
-    bucket_200 = next((b for b in tp["buckets"] if b["bucket"] == "≤200万"), None)
+    bucket_200 = next((b for b in tp["buckets"] if b["bucket"] == "<200万"), None)
     bucket_200_rate = bucket_200["big_drop_rate"] * 100 if bucket_200 and bucket_200["big_drop_rate"] is not None else 0
-    other_rates = [b["big_drop_rate"] * 100 for b in tp["buckets"] if b["bucket"] != "≤200万" and b["big_drop_rate"] is not None]
+    other_rates = [b["big_drop_rate"] * 100 for b in tp["buckets"] if b["bucket"] != "<200万" and b["big_drop_rate"] is not None]
     other_str = f"{min(other_rates):.0f}-{max(other_rates):.0f}%" if other_rates else "—"
 
     # 找有没有片区"急涨"（品种偏移）
@@ -606,7 +606,7 @@ def build_tldr(df: pd.DataFrame, periods: list[str]) -> str:
         parts.append('同小区同户型对比样本不足，无法判定真实方向。')
 
     parts.append(
-        f'<strong>低总价段（≤200 万）的砍价深度依然显著高于其他段</strong>'
+        f'<strong>低总价段（200 万以下）的砍价深度依然显著高于其他段</strong>'
         f'（大跌占比 {bucket_200_rate:.1f}% vs {other_str}）。'
     )
 
