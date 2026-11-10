@@ -32,23 +32,10 @@ from analyze import (
     SCHOOL_TIERS,
     UNMAPPED_TIER,
     analyze_by_total_price,
+    total_price_bucket,
+    TOTAL_PRICE_LABELS,
     analyze_same_community_room_delta,
-    predict_next_period,
 )
-
-
-def next_period_label(periods: list[str]) -> str:
-    """从最后一期推下一期 label，例如 '2026-05上' → '2026-05下'。"""
-    m = re.match(r"(\d{4})-(\d{2})([上下])", periods[-1])
-    if not m:
-        return "下期"
-    year, mon, half = int(m.group(1)), int(m.group(2)), m.group(3)
-    if half == "上":
-        return f"{year}-{mon:02d}下"
-    nm = mon + 1
-    if nm > 12:
-        return f"{year + 1}-01上"
-    return f"{year}-{nm:02d}上"
 
 
 # ── 工具 ──────────────────────────────────────────────────────────
@@ -385,90 +372,6 @@ def build_area_observations(df: pd.DataFrame, periods: list[str]) -> str:
     return "\n".join(html)
 
 
-# ── 同小区同户型 ──────────────────────────────────────────────────
-
-
-def build_same_unit_rows(df: pd.DataFrame, periods: list[str]) -> tuple[str, str]:
-    """返回 (table rows HTML, conclusion p HTML)。"""
-    pair_stats = []
-    for e, l in zip(periods[:-1], periods[1:]):
-        pairs = analyze_same_community_room_delta(df, e, l)
-        thick = [p for p in pairs if p["n_earlier"] >= 2 and p["n_later"] >= 2]
-        if thick:
-            avg = sum(p["change_pct"] for p in thick) / len(thick)
-            pair_stats.append({
-                "label": f"{period_compact(l)} vs {period_compact(e)}",
-                "n": len(thick),
-                "avg": avg,
-            })
-        elif pairs:
-            # 退一步：用所有 pair 的平均
-            avg = sum(p["change_pct"] for p in pairs) / len(pairs)
-            pair_stats.append({
-                "label": f"{period_compact(l)} vs {period_compact(e)}",
-                "n": len(pairs),
-                "avg": avg,
-            })
-
-    # 空数据保护：少于 2 期 或 所有相邻对都无样本时
-    if not pair_stats:
-        return (
-            '        <tr><td colspan="4" class="dim">暂无相邻期对比数据。</td></tr>',
-            "样本不足，暂不展开真实变化分析。",
-        )
-
-    most_reliable_idx = max(range(len(pair_stats)), key=lambda i: pair_stats[i]["n"])
-
-    html_rows = []
-    for i, s in enumerate(pair_stats):
-        avg = s["avg"]
-        cls_avg = "num down" if avg < -0.5 else ("num up" if avg > 0.5 else "num")
-        # 解读
-        if s["n"] < 2:
-            note = '<td class="dim">样本太少，噪音</td>'
-        elif avg < -3:
-            note = '<td>明显回调</td>'
-        elif avg < -1:
-            note = '<td>小幅回调</td>'
-        elif avg > 3:
-            note = '<td>明显反弹</td>'
-        elif avg > 1:
-            note = '<td>反弹微涨</td>'
-        else:
-            note = '<td>基本持平</td>'
-
-        if i == most_reliable_idx and s["n"] >= 3:
-            note = '<td><strong>样本最厚，最可信</strong></td>'
-            row_cls = ' class="row-highlight"'
-            avg_str = f'<strong>{signed(avg)}%</strong>'
-            n_str = f'<strong>{s["n"]}</strong>'
-            label_html = f'<strong>{s["label"]}</strong>'
-        else:
-            row_cls = ""
-            avg_str = f'{signed(avg)}%'
-            n_str = str(s["n"])
-            label_html = s["label"]
-
-        html_rows.append(
-            f'        <tr{row_cls}><td>{label_html}</td><td class="num">{n_str}</td>'
-            f'<td class="{cls_avg}">{avg_str}</td>{note}</tr>'
-        )
-
-    # Conclusion: 最厚一对的 |avg|
-    max_abs = max(abs(s["avg"]) for s in pair_stats) if pair_stats else 0
-    if max_abs < 4:
-        conclusion = f'真实市场节奏：<strong>在 ±{max_abs:.0f}% 范围内震荡</strong>，没有持续单边方向。'
-    else:
-        # 看最近一对
-        latest = pair_stats[-1]
-        direction = "回调" if latest["avg"] < 0 else "反弹"
-        conclusion = (
-            f'真实市场节奏：相邻期变化范围 ±{max_abs:.1f}%，'
-            f'最近一期（{latest["label"]}）{direction} <strong>{signed(latest["avg"])}%</strong>。'
-        )
-    return "\n".join(html_rows), conclusion
-
-
 # ── 假设检验 ─────────────────────────────────────────────────────
 
 
@@ -536,6 +439,59 @@ def build_hypothesis(df: pd.DataFrame) -> tuple[str, str]:
     conclusion_lines.append(f'<p>意思是：{meaning}</p>')
 
     return "\n".join(rows), "\n    ".join(conclusion_lines)
+
+
+# ── 总价段成交结构 ─────────────────────────────────────────────────
+
+
+PRICE_MIX_LOW = ("≤200万", "200-400万")  # 「低总价」= 400 万以下
+PRICE_MIX_WINDOW = 4  # 说明文字：最早 N 期 vs 最近 N 期
+
+
+def price_mix_counts(df: pd.DataFrame, periods: list[str]) -> list[list[int]]:
+    """counts[i][j] = 第 i 个总价段在第 j 期的成交笔数。"""
+    b = df["total_price_wan"].map(total_price_bucket)
+    pivot = (df.assign(_b=b).groupby(["_b", "period"]).size()
+               .unstack("period").reindex(index=TOTAL_PRICE_LABELS, columns=periods).fillna(0).astype(int))
+    return pivot.values.tolist()
+
+
+def build_price_mix(df: pd.DataFrame, periods: list[str]) -> tuple[str, str]:
+    counts = price_mix_counts(df, periods)
+    totals = [sum(row[j] for row in counts) for j in range(len(periods))]
+
+    head = "".join(f'<th class="num">{esc(l)}</th>' for l in TOTAL_PRICE_LABELS)
+    rows = []
+    for j, p in enumerate(periods):
+        cells = "".join(
+            f'<td class="num">{counts[i][j]}<span class="dim"> · {counts[i][j] / totals[j] * 100:.0f}%</span></td>'
+            if totals[j] else '<td class="num">0</td>'
+            for i in range(len(TOTAL_PRICE_LABELS)))
+        rows.append(f'<tr><td>{esc(period_short(p))}</td>{cells}<td class="num">{totals[j]}</td></tr>')
+    grand = sum(totals)
+    foot = "".join(
+        f'<td class="num"><strong>{sum(row)}</strong><span class="dim"> · {sum(row) / grand * 100:.0f}%</span></td>'
+        for row in counts)
+    table = ('<table><thead><tr><th>期次</th>' + head + '<th class="num">合计</th></tr></thead><tbody>'
+             + "".join(rows)
+             + f'<tr><td><strong>全部</strong></td>{foot}<td class="num"><strong>{grand}</strong></td></tr>'
+             + '</tbody></table>')
+
+    low_idx = [TOTAL_PRICE_LABELS.index(l) for l in PRICE_MIX_LOW]
+    def low_share(js):
+        n = sum(totals[j] for j in js)
+        return sum(counts[i][j] for i in low_idx for j in js) / n * 100 if n else 0.0
+    w = min(PRICE_MIX_WINDOW, len(periods) // 2)
+    if w >= 1:
+        early, late = low_share(range(w)), low_share(range(len(periods) - w, len(periods)))
+        diff = late - early
+        trend = "上升" if diff > 2 else ("下降" if diff < -2 else "基本持平")
+        caption = (f'每期成交按总价分段堆叠（已剔除法拍与非市场价），可切换笔数 / 占比。'
+                   f'400 万以下成交占比：最早 {w} 期 <strong>{early:.0f}%</strong> → '
+                   f'最近 {w} 期 <strong>{late:.0f}%</strong>（{trend}，{signed(diff, 0)} 个百分点）。')
+    else:
+        caption = '每期成交按总价分段堆叠（已剔除法拍与非市场价），可切换笔数 / 占比。'
+    return table, caption
 
 
 # ── 期次详情 ─────────────────────────────────────────────────────
@@ -880,84 +836,6 @@ def build_search_data(df: pd.DataFrame) -> str:
     return raw.replace("</", "<\\/")
 
 
-# ── 下期预测 ─────────────────────────────────────────────────────
-
-
-def build_prediction_rows(df: pd.DataFrame, periods: list[str]) -> tuple[str, str]:
-    """返回 (table rows HTML, caption HTML)。"""
-    preds = predict_next_period(df, periods)
-    if not preds:
-        return ('        <tr><td colspan="6" class="dim">样本不足，无法预测。</td></tr>', "")
-
-    next_p = next_period_label(periods)
-
-    latest_period = periods[-1]
-    html_rows = []
-    for r in preds:
-        area = esc(r["area"])
-        cur = f'{r["current"]:.2f}'
-        # 若 current 不是最末期，给 "当期均价" 加期次脚注 + 颜色提示
-        cur_p = r["current_period"]
-        if cur_p != latest_period:
-            cur_html = (
-                f'{cur} <span class="dim" '
-                f'title="最末期 {esc(period_short(latest_period))} 样本不足 5 笔，'
-                f'当期均价基于 {esc(period_short(cur_p))}">'
-                f'({esc(period_compact(cur_p))})</span>'
-            )
-        else:
-            cur_html = cur
-        pred = f'{r["predicted"]:.2f}'
-        ci = f'[{r["ci_low"]:.2f}, {r["ci_high"]:.2f}]'
-        chg = r["change_pct"]
-        if chg > 1.5:
-            chg_cls = "num up"
-        elif chg < -1.5:
-            chg_cls = "num down"
-        else:
-            chg_cls = "num dim"
-        chg_str = f'{signed(chg, 1)}%'
-
-        # R² 颜色：< 0.3 不可信
-        r2 = r["r2"]
-        r2_cls = "num up" if r2 >= 0.7 else ("num" if r2 >= 0.3 else "num dim")
-        r2_str = f'{r2:.2f}'
-        if r2 < 0.3:
-            r2_str += ' <span class="dim">(噪)</span>'
-
-        html_rows.append(
-            f'        <tr>'
-            f'<td>{area}</td>'
-            f'<td class="num">{cur_html}</td>'
-            f'<td class="num"><strong>{pred}</strong></td>'
-            f'<td class="num dim">{ci}</td>'
-            f'<td class="{chg_cls}">{chg_str}</td>'
-            f'<td class="{r2_cls}">{r2_str}</td>'
-            f'</tr>'
-        )
-
-    # caption: 选最强信号
-    strong = [r for r in preds if r["r2"] >= 0.5 and abs(r["change_pct"]) >= 3]
-    n_up = sum(1 for r in preds if r["change_pct"] > 1.5)
-    n_down = sum(1 for r in preds if r["change_pct"] < -1.5)
-
-    if strong:
-        names = "、".join(esc(r["area"]) for r in strong[:3])
-        caption = (
-            f'<strong>{next_p} 预测信号：</strong>'
-            f'{n_up} 个片区上行 / {n_down} 个下行（{len(preds) - n_up - n_down} 个持平）。'
-            f'R² ≥ 0.5 且变化 ≥ 3% 的可信信号：<strong>{names}</strong>。'
-        )
-    else:
-        caption = (
-            f'<strong>{next_p} 预测信号：</strong>'
-            f'{n_up} 个片区上行 / {n_down} 个下行（{len(preds) - n_up - n_down} 个持平），'
-            f'但 R² 普遍偏低，样本期数有限，难以支撑高置信预测，仅供方向性参考。'
-        )
-
-    return "\n".join(html_rows), caption
-
-
 # ── Outlier 通告 ─────────────────────────────────────────────────
 
 
@@ -1039,16 +917,6 @@ def build_chart_data(df: pd.DataFrame, periods: list[str]) -> dict[str, Any]:
         per_period["n_big_drop"] / per_period["n_with_nr"] * 100
     ).round(2)
 
-    same_unit_bars = []
-    for e, l in zip(periods[:-1], periods[1:]):
-        pairs = analyze_same_community_room_delta(df, e, l)
-        thick = [p for p in pairs if p["n_earlier"] >= 2 and p["n_later"] >= 2]
-        if thick:
-            avg = sum(p["change_pct"] for p in thick) / len(thick)
-            same_unit_bars.append({"label": f"{l} vs {e}", "value": round(avg, 2), "n": len(thick)})
-        else:
-            same_unit_bars.append({"label": f"{l} vs {e}", "value": 0, "n": 0})
-
     return {
         "periods": periods,
         "core_areas": core_areas,
@@ -1056,7 +924,7 @@ def build_chart_data(df: pd.DataFrame, periods: list[str]) -> dict[str, Any]:
         "median_series": series(med_pivot),
         "volume": [int(per_period.loc[p, "n_total"]) for p in periods],
         "big_drop_rate": [float(per_period.loc[p, "big_drop_rate"]) for p in periods],
-        "same_unit": same_unit_bars,
+        "price_mix": {"labels": TOTAL_PRICE_LABELS, "counts": price_mix_counts(df, periods)},
     }
 
 
@@ -1089,26 +957,17 @@ def main() -> None:
         "KPI_GRID_HTML": build_kpi_grid(df, periods),
         "AREA_CONSENSUS_HTML": build_area_consensus(df, periods),
         "AREA_OBSERVATIONS_ROWS": build_area_observations(df, periods),
-        "SAME_UNIT_CONCLUSION_HTML": "",  # filled below
-        "SAME_UNIT_ROWS": "",  # filled below
         "HYPOTHESIS_ROWS": "",  # filled below
         "HYPOTHESIS_CONCLUSION_HTML": "",  # filled below
         "PERIOD_DETAILS_ROWS": build_period_details(df, periods),
-        "NEXT_PERIOD_LABEL": next_period_label(periods),
-        "PREDICTION_ROWS": "",  # filled below
-        "PREDICTION_CAPTION": "",  # filled below
     }
 
-    pred_rows, pred_caption = build_prediction_rows(df, periods)
-    placeholders["PREDICTION_ROWS"] = pred_rows
-    placeholders["PREDICTION_CAPTION"] = pred_caption
+    mix_table, mix_caption = build_price_mix(df, periods)
+    placeholders["PRICE_MIX_TABLE"] = mix_table
+    placeholders["PRICE_MIX_CAPTION"] = mix_caption
 
     placeholders["SEARCH_DATA_JSON"] = build_search_data(df)
     placeholders["SCHOOL_SECTION_HTML"] = build_school_section(df)
-
-    same_rows, same_conclusion = build_same_unit_rows(df, periods)
-    placeholders["SAME_UNIT_ROWS"] = same_rows
-    placeholders["SAME_UNIT_CONCLUSION_HTML"] = same_conclusion
 
     hyp_rows, hyp_conclusion = build_hypothesis(df)
     placeholders["HYPOTHESIS_ROWS"] = hyp_rows
